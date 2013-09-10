@@ -1,0 +1,42 @@
+/* Move down content because we have a fixed navbar that is 50px tall */
+body {
+  background-image: url("../img/cream_pixels_@2X.png");
+}
+
+
+
+h1, h2, h3, h4 {
+    font-family: 'Lato', sans-serif;
+    font-weight: 900;
+}
+
+.logo {
+    font-size: 5em;
+    text-align: center;
+}
+
+.tagline {
+    text-align: center;
+    font-size: 24px;
+}
+
+.center-container {
+  position: relative;
+}
+
+.absolute-center {
+  width: 50%;
+  height: 50%;
+  margin: auto;
+  position: absolute;
+  top: -50px; left: 0; bottom: 0; right: 0;
+}
+
+.email-form{
+    padding: 5px;
+}
+
+* {
+    font-family: 'Lato', sans-serif;
+    font-weight: 400;
+}
