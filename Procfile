@@ -1,1 +1,1 @@
-web: gunicorn sterling.wsgi
+web: gunicorn sterling.sterling.wsgi
