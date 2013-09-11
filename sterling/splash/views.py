@@ -7,14 +7,17 @@ from django.shortcuts import render
 from .models import SignUp
 
 class SplashFormView(View):
-    template_name = "index.html"
+    template_name = "splash.html"
 
 
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
 
     def post(self, request, *args, **kwargs):
-        email = request.POST['email']
+        email = request.POST.get('email', '')
+        username = request.POST.get('username', '')
+        password = request.POST.get('password', '')
+        
         if validate_email(email):
             signup = SignUp(email=email)
             signup.save()
