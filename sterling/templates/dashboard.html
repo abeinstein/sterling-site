@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2> My Apps </h2>
+    <ul>
+        {% for app in app_list %}
+            <li> {{ app.name }} </li>
+        {% endfor %}
+    </ul>
+
+{% endblock content %}

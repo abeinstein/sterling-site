@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if form.errors %}
+<p> You have the wrong username or password. Please try again. </p>
+{% endif %}
+
+<form method="post" action="{% url "login" %}">
+  {% csrf_token %}
+  <p> Username: {{form.username}}</p>
+  <p> Password: {{form.password}}</p>
+
+  <input type="submit" value="Login" />
+  <input type="hidden" name="next" value="{{ next }}"/>
+</form>
+
+{% endblock content %}
