@@ -1,1 +1,1 @@
-web: gunicorn sterling.sterling.wsgi
+web: gunicorn --pythonpath sterling sterling.wsgi
