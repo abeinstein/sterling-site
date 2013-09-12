@@ -7,7 +7,7 @@ class FbNodeSerializer(serializers.HyperlinkedModelSerializer):
 	
 	class Meta:
 		model = FbNode
-		fields = ('created', 'current_app', 'apps', 'user_id', 'o_auth_token')
+		fields = ('created', 'current_app_id', 'apps', 'user_id', 'o_auth_token')
 
 class SuggestionsNodeSerializer(serializers.HyperlinkedModelSerializer):
 	app = PrimaryKeyRelatedField(many=False)

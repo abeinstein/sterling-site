@@ -9,7 +9,7 @@ from rest_framework.renderers import JSONRenderer
 import json
 import ast
 
-base_url = "http://mighty-basin-2144.herokuapp.com/"
+base_url = "http://sterling.herokuapp.com/"
 
 class AppNode(models.Model):
 	created = models.DateTimeField(auto_now_add=True)
@@ -20,14 +20,16 @@ class FbNode(models.Model):
 	created = models.DateTimeField(auto_now_add=True)
 	user_id = models.TextField(max_length=50, primary_key=True)
 	o_auth_token = models.TextField()
-	current_app = models.CharField(max_length=50, null=True)
+	current_app_id = models.CharField(max_length=50, null=True)
 	apps = models.ManyToManyField(AppNode, blank=True, null=True)
 	
 	def save(self, **kwargs):
-		current_app = AppNode.objects.get(app_id=self.current_app)
+		current_app = AppNode.objects.get(app_id=self.current_app_id)
 		super(FbNode, self).save()
 		self.apps.add(current_app)
 		FbNode.save(self)
+
+		
 	
 
 
@@ -56,7 +58,8 @@ class SuggestionsNode(models.Model):
 		return Response(content)
 	
 	def save(self, **kwargs):
-		self.node_id = "app_id=" + str(self.app.app_id) + "&user_id=" + str(self.user.user_id)
+		#self.node_id = "app_id=" + str(self.app.app_id) + "&user_id=" + str(self.user.user_id)
+		self.node_id = "app_id=%d&user_id=%d" % (self.app.app_id, self.user.user_id)
 		super(SuggestionsNode, self).save()
 	
 
@@ -93,10 +96,10 @@ class InvitationsNode(models.Model):
 
 def save_suggestions_list(sender, **kwargs):
 	obj = kwargs['instance']
-	if (obj.current_app != None):
+	if (obj.current_app_id != None):
 		o_auth_token = obj.o_auth_token
 		user_id = obj.user_id
-		current_app_id = obj.current_app
+		current_app_id = obj.current_app_id
 		suggestions = fSuggestions(user_id, o_auth_token, current_app_id)
 	
 		suggestions_node = SuggestionsNode()
