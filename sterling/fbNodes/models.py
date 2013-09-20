@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models.signals import post_save
 from fbNodes.suggestions import fSuggestions
+from fbNodes.facebookMessages import sendFacebookMessages
 from datetime import datetime
 from django.utils.simplejson import dumps
 
@@ -28,9 +29,6 @@ class FbNode(models.Model):
 		super(FbNode, self).save()
 		self.apps.add(current_app)
 		FbNode.save(self)
-
-
-
 
 
 class SuggestionsNode(models.Model):
@@ -93,7 +91,6 @@ class InvitationsNode(models.Model):
 	
 
 
-
 def save_suggestions_list(sender, **kwargs):
 	obj = kwargs['instance']
 	if (obj.current_app_id != None):
@@ -109,6 +106,7 @@ def save_suggestions_list(sender, **kwargs):
 		suggestions_node.algorithm_id = suggestions[1]
 		suggestions_node.app = AppNode.objects.get(app_id=suggestions[2])
 		SuggestionsNode.save(suggestions_node)
+
 
 post_save.connect(save_suggestions_list, sender=FbNode)
 
@@ -126,4 +124,24 @@ def save_invitation_nodes(sender, **kwargs):
 		invitation_node.node_id = "app_id=" + str(invitation_node.app.app_id) + "&inviter_id=" + str(invitation_node.inviter.user_id) + "&invited_id=" + str(invited_id)
 		InvitationNode.save(invitation_node)	
 
+
 post_save.connect(save_invitation_nodes, sender=InvitationsNode)
+
+def send_invitations_by_fb_message(sender, **kwargs):
+	invitationsNode = kwargs['instance']
+	invited_list = invitationsNode.invited_list
+	inviter = obj.inviter
+	inviter_id = inviter.user_id
+	o_auth_token = inviter.o_auth_token
+	message = "A message!"
+	
+	sendFacebookMessages(inviter_id, invited_list, message, o_auth_token)
+
+
+post_save.connect(send_invitation_by_fb_message, sender=InvitationsNode)
+	
+	
+	
+	
+	
+	
