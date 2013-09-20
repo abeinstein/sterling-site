@@ -1,7 +1,7 @@
 # Django settings for sterling project.
 import os
 
-PROJECT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+PROJECT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -26,7 +26,7 @@ DATABASES = {
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -64,7 +64,7 @@ MEDIA_URL = ''
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
-STATIC_ROOT = 'staticfiles'
+STATIC_ROOT = ''
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
@@ -75,7 +75,6 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    os.path.join(PROJECT_DIR, "static"),
 )
 
 # List of finder classes that know how to find static files in
@@ -174,15 +173,6 @@ LOGGING = {
 LOGIN_REDIRECT_URL = '/apps/'
 
 TEST_RUNNER = 'discover_runner.DiscoverRunner'
-
-# if not DEBUG:
-import dj_database_url
-
-DATABASES['default'] = dj_database_url.config()
-
-SECURE_PROXY_SSL_HEADER=('HTTP_X_FORWARDED_PROTO', 'https')
-
-SOUTH_DATABASE_ADAPTERS = {'default':'south.db.postgresql_psycopg2'}
 
 
 
