@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models.signals import post_save
 from fbNodes.suggestions import fSuggestions
-from fbNodes.facebookMessages import sendFacebookMessages
+from fbNodes.facebookMessages import send_facebook_messages
 from datetime import datetime
 from django.utils.simplejson import dumps
 
@@ -135,10 +135,10 @@ def send_invitations_by_fb_message(sender, **kwargs):
 	o_auth_token = inviter.o_auth_token
 	message = "A message!"
 	
-	sendFacebookMessages(inviter_id, invited_list, message, o_auth_token)
+	send_facebook_messages(inviter_id, invited_list, message, o_auth_token)
 
 
-post_save.connect(send_invitation_by_fb_message, sender=InvitationsNode)
+post_save.connect(send_invitations_by_fb_message, sender=InvitationsNode)
 	
 	
 	
