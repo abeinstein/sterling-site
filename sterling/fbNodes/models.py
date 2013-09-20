@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models.signals import post_save
-from sterling.fbNodes.suggestions import fSuggestions
-from sterling.fbNodes.facebookMessages import send_facebook_messages
+from fbNodes.suggestions import fSuggestions
+from fbNodes.facebookMessages import send_facebook_messages
 from datetime import datetime
 from django.utils.simplejson import dumps
 
