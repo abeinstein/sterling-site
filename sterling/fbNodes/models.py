@@ -29,8 +29,8 @@ class FbNode(models.Model):
 		self.apps.add(current_app)
 		FbNode.save(self)
 
-		
-	
+
+
 
 
 class SuggestionsNode(models.Model):

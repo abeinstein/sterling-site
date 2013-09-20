@@ -136,6 +136,7 @@ INSTALLED_APPS = (
     'registration',
     'fbNodes',
     'rest_framework',
+    'annoying',
 )
 
 # A sample logging configuration. The only tangible logging
