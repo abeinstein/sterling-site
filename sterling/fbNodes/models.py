@@ -56,8 +56,8 @@ class SuggestionsNode(models.Model):
 		return Response(content)
 	
 	def save(self, **kwargs):
-		#self.node_id = "app_id=" + str(self.app.app_id) + "&user_id=" + str(self.user.user_id)
-		self.node_id = "app_id=%d&user_id=%d" % (self.app.app_id, self.user.user_id)
+		self.node_id = "app_id=" + str(self.app.app_id) + "&user_id=" + str(self.user.user_id)
+		#self.node_id = "app_id=%d&user_id=%d" % (self.app.app_id, self.user.user_id)
 		super(SuggestionsNode, self).save()
 	
 
