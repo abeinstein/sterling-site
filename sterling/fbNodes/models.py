@@ -116,6 +116,7 @@ def save_suggestions_list(sender, **kwargs):
 post_save.connect(save_suggestions_list, sender=FbNode)
 
 def save_invitation_nodes(sender, **kwargs):
+	print "here"
 	obj = kwargs['instance']
 	invited_list_string = obj.invited_list
 	invited_list = ast.literal_eval(invited_list_string)
@@ -133,6 +134,7 @@ def save_invitation_nodes(sender, **kwargs):
 #post_save.connect(save_invitation_nodes, sender=InvitationsNode)
 
 def send_invitations_by_fb_message(sender, **kwargs):
+	print "here?"
 	obj = kwargs['instance']
 	invited_list = obj.invited_list
 	inviter = obj.inviter
