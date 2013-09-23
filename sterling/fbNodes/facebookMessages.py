@@ -21,7 +21,7 @@ class SendMsgsBot(sleekxmpp.ClientXMPP):
 
 def send_facebook_messages(inviter_id, invited_list, message, o_auth_token):
 	xmpp = SendMsgsBot(inviter_id, invited_list, message)
-	xmpp.credentials['api_key'] = '466489223450195'
+	xmpp.credentials['api_key'] = '422143484562527'
 	xmpp.credentials['access_token'] = o_auth_token
 		
 	if xmpp.connect(server):
