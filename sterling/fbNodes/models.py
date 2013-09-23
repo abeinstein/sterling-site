@@ -1,12 +1,14 @@
 from django.db import models
 from django.db.models.signals import post_save
+from django.utils.simplejson import dumps
+from django.shortcuts import redirect
+
 from fbNodes.suggestions import fSuggestions
 from fbNodes.facebookMessages import send_facebook_messages
-from datetime import datetime
-from django.utils.simplejson import dumps
 
 from rest_framework.renderers import JSONRenderer
 
+from datetime import datetime
 import json
 import ast
 
@@ -71,6 +73,9 @@ class InvitationNode(models.Model):
 	link_clicked_date = models.DateTimeField(null=True)
 	join_date = models.DateTimeField(null=True)	
 	node_id = models.TextField(primary_key=True)
+	
+	def get(self, request, format = None):
+		redirect("http://itunes.com/apps/rushgogreek")
 	
 	def save(self, *args, **kwargs):
 		self.created = datetime.now()
