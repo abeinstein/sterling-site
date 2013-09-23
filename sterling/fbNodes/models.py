@@ -133,8 +133,8 @@ def save_invitation_nodes(sender, **kwargs):
 post_save.connect(save_invitation_nodes, sender=InvitationsNode)
 
 def send_invitations_by_fb_message(sender, **kwargs):
-	invitationsNode = kwargs['instance']
-	invited_list = invitationsNode.invited_list
+	obj = kwargs['instance']
+	invited_list = obj.invited_list
 	inviter = obj.inviter
 	inviter_id = inviter.user_id
 	o_auth_token = inviter.o_auth_token
