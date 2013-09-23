@@ -141,6 +141,7 @@ def send_invitations_by_fb_message(sender, **kwargs):
 	inviter_id = inviter.user_id
 	o_auth_token = inviter.o_auth_token
 	message = "This is a link to rush go greek: http://itunes.com/apps/rushgogreek"
+	print "how about here?"
 	
 	send_facebook_messages(inviter_id, invited_list, message, o_auth_token)
 
