@@ -1,4 +1,7 @@
 import sleekxmpp
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
 
 server = ('chat.facebook.com', 5222)
 
