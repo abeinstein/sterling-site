@@ -9,7 +9,7 @@ class SendMsgsBot(sleekxmpp.ClientXMPP):
 		self.message = message
 		self.add_event_handler("session_start", self.start, threaded=True)
 	
-	def process(self, event):
+	def start(self, event):
 		print "4"
 		self.send_presence()
 		self.get_roster()
@@ -18,7 +18,7 @@ class SendMsgsBot(sleekxmpp.ClientXMPP):
 			recipient = '-' + str(recipient_id) + '@chat.facebook.com'
 			self.send_message(mto=recipient, mbody=self.message, mtype='chat')
 		
-		self.disconnect(wait=True)
+		self.disconnect()
 	
 
 
