@@ -30,7 +30,8 @@ def send_facebook_messages(inviter_id, invited_list, message, o_auth_token):
 		
 	if xmpp.connect(server):
 		print "3"
-		xmpp.process(block=True)
+		#xmpp.process(block=True)
+		xmpp.start({})
 		print "6"
 	else:
 		print "Error"
