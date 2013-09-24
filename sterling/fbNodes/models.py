@@ -83,7 +83,7 @@ class InvitationNode(models.Model):
 		self.link_clicked_date = datetime.now()
 		super(InvitationNode, self).save()
 		
-		return HttpResponseRedirect('http://itunes.com/apps/rushgogreek', permanent=True)
+		#return HttpResponseRedirect('http://itunes.com/apps/rushgogreek', permanent=True)
 	
 	def save(self, *args, **kwargs):
 		self.created = datetime.now()
