@@ -78,7 +78,7 @@ class InvitationNode(models.Model):
 	def get(self, request, format = None):
 		self.link_clicked = True
 		self.link_clicked_date = datetime.now()
-		super (InvitationNode, self).save()
+		super(InvitationNode, self).save()
 		
 		return HttpResponseRedirect('http://itunes.com/apps/rushgogreek', permanent=True)
 	
