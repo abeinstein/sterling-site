@@ -12,7 +12,7 @@ class SendMsgsBot(sleekxmpp.ClientXMPP):
 		self.message = message
 		self.add_event_handler("session_start", self.start, threaded=True)
 	
-	def start(self, event):
+	def session_start(self, event):
 		print "4"
 		self.send_presence()
 		self.get_roster()
@@ -33,8 +33,8 @@ def send_facebook_messages(inviter_id, invited_list, message, o_auth_token):
 		
 	if xmpp.connect(server):
 		print "3"
-		#xmpp.process(block=True)
-		xmpp.start({})
+		xmpp.process(block=True)
+		#xmpp.start({})
 		print "6"
 	else:
 		print "Error"
