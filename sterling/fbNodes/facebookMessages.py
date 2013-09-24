@@ -14,10 +14,8 @@ class SendMsgsBot(sleekxmpp.ClientXMPP):
 		self.add_event_handler("session_start", self.start, threaded=False)
 	
 	def start(self, event):
-		print "4"
 		self.send_presence()
 		self.get_roster()
-		print "5"
 		for recipient_id in self.recipients:
 			recipient = '-' + str(recipient_id) + '@chat.facebook.com'
 			self.send_message(mto=recipient, mbody=self.message, mtype='chat')
@@ -34,9 +32,6 @@ def send_facebook_messages(inviter_id, invited_list, message, o_auth_token):
 	xmpp.credentials['access_token'] = o_auth_token
 		
 	if xmpp.connect(server):
-		print "3"
 		xmpp.process(block=True)
-		#xmpp.start({})
-		print "6"
 	else:
 		print "Error"
