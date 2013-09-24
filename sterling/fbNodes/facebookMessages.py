@@ -10,9 +10,9 @@ class SendMsgsBot(sleekxmpp.ClientXMPP):
 		sleekxmpp.ClientXMPP.__init__(self, jid, 'ignore')
 		self.recipients = recipients
 		self.message = message
-		self.add_event_handler("session_start", self.session_start, threaded=True)
+		self.add_event_handler("session_start", self.start, threaded=False)
 	
-	def session_start(self, event):
+	def start(self, event):
 		print "4"
 		self.send_presence()
 		self.get_roster()
