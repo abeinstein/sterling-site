@@ -2,7 +2,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.utils.simplejson import dumps
 from django.shortcuts import redirect
-from django.http import HttpResponseRedirect
+from django.http import HttpResponsePermanentRedirect
 
 from fbNodes.suggestions import fSuggestions
 from fbNodes.facebookMessages import send_facebook_messages
