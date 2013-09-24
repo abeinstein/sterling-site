@@ -75,7 +75,7 @@ class InvitationNode(models.Model):
 	node_id = models.TextField(primary_key=True)
 	
 	def get(self, request, format = None):
-		return redirect("http://itunes.com/apps/rushgogreek")
+		return redirect('http://itunes.com/apps/rushgogreek')
 	
 	def save(self, *args, **kwargs):
 		self.created = datetime.now()
