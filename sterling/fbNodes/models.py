@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.utils.simplejson import dumps
 from django.shortcuts import redirect
+from django.http import HttpResponseRedirect
 
 from fbNodes.suggestions import fSuggestions
 from fbNodes.facebookMessages import send_facebook_messages
@@ -75,7 +76,7 @@ class InvitationNode(models.Model):
 	node_id = models.TextField(primary_key=True)
 	
 	def get(self, request, format = None):
-		return redirect('http://itunes.com/apps/rushgogreek', permanent=True)
+		return HttpResponseRedirect('http://itunes.com/apps/rushgogreek', permanent=True)
 	
 	def save(self, *args, **kwargs):
 		self.created = datetime.now()
