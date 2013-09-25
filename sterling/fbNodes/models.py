@@ -30,9 +30,6 @@ class FbNode(models.Model):
 		FbNode.save(self)
 
 
-
-
-
 class SuggestionsNode(models.Model):
 	created = models.DateTimeField(auto_now_add=True)
 	user = models.ForeignKey(FbNode)
