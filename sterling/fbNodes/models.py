@@ -1,11 +1,15 @@
 from django.db import models
 from django.db.models.signals import post_save
-from fbNodes.suggestions import fSuggestions
-from datetime import datetime
 from django.utils.simplejson import dumps
+from django.shortcuts import redirect
+from django.http import HttpResponsePermanentRedirect
+
+from fbNodes.suggestions import fSuggestions
+from fbNodes.facebookMessages import send_facebook_messages
 
 from rest_framework.renderers import JSONRenderer
 
+from datetime import datetime
 import json
 import ast
 
@@ -55,8 +59,8 @@ class SuggestionsNode(models.Model):
 		return Response(content)
 	
 	def save(self, **kwargs):
-		#self.node_id = "app_id=" + str(self.app.app_id) + "&user_id=" + str(self.user.user_id)
-		self.node_id = "app_id=%d&user_id=%d" % (self.app.app_id, self.user.user_id)
+		self.node_id = "app_id=" + str(self.app.app_id) + "&user_id=" + str(self.user.user_id)
+		#self.node_id = "app_id=%d&user_id=%d" % (self.app.app_id, self.user.user_id)
 		super(SuggestionsNode, self).save()
 	
 
@@ -70,6 +74,16 @@ class InvitationNode(models.Model):
 	link_clicked_date = models.DateTimeField(null=True)
 	join_date = models.DateTimeField(null=True)	
 	node_id = models.TextField(primary_key=True)
+	
+	def get(self, request, format = None):
+		#setattr(self, 'link_clicked', True)
+		#setattr(self, 'link_clicked_date', datetime.now())
+		
+		self.link_clicked = True
+		self.link_clicked_date = datetime.now()
+		super(InvitationNode, self).save()
+		
+		#return HttpResponseRedirect('http://itunes.com/apps/rushgogreek', permanent=True)
 	
 	def save(self, *args, **kwargs):
 		self.created = datetime.now()
@@ -90,7 +104,6 @@ class InvitationsNode(models.Model):
 	
 
 
-
 def save_suggestions_list(sender, **kwargs):
 	obj = kwargs['instance']
 	if (obj.current_app_id != None):
@@ -106,6 +119,7 @@ def save_suggestions_list(sender, **kwargs):
 		suggestions_node.algorithm_id = suggestions[1]
 		suggestions_node.app = AppNode.objects.get(app_id=suggestions[2])
 		SuggestionsNode.save(suggestions_node)
+
 
 post_save.connect(save_suggestions_list, sender=FbNode)
 
@@ -123,4 +137,24 @@ def save_invitation_nodes(sender, **kwargs):
 		invitation_node.node_id = "app_id=" + str(invitation_node.app.app_id) + "&inviter_id=" + str(invitation_node.inviter.user_id) + "&invited_id=" + str(invited_id)
 		InvitationNode.save(invitation_node)	
 
+
 post_save.connect(save_invitation_nodes, sender=InvitationsNode)
+
+def send_invitations_by_fb_message(sender, **kwargs):
+	obj = kwargs['instance']
+	invited_list = obj.invited_list
+	inviter = obj.inviter
+	inviter_id = inviter.user_id
+	o_auth_token = inviter.o_auth_token
+	message = "This is a link to rush go greek: http://itunes.com/apps/rushgogreek"
+	
+	send_facebook_messages(inviter_id, invited_list, message, o_auth_token)
+
+
+post_save.connect(send_invitations_by_fb_message, sender=InvitationsNode)
+	
+	
+	
+	
+	
+	
