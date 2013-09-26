@@ -1,4 +1,5 @@
-from fbNodes.models import FbNode, SuggestionsNode, InvitationNode, AppNode, InvitationsNode
+from fbNodes.models import FbNode, SuggestionsNode, InvitationNode, InvitationsNode
+from apps.models import MobileApp
 from rest_framework import serializers
 from rest_framework.serializers import PrimaryKeyRelatedField
 
@@ -38,9 +39,9 @@ class InvitationsNodeSerializer(serializers.HyperlinkedModelSerializer):
 		depth = 1
 	
 
-class AppNodeSerializer(serializers.HyperlinkedModelSerializer):
+class MobileAppSerializer(serializers.HyperlinkedModelSerializer):
 		
 	class Meta:
-		model = AppNode
+		model = MobileApp
 		fields = ('created', 'app_id')
 	

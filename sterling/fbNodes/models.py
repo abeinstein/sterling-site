@@ -6,6 +6,7 @@ from django.http import HttpResponsePermanentRedirect
 
 from fbNodes.suggestions import fSuggestions
 from fbNodes.facebookMessages import send_facebook_messages
+from apps.models import MobileApp
 
 from rest_framework.renderers import JSONRenderer
 
@@ -15,20 +16,15 @@ import ast
 
 base_url = "http://sterling.herokuapp.com/"
 
-class AppNode(models.Model):
-	created = models.DateTimeField(auto_now_add=True)
-	app_id = models.TextField(primary_key=True)
-
-
 class FbNode(models.Model):
 	created = models.DateTimeField(auto_now_add=True)
 	user_id = models.TextField(max_length=50, primary_key=True)
 	o_auth_token = models.TextField()
 	current_app_id = models.CharField(max_length=50, null=True)
-	apps = models.ManyToManyField(AppNode, blank=True, null=True)
+	apps = models.ManyToManyField(MobileApp, blank=True, null=True)
 	
 	def save(self, **kwargs):
-		current_app = AppNode.objects.get(app_id=self.current_app_id)
+		current_app = MobileApp.objects.get(facebook_id=self.current_app_id)
 		super(FbNode, self).save()
 		self.apps.add(current_app)
 		FbNode.save(self)
@@ -37,7 +33,7 @@ class FbNode(models.Model):
 class SuggestionsNode(models.Model):
 	created = models.DateTimeField(auto_now_add=True)
 	user = models.ForeignKey(FbNode)
-	app = models.ForeignKey(AppNode)
+	app = models.ForeignKey(MobileApp)
 	suggestions_list = models.TextField()
 	algorithm_id = models.TextField()
 	node_id = models.TextField(primary_key=True)
@@ -69,7 +65,7 @@ class InvitationNode(models.Model):
 	created = models.DateTimeField(auto_now_add=True)
 	inviter = models.ForeignKey(FbNode)
 	invited_id = models.TextField()
-	app = models.ForeignKey(AppNode)
+	app = models.ForeignKey(MobileApp)
 	link_clicked = models.BooleanField(default=False)
 	link_clicked_date = models.DateTimeField(null=True)
 	join_date = models.DateTimeField(null=True)	
@@ -95,7 +91,7 @@ class InvitationsNode(models.Model):
 	created = models.DateTimeField(auto_now_add=True)
 	inviter = models.ForeignKey(FbNode)
 	invited_list = models.TextField()
-	app = models.ForeignKey(AppNode)
+	app = models.ForeignKey(MobileApp)
 	node_id = models.TextField(primary_key=True)
 		
 	def save(self, **kwargs):
@@ -117,7 +113,7 @@ def save_suggestions_list(sender, **kwargs):
 		suggestions_node.user = FbNode.objects.get(user_id=user_id)
 		suggestions_node.suggestions_list = suggestions[0]
 		suggestions_node.algorithm_id = suggestions[1]
-		suggestions_node.app = AppNode.objects.get(app_id=suggestions[2])
+		suggestions_node.app = MobileApp.objects.get(facebook_id=suggestions[2])
 		SuggestionsNode.save(suggestions_node)
 
 

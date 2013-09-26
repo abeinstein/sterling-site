@@ -1,6 +1,7 @@
 from rest_framework import viewsets
-from fbNodes.models import FbNode, SuggestionsNode, InvitationNode, AppNode, InvitationsNode
-from fbNodes.serializers import FbNodeSerializer, SuggestionsNodeSerializer, InvitationNodeSerializer, AppNodeSerializer, InvitationsNodeSerializer
+from fbNodes.models import FbNode, SuggestionsNode, InvitationNode, InvitationsNode
+from apps.models import MobileApp
+from fbNodes.serializers import FbNodeSerializer, SuggestionsNodeSerializer, InvitationNodeSerializer, MobileAppSerializer, InvitationsNodeSerializer
 from rest_framework.response import Response
 from django.http import HttpResponse
 
@@ -16,9 +17,9 @@ class InvitationNodeViewSet(viewsets.ModelViewSet):
 	queryset = InvitationNode.objects.all()
 	serializer_class = InvitationNodeSerializer
 
-class AppNodeViewSet(viewsets.ModelViewSet):
-	queryset = AppNode.objects.all()
-	serializer_class = AppNodeSerializer
+class MobileAppViewSet(viewsets.ModelViewSet):
+	queryset = MobileApp.objects.all()
+	serializer_class = MobileAppSerializer
 
 class InvitationsNodeViewSet(viewsets.ModelViewSet):
 	queryset = InvitationsNode.objects.all()
