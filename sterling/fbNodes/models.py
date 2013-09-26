@@ -97,6 +97,10 @@ class InvitationsNode(models.Model):
 	def save(self, **kwargs):
 		self.node_id = "app_id=" + str(self.app.app_id) + "&user_id=" + str(self.inviter.user_id)
 		super(InvitationsNode, self).save()
+
+	# def get_invited_list(self):
+	# 	ids = self.invited_list.strip('[').split(',')
+	# 	return map(lambda num: int(num), ids)
 	
 
 
@@ -133,7 +137,7 @@ def save_invitation_nodes(sender, **kwargs):
 		invitation_node.node_id = "app_id=" + str(invitation_node.app.app_id) + "&inviter_id=" + str(invitation_node.inviter.user_id) + "&invited_id=" + str(invited_id)
 		InvitationNode.save(invitation_node)	
 
-
+  
 post_save.connect(save_invitation_nodes, sender=InvitationsNode)
 
 def send_invitations_by_fb_message(sender, **kwargs):

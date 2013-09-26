@@ -1,6 +1,6 @@
 # Create your views here.
 from registration.backends.simple.views import RegistrationView
-from vanilla import ListView, CreateView
+from vanilla import ListView, CreateView, DetailView
 
 from django.core.urlresolvers import reverse, reverse_lazy
 
@@ -26,6 +26,9 @@ class AppCreateView(CreateView):
                        is_admin=False)
         m.save()
         return super(AppCreateView, self).form_valid(form)
+
+class AppDetailView(DetailView):
+    model = MobileApp
 
 
 class SterlingRegistrationView(RegistrationView):
