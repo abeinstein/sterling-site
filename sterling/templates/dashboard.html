@@ -4,9 +4,11 @@
 
 <h2> My Apps </h2>
     <ul>
-        {% for app in app_list %}
+        {% for app in object_list %}
             <li> {{ app.name }} </li>
         {% endfor %}
     </ul>
+
+    <a href="{% url 'create_app' %}" class="btn btn-primary">Add an app</a>
 
 {% endblock content %}
