@@ -4,12 +4,11 @@ from vanilla import ListView, CreateView, DetailView
 
 from django.core.urlresolvers import reverse, reverse_lazy
 
-from .models import MobileApp, Membership
+from .models import MobileApp, DevMembership
 
 class AppListView(ListView):
     model = MobileApp
     template_name = "dashboard.html"
-
 
     def get_queryset(self):
         return MobileApp.objects.filter(users__exact=self.request.user)
@@ -21,7 +20,7 @@ class AppCreateView(CreateView):
 
     def form_valid(self, form):
         form.instance.save()
-        m = Membership(user=self.request.user,
+        m = DevMembership(user=self.request.user,
                        mobile_app=form.instance,
                        is_admin=False)
         m.save()

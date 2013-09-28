@@ -133,9 +133,9 @@ INSTALLED_APPS = (
     'apps',
     'discover_runner',
     'registration',
-    'fbNodes',
     'rest_framework',
     'annoying',
+    'suggestions',
 )
 
 # A sample logging configuration. The only tangible logging

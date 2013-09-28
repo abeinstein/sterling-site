@@ -69,6 +69,7 @@ class InvitationNode(models.Model):
 	link_clicked = models.BooleanField(default=False)
 	link_clicked_date = models.DateTimeField(null=True)
 	join_date = models.DateTimeField(null=True)	
+	joined = models.BooleeanField(default=False)
 	node_id = models.TextField(primary_key=True)
 	
 	def get(self, request, format = None):
