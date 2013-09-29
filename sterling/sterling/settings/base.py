@@ -12,14 +12,26 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
+def get_user():
+	try:
+		return os.environ['DATABASE_USER']
+	except KeyError:
+		return ''
+		
+def get_password():
+	try:
+		return os.environ['DATABASE_PASSWORD']
+	except KeyError:
+		return ''
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'sterling',                      # Or path to database file if using sqlite3.
         # The following settings are not used with sqlite3:
-        'USER': os.environ['DATABASE_USER'],
-        'PASSWORD': os.environ['DATABASE_PASSWORD'],
-        'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+        'USER': get_user(),
+        'PASSWORD': get_password(),
+        'HOST': '127.0.0.1',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
         'PORT': '',                      # Set to empty string for default.
     }
 }
