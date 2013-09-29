@@ -137,7 +137,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # Uncomment the next line to enable the admin:
-    # 'django.contrib.admin',
+    'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'splash',
@@ -145,9 +145,9 @@ INSTALLED_APPS = (
     'apps',
     'discover_runner',
     'registration',
-    'fbNodes',
     'rest_framework',
     'annoying',
+    'suggestions',
 )
 
 # A sample logging configuration. The only tangible logging

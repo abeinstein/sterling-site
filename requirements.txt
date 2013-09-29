@@ -6,11 +6,12 @@ django-annoying==0.7.7
 django-discover-runner==1.0
 django-registration==1.0
 django-toolbelt==0.0.1
+django-vanilla-views==1.0.1
 djangorestframework==2.3.8
 facebook-sdk==0.4.0
 gunicorn==18.0
 psycopg2==2.5.1
-static==0.4
 sleekxmpp==1.1.11
+static==0.4
 validate-email==1.1
 wsgiref==0.1.2

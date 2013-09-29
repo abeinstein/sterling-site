@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1> {{ object.name }} </h1>
+<ul class="nav nav-tabs">
+    <li class="active"> <a href="#"> Growth </a> </li>
+
+    <li> <a href="#"> Demographics </a></li>
+    <li> <a href="#">Algorithms </a></li>
+    <li> <a href="#">Settings </a></li>
+
+</ul>
+
+<div class="growth">
+    <ul>
+        <li> Invitations sent: </li>
+        <li> Invitations accepted: </li>
+        <li> Conversion rate: </li>
+        <li> Total users: </li>
+        <li>
+        
+    </ul>
+</div>
+
+<div class="demographics">
+    <ul>
+        <li> Percent Male / Percent Female: </li>
+        <li> Age groups: </li>
+    </ul>
+</div>
+
+<div class="algorithms">
+    <ul>
+        <li> Algorithms used:
+{% endblock content %}

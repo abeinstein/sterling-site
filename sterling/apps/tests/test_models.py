@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
 
-from apps.models import MobileApp, Membership
+from apps.models import MobileApp, DevMembership
 
 class AppTests(TestCase):
 
@@ -9,7 +9,7 @@ class AppTests(TestCase):
         self.app = MobileApp.objects.create(name="Rush: Go Greek", facebook_id="12345678")
         self.user = User.objects.create_user('abeinstein', 'andrew.beinstein@gmail.com', 'andrewpassword')
         
-        self.mem = Membership(user=self.user, mobile_app=self.app, is_admin=False) 
+        self.mem = DevMembership(user=self.user, mobile_app=self.app, is_admin=False) 
         self.mem.save()       
 
     def test_user_is_member(self):
