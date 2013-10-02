@@ -24,5 +24,5 @@ urlpatterns = patterns('',
     url(r'^accounts/register/', SterlingRegistrationView.as_view(), name="registration_register"),
     url(r'^accounts/', include('registration.backends.simple.urls')),
 
-    url(r'^', include('fbNodes.urls')),
+    url(r'^', include('suggestions.urls')),
 )
