@@ -1,4 +1,7 @@
+import facebook
+
 from django.db import models
+
 
 
 # Create your models here.
@@ -6,30 +9,39 @@ class AppUser(models.Model):
     ''' Represents anyone who is signed up for an app, or is Facebook friends with 
     someone signed up for an app
     '''
-    facebook_id = models.PositiveIntegerField()
-    first_name = models.CharField(max_length=50, blank=True, null=True)
-    last_name = models.CharField(max_length=50, blank=True,  null=True)
-    
-    # TODO: Should this be moved to the apps model? Probably...
+    facebook_id = models.CharField(max_length=50)
+    name = models.CharField(max_length=1000, blank=True, null=True)
+    friends = models.ManyToManyField("self")
     mobile_apps = models.ManyToManyField('apps.MobileApp', through='AppUserMembership')
-
     created = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
-        return "%s %s" % (self.first_name, self.last_name)
+        return self.name
 
-    def create_friends(self, graph=None):
+    def create_friends(self):
         ''' Make AppUser's for self's friends '''
-        return NotImplemented
+        # First, grab friends from Facebook
+        graph = facebook.GraphAPI(self.get_oauth_token())
+        friends = graph.get_connections("me", "friends")
+
+        # TODO: Worry about paging
+        # TODO: Bulk update?
+        for f in friends['data']:
+            new_user = AppUser.objects.get_or_create(facebook_id=f['id'],
+                                    name=f['name']
+                                    )
+            self.friends.add(new_user)
 
     def get_name(self, graph=None):
         ''' Returns the tuple (first_name, last_name) from Facebook data'''
         return NotImplemented
 
-    def save(self, *args, **kwargs):
-        return super(AppUser, self).save(args, kwargs)
-
-
+    # TODO: Only getting first mobile app will create problems!!
+    def get_oauth_token(self, mobile_app=None):
+        if not mobile_app:
+            mobile_app = self.mobile_apps.all()[0] # Get first one
+        app_user_membership = AppUserMembership.objects.get(app_user=self, mobile_app=mobile_app)
+        return app_user_membership.oauth_token
 
 
 class AppUserMembership(models.Model):
@@ -51,9 +63,19 @@ class Algorithm(models.Model):
     name = models.CharField(max_length=200)
     number_times_used = models.PositiveIntegerField(default=0)
     created = models.DateTimeField(auto_now_add=True)
+    algorithm_method_id = models.PositiveIntegerField(default=0)
 
     def __unicode__(self):
         return self.name
+
+    @property
+    def algorithm(self):
+        algorithm_dict = {
+            1: some_algorithm
+        }
+        return algorithm_dict[self.algorithm_method_id]
+
+
 
 class SuggestionList(models.Model):
     ''' Represents a list of suggestions. This is also a 'through' model betweeen 
@@ -72,8 +94,28 @@ class SuggestionList(models.Model):
     def save(self, *args, **kwargs):
         if not self.suggested_friends:
             # Create Suggestion models using self.algorithm
-            pass
+            self.algorithm.generate_suggestions(self.app_user_membership)
         return super(SuggestionList, self).save(args, kwargs)
+
+    def generate_suggestions(self):
+        ''' Takes an AppUserMembership and calls an external function to 
+        generate Suggestion objects '''
+        # Call external function to actually run the algorithm
+        facebook_id = self.app_user_membership.app_user.facebook_id
+        oauth_token = self.app_user_membership.oauth_token
+        
+        # This is where the magic happens
+        ordered_facebook_ids = self.algorithm.external_function(facebook_id, oauth_token)
+
+        for rank, friend_id in enumerate(ordered_facebook_ids):
+            # TODO: get_or_create? What happens when their friend list has changed?
+            app_user = AppUser.objects.get_or_404(facebook_id=friend_id)
+            Suggestion.objects.create(
+                    suggestion_list=self,
+                    app_user=app_user,
+                    rank=rank
+            )
+
 
 
 

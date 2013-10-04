@@ -17,7 +17,8 @@ class MultipleFieldLookupMixin(object):
         queryset = self.filter_queryset(queryset)  # Apply any filter backends
         filter = {}
         for field in self.multiple_lookup_fields:
-            filter[field] = self.kwargs[field]
+            if field in self.kwargs:
+                filter[field] = self.kwargs[field]
         return get_object_or_404(queryset, **filter)  # Lookup the object
 
 class AppUserViewSet(MultipleFieldLookupMixin, viewsets.ModelViewSet):
@@ -28,27 +29,38 @@ class AppUserViewSet(MultipleFieldLookupMixin, viewsets.ModelViewSet):
     def put(self, request, pk, format=None):
         data = request.DATA
         serializer = AppUserSerializer(data)
+
+        # Django REST framework is hopefully dealing with new vs existing AppUser objects
         if serializer.is_valid():
             serializer.save()
         app_user = serializer.object()
-        app_user.create_friends() 
 
-        app_facebook_id = data.app_facebook_id
-        oauth_token = data.oauth_token
+        # If it's a new user, create new AppUser objects for his friends
+        if not app_user.friends:
+            app_user.create_friends() 
 
+        # Mobile App should already be configured on the website
         try:
-            mobile_app = MobileApp.objects.get(pk=app_facebook_id)
+            mobile_app = MobileApp.objects.get(pk=data.app_facebook_id)
         except ObjectDoesNotExist:
             return Response("App does not exist", status=400)
 
-        app_user_membership = AppUserMembership(app_user=app_user, mobile_app=mobile_app, oauth_token=oauth_token)
-        app_user_membership.save()
-        algorithm = mobile_app.default_algorithm
-        suggestion_list = SuggestionList.objects.create(app_user_membership=app_user_membership,
-                                                        algorithm=algorithm)
+        app_user_membership = AppUserMembership.objects.get_or_create(app_user=app_user, 
+                                                                    mobile_app=mobile_app, 
+                                                                    oauth_token=data.oauth_token)
+        # TODO: Figure out the right exception here
+        try:
+            app_user_membership.save()
+        except:
+            return Response("AppUserMembership could not be saved", status=400)
 
-        
-
+        if mobile_app.default_algorithm:
+            # Creates a suggestion list if one doesn't yet exist
+            # This will go off and start running the default algorithm
+            SuggestionList.objects.get_or_create(app_user_membership=app_user_membership,
+                                                algorithm=mobile_app.default_algorithm)
+        else:
+            return Response("No default algorithm set", status=400)
 
 
 

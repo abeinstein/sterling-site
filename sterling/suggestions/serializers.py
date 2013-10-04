@@ -5,16 +5,15 @@ from suggestions.models import AppUser, AppUserMembership, Algorithm, Suggestion
 from apps.models import MobileApp
 
 class AppUserSerializer(serializers.HyperlinkedModelSerializer):
-	mobile_apps = PrimaryKeyRelatedField(many = True)
 	
 	class Meta:
 		model = AppUser
-		#fields = ('id', 'facebook_id', 'first_name', 'last_name', 'mobile_apps', 'created')
+		fields = ('id', 'facebook_id', 'name', 'created')
 
 class AppUserMembershipSerializer(serializers.HyperlinkedModelSerializer):
 	app_user = PrimaryKeyRelatedField(many = False)
 	mobile_app = PrimaryKeyRelatedField(many = False)
-	algorithms = PrimaryKeyRelatedField(many = True)
+	# algorithms = PrimaryKeyRelatedField(many = True)
 	
 	class Meta:
 		model = AppUserMembership
@@ -29,7 +28,7 @@ class AlgorithmSerializer(serializers.HyperlinkedModelSerializer):
 class SuggestionListSerializer(serializers.HyperlinkedModelSerializer):
 	app_user_membership = PrimaryKeyRelatedField(many = False)
 	algorithm = PrimaryKeyRelatedField(many = False)
-	suggested_friends = PrimaryKeyRelatedField(many = True)
+	# suggested_friends = PrimaryKeyRelatedField(many = True)
 	
 	class Meta:
 		model = SuggestionList
@@ -42,7 +41,6 @@ class SuggestionSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = Suggestion
 		#fields = ('id', 'suggestion_list', 'app_user', 'rank', 'invited', 'accepted', 'created')
-	
 	
 	
 	

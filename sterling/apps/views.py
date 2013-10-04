@@ -32,7 +32,6 @@ class AppDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(AppDetailView, self).get_context_data(**kwargs)
         mobileapp = context['mobileapp']
-        context['num_suggested_list'] = mobileapp.num_suggested()
         context['num_invited'] = mobileapp.num_invited()
         context['num_accepted'] = mobileapp.num_invitations_joined()
         if context['num_invited']:
