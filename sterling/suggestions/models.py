@@ -18,6 +18,20 @@ class AppUser(models.Model):
     def __unicode__(self):
         return "%s %s" % (self.first_name, self.last_name)
 
+    def create_friends(self, graph=None):
+        ''' Make AppUser's for self's friends '''
+        return NotImplemented
+
+    def get_name(self, graph=None):
+        ''' Returns the tuple (first_name, last_name) from Facebook data'''
+        return NotImplemented
+
+    def save(self, *args, **kwargs):
+        return super(AppUser, self).save(args, kwargs)
+
+
+
+
 class AppUserMembership(models.Model):
     ''' Through model between AppUser and MobileApp 
     Only created when a user actually signs up for an app
@@ -54,6 +68,12 @@ class SuggestionList(models.Model):
 
     def __unicode__(self):
         return "%s suggestions for %s" % (self.algorithm, self.app_user_membership) 
+
+    def save(self, *args, **kwargs):
+        if not self.suggested_friends:
+            # Create Suggestion models using self.algorithm
+            pass
+        return super(SuggestionList, self).save(args, kwargs)
 
 
 
