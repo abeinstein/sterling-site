@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1> {{ object.name }} </h1>
+<h1> {{ mobileapp.name }} </h1>
 <ul class="nav nav-tabs">
     <li class="active"> <a href="#"> Growth </a> </li>
 
@@ -13,11 +13,13 @@
 
 <div class="growth">
     <ul>
-        <li> Invitations sent: </li>
-        <li> Invitations accepted: </li>
-        <li> Conversion rate: </li>
-        <li> Total users: </li>
-        <li>
+        <li> Users: {{ total_users }}</li>
+        <li> Number of times button was clicked: {{ num_suggested_list }} </li>
+        <li> Number of invitations sent: {{ num_invited }}</li>
+        <li> Number of invitations accepted: {{ num_accepted }}</li>
+        {% if conversion_rate %}
+        <li> Conversion rate: {{ conversion_rate }}  </li>
+        {% endif %}
         
     </ul>
 </div>
