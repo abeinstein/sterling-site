@@ -1,6 +1,5 @@
 from django.db import models
 
-from apps.models import MobileApp
 
 # Create your models here.
 class AppUser(models.Model):
@@ -10,13 +9,17 @@ class AppUser(models.Model):
     facebook_id = models.PositiveIntegerField()
     first_name = models.CharField(max_length=50, blank=True, null=True)
     last_name = models.CharField(max_length=50, blank=True,  null=True)
-    mobile_apps = models.ManyToManyField(MobileApp, through='AppUserMembership')
+    # TODO: Should this be moved to the apps model? Probably...
+    mobile_apps = models.ManyToManyField('apps.MobileApp', through='AppUserMembership')
+
     created = models.DateTimeField(auto_now_add=True)
 
 class AppUserMembership(models.Model):
-    ''' Through model between AppUser and MobileApp '''
+    ''' Through model between AppUser and MobileApp 
+    Only created when a user actually signs up for an app
+    '''
     app_user = models.ForeignKey(AppUser)
-    mobile_app = models.ForeignKey(MobileApp)
+    mobile_app = models.ForeignKey('apps.MobileApp')
     oauth_token = models.TextField()
     algorithms = models.ManyToManyField('Algorithm', through='SuggestionList')
     created = models.DateTimeField(auto_now_add=True)

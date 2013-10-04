@@ -29,6 +29,17 @@ class AppCreateView(CreateView):
 class AppDetailView(DetailView):
     model = MobileApp
 
+    def get_context_data(self, **kwargs):
+        context = super(AppDetailView, self).get_context_data(**kwargs)
+        mobileapp = context['mobileapp']
+        context['num_suggested_list'] = mobileapp.num_suggested()
+        context['num_invited'] = mobileapp.num_invited()
+        context['num_accepted'] = mobileapp.num_invitations_joined()
+        if context['num_invited']:
+            context['conversion_rate'] = float(context['num_accepted']) / context['num_invited']
+        context['total_users'] = mobileapp.num_users()
+        return context
+
 
 class SterlingRegistrationView(RegistrationView):
 
