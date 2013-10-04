@@ -27,10 +27,10 @@ class MobileApp(models.Model):
         return AppUserMembership.objects.filter(mobile_app=self, created__lt=datetime).count()
 
     # TODO: Investigate these queries to see if they're fast (they're probably not)
-    def num_suggested(self, datetime=datetime.datetime.now()):
-        ''' Returns number of invitations that were clicked, with optional datetime parameter '''
-        return Suggestion.objects.filter(suggestion_list__app_user_membership__mobile_app=self,
-                                        created__lt=datetime).count()
+    # def num_suggested(self, datetime=datetime.datetime.now()):
+    #     ''' Returns number of invitations that were clicked, with optional datetime parameter '''
+    #     return Suggestion.objects.filter(suggestion_list__app_user_membership__mobile_app=self,
+    #                                     created__lt=datetime).count()
 
     def num_invited(self, datetime=datetime.datetime.now()):
         ''' Returns number of people invited to the app
