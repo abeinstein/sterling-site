@@ -23,4 +23,5 @@ urlpatterns = patterns('',
     url(r'^apps/create/$', AppCreateView.as_view(), name="create_app"),
     url(r'^accounts/register/', SterlingRegistrationView.as_view(), name="registration_register"),
     url(r'^accounts/', include('registration.backends.simple.urls')),
+    url(r'^', include('suggestions.urls')),
 )
