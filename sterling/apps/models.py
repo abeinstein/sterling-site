@@ -13,7 +13,9 @@ class MobileApp(models.Model):
     users = models.ManyToManyField(settings.AUTH_USER_MODEL, through='DevMembership') # App admins
     invitation_message = models.TextField(blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
-    default_algorithm = models.ForeignKey(Algorithm)
+
+    # TODO: Point to actual default algorithm
+    default_algorithm = models.ForeignKey(Algorithm, blank=True, null=True)
 
     def __unicode__(self):
         return self.name
