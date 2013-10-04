@@ -3,6 +3,7 @@ from suggestions.models import AppUser, AppUserMembership, Algorithm, Suggestion
 from apps.models import MobileApp
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
+from django.core.exceptions import ObjectDoesNotExist
 
 from suggestions.serializers import AppUserSerializer, AppUserMembershipSerializer, AlgorithmSerializer, SuggestionListSerializer, SuggestionSerializer
 
@@ -23,6 +24,30 @@ class AppUserViewSet(MultipleFieldLookupMixin, viewsets.ModelViewSet):
 	queryset = AppUser.objects.all()
 	serializer_class = AppUserSerializer
 	multiple_lookup_fields = ['facebook_id']
+
+	def put(self, request, pk, format=None):
+		data = request.DATA
+		serializer = AppUserSerializer(data)
+		if serializer.is_valid()
+			serializer.save()
+		appUser = serializer.object()
+		appUser.create_friends() 
+
+		app_facebook_id = data.app_facebook_id
+		oauth_token = data.oauth_token
+
+		try:
+			mobile_app = MobileApp.objects.get(pk=app_facebook_id)
+		except ObjectDoesNotExist:
+			return Response("App does not exist", status=400)
+
+		app_user_membership = AppUserMembership.objects.create(app_user=app_user, 
+															   mobile_app=mobile_app, 
+															   oauth_token=oauth_token)
+
+		suggestion_list = SuggestionList.objects.create(app_user_membership=app_user_membership,
+														algorithm=algorithm)
+
 
 class AppUserMembershipViewSet(MultipleFieldLookupMixin, viewsets.ModelViewSet):
 	queryset = AppUserMembership.objects.all()
