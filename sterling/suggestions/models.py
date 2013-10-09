@@ -2,34 +2,34 @@ import facebook
 
 from django.db import models
 
-
+from suggestions.algorithms import toy_algorithm
 
 # Create your models here.
 class AppUser(models.Model):
     ''' Represents anyone who is signed up for an app, or is Facebook friends with 
     someone signed up for an app
     '''
-    facebook_id = models.CharField(max_length=50)
+    facebook_id = models.CharField(max_length=50, unique=True)
     name = models.CharField(max_length=1000, blank=True, null=True)
     friends = models.ManyToManyField("self")
     mobile_apps = models.ManyToManyField('apps.MobileApp', through='AppUserMembership')
     created = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
-        return self.name
+        if self.name:
+            return self.name
+        else:
+            return self.facebook_id
 
     def create_friends(self):
         ''' Make AppUser's for self's friends '''
         # First, grab friends from Facebook
         graph = facebook.GraphAPI(self.get_oauth_token())
         friends = graph.get_connections("me", "friends")
-
         # TODO: Worry about paging
         # TODO: Bulk update?
         for f in friends['data']:
-            new_user = AppUser.objects.get_or_create(facebook_id=f['id'],
-                                    name=f['name']
-                                    )
+            new_user, _ = AppUser.objects.get_or_create(facebook_id=f['id'])
             self.friends.add(new_user)
 
     def get_name(self, graph=None):
@@ -71,7 +71,7 @@ class Algorithm(models.Model):
     @property
     def algorithm(self):
         algorithm_dict = {
-            1: some_algorithm
+            1: toy_algorithm
         }
         return algorithm_dict[self.algorithm_method_id]
 
@@ -88,14 +88,9 @@ class SuggestionList(models.Model):
 
     presented_count = models.PositiveIntegerField(default=0)
 
-    def __unicode__(self):
-        return "%s suggestions for %s" % (self.algorithm, self.app_user_membership) 
+    # def __unicode__(self):
+    #     return "%s suggestions for %s" % (self.algorithm, self.app_user_membership) 
 
-    def save(self, *args, **kwargs):
-        if not self.suggested_friends:
-            # Create Suggestion models using self.algorithm
-            self.algorithm.generate_suggestions(self.app_user_membership)
-        return super(SuggestionList, self).save(args, kwargs)
 
     def generate_suggestions(self):
         ''' Takes an AppUserMembership and calls an external function to 
@@ -105,11 +100,14 @@ class SuggestionList(models.Model):
         oauth_token = self.app_user_membership.oauth_token
         
         # This is where the magic happens
-        ordered_facebook_ids = self.algorithm.external_function(facebook_id, oauth_token)
-
+        ordered_facebook_ids = self.algorithm.algorithm(facebook_id, oauth_token)
         for rank, friend_id in enumerate(ordered_facebook_ids):
             # TODO: get_or_create? What happens when their friend list has changed?
-            app_user = AppUser.objects.get_or_404(facebook_id=friend_id)
+            try:
+                app_user = AppUser.objects.get(facebook_id=friend_id)
+            except object.DoesNotExist:
+                return Exception("Appuser does not exist")
+
             Suggestion.objects.create(
                     suggestion_list=self,
                     app_user=app_user,

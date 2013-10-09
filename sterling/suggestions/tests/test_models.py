@@ -39,3 +39,6 @@ class SuggestionsModelsTests(TestCase):
 
     def test_create_suggestion(self):
         self.assertIsInstance(self.suggestion, Suggestion)
+
+    # def test_create_friends(self):
+        

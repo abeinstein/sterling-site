@@ -186,6 +186,8 @@ LOGIN_REDIRECT_URL = '/apps/'
 
 TEST_RUNNER = 'discover_runner.DiscoverRunner'
 
+SOUTH_TESTS_MIGRATE = False # To disable migrations and use syncdb instead
+
 
 
 
