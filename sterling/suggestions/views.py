@@ -1,10 +1,14 @@
-from rest_framework import viewsets
+import datetime
+
+from django.db.models import F
+from django.shortcuts import get_object_or_404
+from django.core.exceptions import ObjectDoesNotExist
+from django.utils.timezone import now
+
+from rest_framework import viewsets, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import action
-
-from django.shortcuts import get_object_or_404
-from django.core.exceptions import ObjectDoesNotExist
 
 from apps.models import MobileApp
 from suggestions.models import AppUser, AppUserMembership, Algorithm, SuggestionList, Suggestion
@@ -44,7 +48,7 @@ class AppUserLoginView(APIView):
             oauth_token = data['oauth_token']
             facebook_id = data['facebook_id']
         except KeyError:
-            return Response("Invalid request", status=400)
+            return Response("Invalid request", status=status.HTTP_400_BAD_REQUEST)
 
         app_user = self.get_object(facebook_id)
 
@@ -52,14 +56,14 @@ class AppUserLoginView(APIView):
         try:
             mobile_app = MobileApp.objects.get(pk=app_facebook_id)
         except ObjectDoesNotExist:
-            return Response("Mobile app does not exist", status=400)
+            return Response("Mobile app does not exist", status=status.HTTP_400_BAD_REQUEST)
 
         try:
             app_user_membership, app_user_membership_created = AppUserMembership.objects.get_or_create(app_user=app_user, 
                                                                     mobile_app=mobile_app, 
                                                                     oauth_token=oauth_token)
         except:
-            return Response("AppUserMembership could not be saved", status=400)
+            return Response("AppUserMembership could not be saved", status=status.HTTP_400_BAD_REQUEST)
 
         # If it's a new user, create new AppUser objects for his friends
         app_user.update_friends() 
@@ -70,12 +74,93 @@ class AppUserLoginView(APIView):
             sl, sl_created = SuggestionList.objects.get_or_create(app_user_membership=app_user_membership,
                                                 algorithm=mobile_app.default_algorithm)
             #sl.generate_suggestions()
-            return Response("Success!", status=201)
+            return Response("Success!", status=status.HTTP_201_CREATED)
         else:
-            return Response("No default algorithm set", status=400)
+            return Response("No default algorithm set", status=status.HTTP_400_BAD_REQUEST)
+
+
+class SuggestionsView(APIView):
+    def get(self, request, format=None):
+        ''' Returns an ordered list of suggestions '''
+        data = request.QUERY_PARAMS
+
+        try:
+            app_facebook_id = data['app_facebook_id']
+            facebook_id = data['facebook_id']
+        except KeyError:
+            return Response("Invalid request", status=status.HTTP_400_BAD_REQUEST)
+
+        # Get objects
+        try:
+            app_user = AppUser.objects.get(facebook_id=facebook_id)
+            mobile_app = MobileApp.objects.get(pk=app_facebook_id)
+        except ObjectDoesNotExist:
+            return Response("AppUser or Mobile App does not exist", status=status.HTTP_400_BAD_REQUEST)
+
+        app_user_membership = AppUserMembership.objects.get(app_user=app_user,
+                                                            mobile_app=mobile_app)
+
+        # Gets first suggestion list
+        # TODO -- more intelligent suggestion list choosing mechanism
+        suggestion_list = app_user_membership.suggestionlist_set.all()[0]
+        friends = suggestion_list.suggested_friends.all().order_by('suggestion__rank')
+
+        # TODO: Custom friend suggestion serializer that takes a suggestion list?
+        response_data = {'list_id': suggestion_list.pk, 'friends': []}
+        for f in friends:
+            response_data['friends'].append({'id': f.facebook_id,
+                                'name': f.name })
+
+        return Response(response_data, status=status.HTTP_200_OK)
+
+
+    def post(self, request, format=None):
+        ''' Captures person views and invites. Requires:
+        - suggestion_list_id (int)
+        - friends_seen (list)
+        - friends_invited (list)
+        ''' 
+        data = request.DATA
+
+        try:
+            suggestion_list_id = data['list_id']
+            friends_seen = data['friends_seen']
+            friends_invited = data['friends_invited']
+        except KeyError:
+            return Response("Invalid request",
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            suggestion_list = SuggestionList.objects.get(id=suggestion_list_id)
+        except SuggestionList.DoesNotExist:
+            return Response("Suggestion List could not be found", 
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        # FUCK YES!!
+        Suggestion.objects.filter(
+            suggestion_list=suggestion_list,
+            app_user__facebook_id__in=friends_seen
+        ).update(
+            times_presented=F('times_presented') + 1,
+            last_presented_date=now()
+        )
+
+        Suggestion.objects.filter(
+            suggestion_list=suggestion_list,
+            app_user__facebook_id__in=friends_invited
+        ).update(
+            times_invited = F('times_invited') + 1,
+            last_invited_date = now()
+        )
+
+        return Response(status=status.HTTP_200_OK)
 
 
 
+###
+# Model Viewsets
+# Deprecated
+####
 class AppUserViewSet(viewsets.ModelViewSet):
     queryset = AppUser.objects.all()
     serializer_class = AppUserSerializer
@@ -94,11 +179,6 @@ class SuggestionListViewSet(MultipleFieldLookupMixin, viewsets.ModelViewSet):
     queryset = SuggestionList.objects.all()
     serializer_class = SuggestionListSerializer
     multiple_lookup_fields = ['app_user_membership__app_user__facebook_id', 'app_user_membership__app_user__facebook_id']
-
-    # def retrieve(self, request, pk=None):
-    #     import pdb; pdb.set_trace()
-
-
 
 class SuggestionViewSet(viewsets.ModelViewSet):
     queryset = Suggestion.objects.all()

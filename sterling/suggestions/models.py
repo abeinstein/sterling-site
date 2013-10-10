@@ -102,6 +102,7 @@ class SuggestionList(models.Model):
         
         # This is where the magic happens
         ordered_facebook_ids = self.algorithm.algorithm(facebook_id, oauth_token)
+        
         for rank, friend_id in enumerate(ordered_facebook_ids):
             # TODO: get_or_create? What happens when their friend list has changed?
             try:
@@ -116,8 +117,6 @@ class SuggestionList(models.Model):
             )
 
 
-
-
 class Suggestion(models.Model):
     ''' Represents a suggestion from one AppUser to another. A 'through' model
     between SuggestionList and AppUser
@@ -127,16 +126,19 @@ class Suggestion(models.Model):
 
     rank = models.PositiveIntegerField()
 
-    presented = models.BooleanField(default=False) # Was this suggestion presented to the user?
-    invited = models.BooleanField(default=False) # Did the suggester actually invite?
-    accepted = models.BooleanField(default=False) # Did the invited actually accept?
+    times_presented = models.PositiveIntegerField(default=0) # How many times was this suggestion presented to the user?
+    last_presented_date = models.DateTimeField(blank=True, null=True)
 
-    first_presentation_date = models.DateTimeField(blank=True, null=True)
-    last_presentation_date = models.DateTimeField(blank=True, null=True)
-    invited_date = models.DateTimeField(blank=True, null=True)
+    times_invited = models.PositiveIntegerField(default=0) # How many times was this user invited?
+    last_invited_date = models.DateTimeField(blank=True, null=True)   
+
+    accepted = models.BooleanField(default=False) # Did the invited actually accept?
     accepted_date = models.DateTimeField(blank=True, null=True)
     
     created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['rank']
 
 
 

@@ -5,7 +5,7 @@ from rest_framework.routers import DefaultRouter
 from django.views.generic.base import RedirectView
 
 from .views import AppUserViewSet, AppUserMembershipViewSet, AlgorithmViewSet, \
-SuggestionListViewSet, SuggestionViewSet, AppUserLoginView
+SuggestionListViewSet, SuggestionViewSet, AppUserLoginView, SuggestionsView
 from .models import AppUser, AppUserMembership
 
 
@@ -43,8 +43,8 @@ urlpatterns = format_suffix_patterns(patterns('',
 	url(r'^suggestionLists/facebook_id=(?P<app_user_membership__app_user__facebook_id>[0-9]+)&app_facebook_id=(?P<app_user_membership__mobile_app__facebook_id>[0-9]+)/$', suggestion_list_detail, name='suggestion_list_detail'),
 
     # URLS for Adam to use
-    url(r'^appUserLogin/', AppUserLoginView.as_view(), name='app-user-login')
-
+    url(r'^appUserLogin/', AppUserLoginView.as_view(), name='app-user-login'),
+    url(r'^suggestions/', SuggestionsView.as_view(), name='suggestions'),
 ))
 
 urlpatterns += patterns('',
