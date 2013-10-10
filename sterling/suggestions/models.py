@@ -1,10 +1,11 @@
 import facebook
-
 from django.db import models
+from suggestions.algorithms.algorithms import alphabetical
 
-from suggestions.algorithms import toy_algorithm
+# ALGORITHM IDS
+ALGORITHM_TOY = 1
+ALGORITHM_ALPHABETICAL = 2
 
-# Create your models here.
 class AppUser(models.Model):
     ''' Represents anyone who is signed up for an app, or is Facebook friends with 
     someone signed up for an app
@@ -72,7 +73,8 @@ class Algorithm(models.Model):
     @property
     def algorithm(self):
         algorithm_dict = {
-            1: toy_algorithm
+            ALGORITHM_TOY: toy_algorithm,
+            ALGORITHM_ALPHABETICAL: alphabetical
         }
         return algorithm_dict[self.algorithm_method_id]
 

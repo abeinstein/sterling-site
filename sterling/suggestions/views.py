@@ -116,7 +116,7 @@ class SuggestionsView(APIView):
 
     def post(self, request, format=None):
         ''' Captures person views and invites. Requires:
-        - suggestion_list_id (int)
+        - list_id (int)
         - friends_seen (list)
         - friends_invited (list)
         ''' 

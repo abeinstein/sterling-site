@@ -1,8 +1,8 @@
-from django.conf.urls import patterns, include, url
 from rest_framework.urlpatterns import format_suffix_patterns
-
 from rest_framework.routers import DefaultRouter
+
 from django.views.generic.base import RedirectView
+from django.conf.urls import patterns, include, url
 
 from .views import AppUserViewSet, AppUserMembershipViewSet, AlgorithmViewSet, \
 SuggestionListViewSet, SuggestionViewSet, AppUserLoginView, SuggestionsView
@@ -48,6 +48,5 @@ urlpatterns = format_suffix_patterns(patterns('',
 ))
 
 urlpatterns += patterns('',
-    #url(r'^appUsers/(?P<facebook_id>\d+)/$', AppUserViewSet.as_view(), name="detail_app_user"),
 	url(r'', include(router.urls)),
 )
