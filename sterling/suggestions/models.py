@@ -21,16 +21,17 @@ class AppUser(models.Model):
         else:
             return self.facebook_id
 
-    def create_friends(self):
-        ''' Make AppUser's for self's friends '''
+    def update_friends(self):
+        ''' Make AppUser's for self's friends if they don't already exist'''
         # First, grab friends from Facebook
         graph = facebook.GraphAPI(self.get_oauth_token())
         friends = graph.get_connections("me", "friends")
         # TODO: Worry about paging
         # TODO: Bulk update?
         for f in friends['data']:
-            new_user, _ = AppUser.objects.get_or_create(facebook_id=f['id'])
-            self.friends.add(new_user)
+            app_user, _ = AppUser.objects.get_or_create(facebook_id=f['id'])
+            self.friends.add(app_user)
+            app_user.save()
 
     def get_name(self, graph=None):
         ''' Returns the tuple (first_name, last_name) from Facebook data'''
