@@ -40,7 +40,7 @@ class MobileApp(models.Model):
         Optional datetime parameter that gets number of users invited before that datetime. 
         '''
         return Suggestion.objects.filter(suggestion_list__app_user_membership__mobile_app=self,
-                                         invited=True,
+                                         times_invited__gt=0,
                                          created__lt=datetime).count()
 
 

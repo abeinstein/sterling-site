@@ -2,7 +2,8 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 
 from apps.models import MobileApp 
-from suggestions.models import AppUser, Algorithm, AppUserMembership, SuggestionList, Suggestion
+from suggestions.models import AppUser, Algorithm, AppUserMembership, SuggestionList, \
+    Suggestion, ALGORITHM_ALPHABETICAL
 
 STERLING_FACEBOOK_APP_ID = '466489223450195'
 user_facebook_id = '100006825758175'
@@ -10,8 +11,8 @@ user_facebook_id = '100006825758175'
 class SuggestionsAPITests(APITestCase):
     def setUp(self):
         self.algorithm = Algorithm.objects.create(
-            name="Bino algorithm",
-            algorithm_method_id=1
+            name="Alphabetical",
+            algorithm_method_id=ALGORITHM_ALPHABETICAL
         )
 
         self.mobile_app = MobileApp.objects.create(
@@ -87,6 +88,7 @@ class SuggestionsAPITests(APITestCase):
             'friends_seen': friends_seen,
             'friends_invited': friends_invited
         }
+
         response = self.client.post('/suggestions/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 

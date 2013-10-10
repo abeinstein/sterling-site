@@ -50,7 +50,8 @@ class AppUserLoginView(APIView):
             oauth_token = data['oauth_token']
             facebook_id = data['facebook_id']
         except KeyError:
-            return Response("Invalid request", status=status.HTTP_400_BAD_REQUEST)
+            error = {'error': "Invalid request"}
+            return Response(error, status=status.HTTP_400_BAD_REQUEST)
 
         app_user = self.get_object(facebook_id)
 
@@ -58,14 +59,16 @@ class AppUserLoginView(APIView):
         try:
             mobile_app = MobileApp.objects.get(pk=app_facebook_id)
         except ObjectDoesNotExist:
-            return Response("Mobile app does not exist", status=status.HTTP_400_BAD_REQUEST)
+            error = {'error': "Mobile app does not exist"}
+            return Response(error, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             app_user_membership, app_user_membership_created = AppUserMembership.objects.get_or_create(app_user=app_user, 
                                                                     mobile_app=mobile_app, 
                                                                     oauth_token=oauth_token)
         except:
-            return Response("AppUserMembership could not be saved", status=status.HTTP_400_BAD_REQUEST)
+            error = {'error': "AppUserMembership could not be saved"}
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
         # If it's a new user, create new AppUser objects for his friends
         app_user.update_friends() 
@@ -76,9 +79,10 @@ class AppUserLoginView(APIView):
             sl, sl_created = SuggestionList.objects.get_or_create(app_user_membership=app_user_membership,
                                                 algorithm=mobile_app.default_algorithm)
             #sl.generate_suggestions()
-            return Response("Success!", status=status.HTTP_201_CREATED)
+            return Response(status=status.HTTP_201_CREATED)
         else:
-            return Response("No default algorithm set", status=status.HTTP_400_BAD_REQUEST)
+            error = {'error': "No default algorithm set"}
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 class SuggestionsView(APIView):
@@ -118,7 +122,7 @@ class SuggestionsView(APIView):
 
     def post(self, request, format=None):
         ''' Captures person views and invites. Requires:
-        - suggestion_list_id (int)
+        - list_id (int)
         - friends_seen (list)
         - friends_invited (list)
         ''' 
