@@ -1,6 +1,4 @@
 import sleekxmpp
-import logging
-import ast
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -23,7 +21,6 @@ class SendMsgsBot(sleekxmpp.ClientXMPP):
         self.disconnect(wait=True)
 
 def send_invitations_via_facebook_message(sender, friends_invited, invitation_message, oauth_token, app_facebook_id):
-
     sender = sender + '@chat.facebook.com'
     xmpp = SendMsgsBot(sender, friends_invited, invitation_message)
     xmpp.credentials['api_key'] = app_facebook_id
