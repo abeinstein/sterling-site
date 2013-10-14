@@ -59,6 +59,10 @@ class AppUserMembership(models.Model):
     def __unicode__(self):
         return "%s: %s" % (self.mobile_app, self.app_user)
 
+    class Meta:
+        unique_together = ('app_user', 'mobile_app')
+
+
 
 class Algorithm(models.Model):
     ''' Represents an algorithm used to sort a list of users '''
@@ -93,6 +97,9 @@ class SuggestionList(models.Model):
 
     # def __unicode__(self):
     #     return "%s suggestions for %s" % (self.algorithm, self.app_user_membership) 
+
+    class Meta:
+        unique_together = ('app_user_membership', 'algorithm')
 
 
     def generate_suggestions(self):
@@ -141,7 +148,4 @@ class Suggestion(models.Model):
 
     class Meta:
         ordering = ['rank']
-
-
-
-
+        unique_together = ('suggestion_list', 'app_user')
