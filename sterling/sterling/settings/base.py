@@ -129,6 +129,8 @@ TEMPLATE_DIRS = (
     os.path.join(PROJECT_DIR, 'templates'),
 )
 
+import djcelery
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -189,7 +191,6 @@ TEST_RUNNER = 'discover_runner.DiscoverRunner'
 
 SOUTH_TESTS_MIGRATE = False # To disable migrations and use syncdb instead
 
-import djcelery
 djcelery.setup_loader()
 
 
