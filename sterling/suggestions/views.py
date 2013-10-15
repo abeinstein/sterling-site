@@ -13,7 +13,6 @@ from rest_framework.decorators import action
 from apps.models import MobileApp
 from suggestions.models import AppUser, AppUserMembership, Algorithm, SuggestionList, Suggestion
 from suggestions.serializers import AppUserSerializer, AppUserMembershipSerializer, AlgorithmSerializer, SuggestionListSerializer, SuggestionSerializer
-from models import generate_suggestions
 #from facebook_messaging.facebook_messenger import send_invitations_via_facebook_message
 
 class MultipleFieldLookupMixin(object):
