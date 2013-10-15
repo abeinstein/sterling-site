@@ -102,6 +102,7 @@ class SuggestionList(models.Model):
     class Meta:
         unique_together = ('app_user_membership', 'algorithm')
 
+    @task()
     def generate_suggestions(self):
         ''' Takes an AppUserMembership and calls an external function to 
         generate Suggestion objects '''
