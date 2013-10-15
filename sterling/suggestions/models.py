@@ -116,7 +116,7 @@ class SuggestionList(models.Model):
             # TODO: get_or_create? What happens when their friend list has changed?
             try:
                 app_user = AppUser.objects.get(facebook_id=friend_id)
-            except object.DoesNotExist:
+            except app_user.DoesNotExist:
                 return Exception("Appuser does not exist")
 
             Suggestion.objects.create(
