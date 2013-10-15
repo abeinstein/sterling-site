@@ -13,6 +13,7 @@ from rest_framework.decorators import action
 from apps.models import MobileApp
 from suggestions.models import AppUser, AppUserMembership, Algorithm, SuggestionList, Suggestion
 from suggestions.serializers import AppUserSerializer, AppUserMembershipSerializer, AlgorithmSerializer, SuggestionListSerializer, SuggestionSerializer
+from models.tasks import generate_suggestions
 #from facebook_messaging.facebook_messenger import send_invitations_via_facebook_message
 
 class MultipleFieldLookupMixin(object):
@@ -77,7 +78,7 @@ class AppUserLoginView(APIView):
             # This will go off and start running the default algorithm
             sl, sl_created = SuggestionList.objects.get_or_create(app_user_membership=app_user_membership,
                                                 algorithm=mobile_app.default_algorithm)
-            #sl.generate_suggestions()
+            sl.generate_suggestions().delay()
             return Response(status=status.HTTP_201_CREATED)
         else:
             error = {'error': "No default algorithm set"}
