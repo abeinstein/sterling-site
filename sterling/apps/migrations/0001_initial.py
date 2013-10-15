@@ -7,6 +7,10 @@ from django.db import models
 
 class Migration(SchemaMigration):
 
+    depends_on = (
+        ("suggestions", "0001_initial"),
+    )
+
     def forwards(self, orm):
         # Adding model 'MobileApp'
         db.create_table(u'apps_mobileapp', (
