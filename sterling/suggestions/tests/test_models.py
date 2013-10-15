@@ -9,8 +9,7 @@ class SuggestionsModelsTests(TestCase):
                                                     name="Rush: Go Greek",
                                                 )
         self.app_user = AppUser.objects.create(facebook_id="123414231",
-                                                first_name="Mitch",
-                                                last_name="Levy",
+                                                name="Mitch Levy",
                                             )
         self.app_user_membership = AppUserMembership.objects.create(app_user=self.app_user, 
                                         mobile_app=self.mobile_app,

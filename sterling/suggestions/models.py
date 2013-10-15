@@ -3,6 +3,7 @@ from django.db import models
 from django.db.models import get_model
 from suggestions.algorithms.algorithms import alphabetical
 from celery import task
+from algorithms.algorithms import *
 
 # ALGORITHM IDS
 ALGORITHM_TOY = 1
