@@ -1,5 +1,6 @@
 import facebook
 from django.db import models
+from django.db.models import get_model
 from suggestions.algorithms.algorithms import alphabetical
 
 # ALGORITHM IDS
@@ -60,9 +61,7 @@ class AppUserMembership(models.Model):
         return "%s: %s" % (self.mobile_app, self.app_user)
 
     class Meta:
-        unique_together = ('app_user', 'mobile_app')
-
-
+        unique_together = ('app_user', 'mobile_app' )
 
 class Algorithm(models.Model):
     ''' Represents an algorithm used to sort a list of users '''
