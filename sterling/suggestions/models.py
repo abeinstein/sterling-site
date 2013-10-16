@@ -35,23 +35,25 @@ class AppUser(models.Model):
         # TODO: Worry about paging
         # TODO: Bulk update?
 
-        new_app_user_friends = []
+        friendships = []
 
         print "adding old friend relations: " + str(datetime.datetime.now())
         for f in friends['data']:
             try:
                 app_user = AppUser.objects.get(facebook_id=f['id'])
-                self.friends.add(AppUser.objects.get(facebook_id=app_user.facebook_id))
+                friendships += AppUser.objects.get(facebook_id=app_user.facebook_id)
             except ObjectDoesNotExist:
                 app_user = AppUser(facebook_id = f['id'])
-                new_app_user_friends.append(app_user)
+                new_friends.append(app_user)
 
         print "calling bulk create: " + str(datetime.datetime.now())
-        AppUser.objects.bulk_create(new_app_user_friends)
+        AppUser.objects.bulk_create(new_friends)
 
         print "adding new friend relationships: " + str(datetime.datetime.now())
-        for app_user in new_app_user_friends:
-            self.friends.add(AppUser.objects.get(facebook_id=app_user.facebook_id))
+        for app_user in new_friends:
+            friendships += AppUser.objects.get(facebook_id=app_user.facebook_id)
+
+        self.friends.add(*friendships)
         print "done with update friends: " + str(datetime.datetime.now())
 
 
