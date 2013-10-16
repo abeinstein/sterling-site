@@ -34,8 +34,8 @@ class AppUser(models.Model):
         friends = graph.get_connections("me", "friends")
         # TODO: Worry about paging
         # TODO: Bulk update?
-
         friendships = []
+        new_friends = []
 
         print "adding old friend relations: " + str(datetime.datetime.now())
         for f in friends['data']:
