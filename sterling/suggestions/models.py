@@ -1,4 +1,5 @@
 import facebook
+import datetime
 from django.db import models
 from django.db.models import get_model
 from suggestions.algorithms.algorithms import alphabetical
