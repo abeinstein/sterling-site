@@ -133,20 +133,24 @@ class SuggestionList(models.Model):
         
         # This is where the magic happens
         ordered_facebook_ids = self.algorithm.algorithm(facebook_id, oauth_token)
+        suggestions = []
         
         for rank, friend_id in enumerate(ordered_facebook_ids):
-            print "Lots of problems here? " + str(datetime.datetime.now())
             # TODO: get_or_create? What happens when their friend list has changed?
             try:
                 app_user = AppUser.objects.get(facebook_id=friend_id)
             except AppUser.DoesNotExist:
                 return Exception("Appuser does not exist")
 
-            Suggestion.objects.get_or_create(
+            suggestion = Suggestion(
                     suggestion_list=self,
                     app_user=app_user,
                     rank=rank
             )
+            suggestions.append(suggestion)
+
+        Suggestion.objects.bulk_create(suggestions)
+
 
 
 class Suggestion(models.Model):
