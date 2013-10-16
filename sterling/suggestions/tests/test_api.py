@@ -51,7 +51,6 @@ class SuggestionsAPITests(APITestCase):
         response = self.client.post('/appUserLogin/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-
         # Test that an AppUser was actually created
         user = AppUser.objects.get(facebook_id=user_facebook_id)
         self.assertEqual(isinstance(user, AppUser), True)

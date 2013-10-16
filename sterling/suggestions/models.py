@@ -4,6 +4,7 @@ from django.db.models import get_model
 from suggestions.algorithms.algorithms import alphabetical
 from celery import task
 from algorithms.algorithms import *
+from django.core.exceptions import ObjectDoesNotExist
 
 # ALGORITHM IDS
 ALGORITHM_TOY = 1
@@ -32,10 +33,22 @@ class AppUser(models.Model):
         friends = graph.get_connections("me", "friends")
         # TODO: Worry about paging
         # TODO: Bulk update?
+
+        new_app_user_friends = []
+
         for f in friends['data']:
-            app_user, _ = AppUser.objects.get_or_create(facebook_id=f['id'])
-            self.friends.add(app_user)
-            app_user.save()
+            try:
+                app_user = AppUser.objects.get(facebook_id=f['id'])
+                self.friends.add(AppUser.objects.get(facebook_id=app_user.facebook_id))
+            except ObjectDoesNotExist:
+                app_user = AppUser(facebook_id = f['id'])
+                new_app_user_friends.append(app_user)
+        
+        AppUser.objects.bulk_create(new_app_user_friends)
+        for app_user in new_app_user_friends:
+            self.friends.add(AppUser.objects.get(facebook_id=app_user.facebook_id))
+
+
 
     def get_name(self, graph=None):
         ''' Returns the tuple (first_name, last_name) from Facebook data'''
