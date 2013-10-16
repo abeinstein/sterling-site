@@ -139,7 +139,7 @@ class SuggestionList(models.Model):
             except AppUser.DoesNotExist:
                 return Exception("Appuser does not exist")
 
-            Suggestion.objects.create(
+            Suggestion.objects.get_or_create(
                     suggestion_list=self,
                     app_user=app_user,
                     rank=rank
