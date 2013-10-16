@@ -43,7 +43,7 @@ class AppUserLoginView(APIView):
         'oauth_token': OAuth Token for the particular user
         'facebook_id': Facebook ID of the user
         '''
-        print "start: " + datetime.datetime.now()
+        print "start: " + str(datetime.datetime.now())
         data = request.DATA
         try:
             app_facebook_id = data['app_facebook_id']
@@ -71,7 +71,7 @@ class AppUserLoginView(APIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         # If it's a new user, create new AppUser objects for his friends
-        print "update friends called: " + datetime.datetime.now()
+        print "update friends called: " + str(datetime.datetime.now())
         app_user.update_friends() 
 
         if mobile_app.default_algorithm:
@@ -79,9 +79,9 @@ class AppUserLoginView(APIView):
             # This will go off and start running the default algorithm
             sl, sl_created = SuggestionList.objects.get_or_create(app_user_membership=app_user_membership,
                                                 algorithm=mobile_app.default_algorithm)
-            print "calling generate suggestions: " + datetime.datetime.now()
+            print "calling generate suggestions: " + str(datetime.datetime.now())
             sl.generate_suggestions()
-            print "generated suggestions: " + datetime.datetime.now()
+            print "generated suggestions: " + str(datetime.datetime.now())
             return Response(status=status.HTTP_201_CREATED)
         else:
             error = {'error': "No default algorithm set"}
