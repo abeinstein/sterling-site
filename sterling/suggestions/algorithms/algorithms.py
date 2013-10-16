@@ -14,7 +14,3 @@ def alphabetical(facebook_id, oauth_token):
     sorted_friends = sorted(friends['data'], key=lambda d: d['name'])
     return [d['id'] for d in sorted_friends]
 
-
-
-
-
