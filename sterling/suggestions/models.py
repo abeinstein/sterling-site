@@ -41,7 +41,7 @@ class AppUser(models.Model):
         for f in friends['data']:
             try:
                 app_user = AppUser.objects.get(facebook_id=f['id'])
-                friendships += AppUser.objects.get(facebook_id=app_user.facebook_id)
+                friendships.append(app_user)
             except ObjectDoesNotExist:
                 app_user = AppUser(facebook_id = f['id'])
                 new_friends.append(app_user)
@@ -51,7 +51,7 @@ class AppUser(models.Model):
 
         print "adding new friend relationships: " + str(datetime.datetime.now())
         for app_user in new_friends:
-            friendships += AppUser.objects.get(facebook_id=app_user.facebook_id)
+            friendships.append(AppUser.objects.get(facebook_id=app_user.facebook_id))
 
         self.friends.add(*friendships)
         print "done with update friends: " + str(datetime.datetime.now())
