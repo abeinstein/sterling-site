@@ -135,6 +135,7 @@ class SuggestionList(models.Model):
         ordered_facebook_ids = self.algorithm.algorithm(facebook_id, oauth_token)
         
         for rank, friend_id in enumerate(ordered_facebook_ids):
+            print "Lots of problems here? " + str(datetime.datetime.now())
             # TODO: get_or_create? What happens when their friend list has changed?
             try:
                 app_user = AppUser.objects.get(facebook_id=friend_id)
