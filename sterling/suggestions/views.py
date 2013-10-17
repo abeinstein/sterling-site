@@ -60,6 +60,9 @@ class AppUserLoginView(APIView):
             error = {'error': "Mobile app does not exist"}
             return Response(error, status=status.HTTP_400_BAD_REQUEST)
 
+        
+
+
         try:
             app_user_membership, app_user_membership_created = AppUserMembership.objects.get_or_create(app_user=app_user, 
                                                                     mobile_app=mobile_app, 
@@ -67,6 +70,10 @@ class AppUserLoginView(APIView):
         except:
             error = {'error': "AppUserMembership could not be saved"}
             return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(status=status.HTTP_201_CREATED)
+
+    def app_user_login(self, app_user, mobile_app, app_user_membership):
 
         # If it's a new user, create new AppUser objects for his friends
         app_user.update_friends() 
@@ -77,7 +84,7 @@ class AppUserLoginView(APIView):
             sl, sl_created = SuggestionList.objects.get_or_create(app_user_membership=app_user_membership,
                                                 algorithm=mobile_app.default_algorithm)
             #sl.generate_suggestions()
-            return Response(status=status.HTTP_201_CREATED)
+            
         else:
             error = {'error': "No default algorithm set"}
             return Response(status=status.HTTP_400_BAD_REQUEST)
