@@ -13,6 +13,7 @@ from rest_framework.decorators import action
 from apps.models import MobileApp
 from suggestions.models import AppUser, AppUserMembership, Algorithm, SuggestionList, Suggestion
 from suggestions.serializers import AppUserSerializer, AppUserMembershipSerializer, AlgorithmSerializer, SuggestionListSerializer, SuggestionSerializer
+#from facebook_messaging.facebook_messenger import send_invitations_via_facebook_message
 
 class MultipleFieldLookupMixin(object):
     """
@@ -42,6 +43,7 @@ class AppUserLoginView(APIView):
         'oauth_token': OAuth Token for the particular user
         'facebook_id': Facebook ID of the user
         '''
+        print "start: " + str(datetime.datetime.now())
         data = request.DATA
         try:
             app_facebook_id = data['app_facebook_id']
@@ -76,6 +78,7 @@ class AppUserLoginView(APIView):
     def app_user_login(self, app_user, mobile_app, app_user_membership):
 
         # If it's a new user, create new AppUser objects for his friends
+        print "update friends called: " + str(datetime.datetime.now())
         app_user.update_friends() 
 
         if mobile_app.default_algorithm:
@@ -83,8 +86,15 @@ class AppUserLoginView(APIView):
             # This will go off and start running the default algorithm
             sl, sl_created = SuggestionList.objects.get_or_create(app_user_membership=app_user_membership,
                                                 algorithm=mobile_app.default_algorithm)
+<<<<<<< HEAD
             #sl.generate_suggestions()
             
+=======
+            print "calling generate suggestions: " + str(datetime.datetime.now())
+            sl.generate_suggestions()
+            print "generated suggestions: " + str(datetime.datetime.now())
+            return Response(status=status.HTTP_201_CREATED)
+>>>>>>> 673b28ccb510531290d2a5d8df11ab267cf1219f
         else:
             error = {'error': "No default algorithm set"}
             return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -124,7 +134,6 @@ class SuggestionsView(APIView):
 
         return Response(response_data, status=status.HTTP_200_OK)
 
-
     def post(self, request, format=None):
         ''' Captures person views and invites. Requires:
         - list_id (int)
@@ -147,7 +156,14 @@ class SuggestionsView(APIView):
             return Response("Suggestion List could not be found", 
                             status=status.HTTP_400_BAD_REQUEST)
 
-        # FUCK YES!!
+
+        '''Sends invitations through facebook messaging using XMPP client'''
+        #invitations_sent = send_invitations_via_facebook_message(sender=suggestion_list.app_user_membership.app_user.facebook_id, 
+        #                                                        friends_invited=friends_invited, 
+        #                                                        invitation_message=suggestion_list.app_user_membership.mobile_app.invitation_message, 
+        #                                                        oauth_token=suggestion_list.app_user_membership.oauth_token,
+        #                                                        app_facebook_id=suggestion_list.app_user_membership.mobile_app.facebook_id)
+
         Suggestion.objects.filter(
             suggestion_list=suggestion_list,
             app_user__facebook_id__in=friends_seen
@@ -165,8 +181,6 @@ class SuggestionsView(APIView):
         )
 
         return Response(status=status.HTTP_200_OK)
-
-
 
 ###
 # Model Viewsets

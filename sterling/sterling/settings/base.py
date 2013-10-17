@@ -129,6 +129,8 @@ TEMPLATE_DIRS = (
     os.path.join(PROJECT_DIR, 'templates'),
 )
 
+import djcelery
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -148,6 +150,7 @@ INSTALLED_APPS = (
     'rest_framework',
     'annoying',
     'suggestions',
+    'djcelery',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -187,6 +190,9 @@ LOGIN_REDIRECT_URL = '/apps/'
 TEST_RUNNER = 'discover_runner.DiscoverRunner'
 
 SOUTH_TESTS_MIGRATE = False # To disable migrations and use syncdb instead
+
+djcelery.setup_loader()
+
 
 
 

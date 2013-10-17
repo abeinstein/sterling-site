@@ -1,6 +1,11 @@
 import facebook
+import datetime
 from django.db import models
+from django.db.models import get_model
 from suggestions.algorithms.algorithms import alphabetical
+from celery import task
+from algorithms.algorithms import *
+from django.core.exceptions import ObjectDoesNotExist
 
 # ALGORITHM IDS
 ALGORITHM_TOY = 1
@@ -29,10 +34,29 @@ class AppUser(models.Model):
         friends = graph.get_connections("me", "friends")
         # TODO: Worry about paging
         # TODO: Bulk update?
+        friendships = []
+        new_friends = []
+
+        print "adding old friend relations: " + str(datetime.datetime.now())
         for f in friends['data']:
-            app_user, _ = AppUser.objects.get_or_create(facebook_id=f['id'])
-            self.friends.add(app_user)
-            app_user.save()
+            try:
+                app_user = AppUser.objects.get(facebook_id=f['id'])
+                friendships.append(app_user)
+            except ObjectDoesNotExist:
+                app_user = AppUser(facebook_id = f['id'])
+                new_friends.append(app_user)
+
+        print "calling bulk create: " + str(datetime.datetime.now())
+        AppUser.objects.bulk_create(new_friends)
+
+        print "adding new friend relationships: " + str(datetime.datetime.now())
+        for app_user in new_friends:
+            friendships.append(AppUser.objects.get(facebook_id=app_user.facebook_id))
+
+        self.friends.add(*friendships)
+        print "done with update friends: " + str(datetime.datetime.now())
+
+
 
     def get_name(self, graph=None):
         ''' Returns the tuple (first_name, last_name) from Facebook data'''
@@ -59,6 +83,8 @@ class AppUserMembership(models.Model):
     def __unicode__(self):
         return "%s: %s" % (self.mobile_app, self.app_user)
 
+    class Meta:
+        unique_together = ('app_user', 'mobile_app')
 
 class Algorithm(models.Model):
     ''' Represents an algorithm used to sort a list of users '''
@@ -94,7 +120,10 @@ class SuggestionList(models.Model):
     # def __unicode__(self):
     #     return "%s suggestions for %s" % (self.algorithm, self.app_user_membership) 
 
+    class Meta:
+        unique_together = ('app_user_membership', 'algorithm')
 
+    #@task()
     def generate_suggestions(self):
         ''' Takes an AppUserMembership and calls an external function to 
         generate Suggestion objects '''
@@ -104,19 +133,24 @@ class SuggestionList(models.Model):
         
         # This is where the magic happens
         ordered_facebook_ids = self.algorithm.algorithm(facebook_id, oauth_token)
+        suggestions = []
         
         for rank, friend_id in enumerate(ordered_facebook_ids):
             # TODO: get_or_create? What happens when their friend list has changed?
             try:
                 app_user = AppUser.objects.get(facebook_id=friend_id)
-            except object.DoesNotExist:
+            except AppUser.DoesNotExist:
                 return Exception("Appuser does not exist")
 
-            Suggestion.objects.create(
+            suggestion = Suggestion(
                     suggestion_list=self,
                     app_user=app_user,
                     rank=rank
             )
+            suggestions.append(suggestion)
+
+        Suggestion.objects.bulk_create(suggestions)
+
 
 
 class Suggestion(models.Model):
@@ -141,7 +175,4 @@ class Suggestion(models.Model):
 
     class Meta:
         ordering = ['rank']
-
-
-
-
+        unique_together = ('suggestion_list', 'app_user')

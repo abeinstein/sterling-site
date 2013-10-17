@@ -7,22 +7,99 @@ from django.db import models
 
 class Migration(SchemaMigration):
 
-    def forwards(self, orm):
+    depends_on = (
+        ("apps", "0001_initial"),
+    )
 
-        # Changing field 'AppUser.name'
-        db.alter_column(u'suggestions_appuser', 'name', self.gf('django.db.models.fields.CharField')(max_length=1000, null=True))
-        # Adding field 'Algorithm.algorithm_method_id'
-        db.add_column(u'suggestions_algorithm', 'algorithm_method_id',
-                      self.gf('django.db.models.fields.PositiveIntegerField')(default=0),
-                      keep_default=False)
+    def forwards(self, orm):
+        # Adding model 'AppUser'
+        db.create_table(u'suggestions_appuser', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('facebook_id', self.gf('django.db.models.fields.CharField')(unique=True, max_length=50)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=1000, null=True, blank=True)),
+            ('created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
+        ))
+        db.send_create_signal(u'suggestions', ['AppUser'])
+
+        # Adding M2M table for field friends on 'AppUser'
+        m2m_table_name = db.shorten_name(u'suggestions_appuser_friends')
+        db.create_table(m2m_table_name, (
+            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('from_appuser', models.ForeignKey(orm[u'suggestions.appuser'], null=False)),
+            ('to_appuser', models.ForeignKey(orm[u'suggestions.appuser'], null=False))
+        ))
+        db.create_unique(m2m_table_name, ['from_appuser_id', 'to_appuser_id'])
+
+        # Adding model 'AppUserMembership'
+        db.create_table(u'suggestions_appusermembership', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('app_user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['suggestions.AppUser'])),
+            ('mobile_app', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['apps.MobileApp'])),
+            ('oauth_token', self.gf('django.db.models.fields.TextField')()),
+            ('created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
+        ))
+        db.send_create_signal(u'suggestions', ['AppUserMembership'])
+
+        # Adding unique constraint on 'AppUserMembership', fields ['app_user', 'mobile_app']
+        db.create_unique(u'suggestions_appusermembership', ['app_user_id', 'mobile_app_id'])
+
+        # Adding model 'SuggestionList'
+        db.create_table(u'suggestions_suggestionlist', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('app_user_membership', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['suggestions.AppUserMembership'])),
+            ('algorithm', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['suggestions.Algorithm'])),
+            ('created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
+            ('presented_count', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
+        ))
+        db.send_create_signal(u'suggestions', ['SuggestionList'])
+
+        # Adding unique constraint on 'SuggestionList', fields ['app_user_membership', 'algorithm']
+        db.create_unique(u'suggestions_suggestionlist', ['app_user_membership_id', 'algorithm_id'])
+
+        # Adding model 'Suggestion'
+        db.create_table(u'suggestions_suggestion', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('suggestion_list', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['suggestions.SuggestionList'])),
+            ('app_user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['suggestions.AppUser'])),
+            ('rank', self.gf('django.db.models.fields.PositiveIntegerField')()),
+            ('times_presented', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
+            ('last_presented_date', self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True)),
+            ('times_invited', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
+            ('last_invited_date', self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True)),
+            ('accepted', self.gf('django.db.models.fields.BooleanField')(default=False)),
+            ('accepted_date', self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True)),
+            ('created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
+        ))
+        db.send_create_signal(u'suggestions', ['Suggestion'])
+
+        # Adding unique constraint on 'Suggestion', fields ['suggestion_list', 'app_user']
+        db.create_unique(u'suggestions_suggestion', ['suggestion_list_id', 'app_user_id'])
 
 
     def backwards(self, orm):
+        # Removing unique constraint on 'Suggestion', fields ['suggestion_list', 'app_user']
+        db.delete_unique(u'suggestions_suggestion', ['suggestion_list_id', 'app_user_id'])
 
-        # Changing field 'AppUser.name'
-        db.alter_column(u'suggestions_appuser', 'name', self.gf('django.db.models.fields.CharField')(max_length=100, null=True))
-        # Deleting field 'Algorithm.algorithm_method_id'
-        db.delete_column(u'suggestions_algorithm', 'algorithm_method_id')
+        # Removing unique constraint on 'SuggestionList', fields ['app_user_membership', 'algorithm']
+        db.delete_unique(u'suggestions_suggestionlist', ['app_user_membership_id', 'algorithm_id'])
+
+        # Removing unique constraint on 'AppUserMembership', fields ['app_user', 'mobile_app']
+        db.delete_unique(u'suggestions_appusermembership', ['app_user_id', 'mobile_app_id'])
+
+        # Deleting model 'AppUser'
+        db.delete_table(u'suggestions_appuser')
+
+        # Removing M2M table for field friends on 'AppUser'
+        db.delete_table(db.shorten_name(u'suggestions_appuser_friends'))
+
+        # Deleting model 'AppUserMembership'
+        db.delete_table(u'suggestions_appusermembership')
+
+        # Deleting model 'SuggestionList'
+        db.delete_table(u'suggestions_suggestionlist')
+
+        # Deleting model 'Suggestion'
+        db.delete_table(u'suggestions_suggestion')
 
 
     models = {
@@ -90,14 +167,14 @@ class Migration(SchemaMigration):
         u'suggestions.appuser': {
             'Meta': {'object_name': 'AppUser'},
             'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'facebook_id': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
+            'facebook_id': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '50'}),
             'friends': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'friends_rel_+'", 'to': u"orm['suggestions.AppUser']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'mobile_apps': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['apps.MobileApp']", 'through': u"orm['suggestions.AppUserMembership']", 'symmetrical': 'False'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '1000', 'null': 'True', 'blank': 'True'})
         },
         u'suggestions.appusermembership': {
-            'Meta': {'object_name': 'AppUserMembership'},
+            'Meta': {'unique_together': "(('app_user', 'mobile_app'),)", 'object_name': 'AppUserMembership'},
             'algorithms': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['suggestions.Algorithm']", 'through': u"orm['suggestions.SuggestionList']", 'symmetrical': 'False'}),
             'app_user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['suggestions.AppUser']"}),
             'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
@@ -106,22 +183,21 @@ class Migration(SchemaMigration):
             'oauth_token': ('django.db.models.fields.TextField', [], {})
         },
         u'suggestions.suggestion': {
-            'Meta': {'object_name': 'Suggestion'},
+            'Meta': {'ordering': "['rank']", 'unique_together': "(('suggestion_list', 'app_user'),)", 'object_name': 'Suggestion'},
             'accepted': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'accepted_date': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
             'app_user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['suggestions.AppUser']"}),
             'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'first_presentation_date': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'invited': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'invited_date': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
-            'last_presentation_date': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
-            'presented': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'last_invited_date': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
+            'last_presented_date': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
             'rank': ('django.db.models.fields.PositiveIntegerField', [], {}),
-            'suggestion_list': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['suggestions.SuggestionList']"})
+            'suggestion_list': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['suggestions.SuggestionList']"}),
+            'times_invited': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
+            'times_presented': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'})
         },
         u'suggestions.suggestionlist': {
-            'Meta': {'object_name': 'SuggestionList'},
+            'Meta': {'unique_together': "(('app_user_membership', 'algorithm'),)", 'object_name': 'SuggestionList'},
             'algorithm': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['suggestions.Algorithm']"}),
             'app_user_membership': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['suggestions.AppUserMembership']"}),
             'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
