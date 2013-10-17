@@ -1,4 +1,5 @@
 import sleekxmpp
+import logging
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -27,8 +28,6 @@ def send_invitations_via_facebook_message(sender, friends_invited, invitation_me
     xmpp.credentials['access_token'] = oauth_token
         
     if xmpp.connect(server):
-        import pdb; pdb.set_trace()
-
         xmpp.process(block=True)
         return True
     else:

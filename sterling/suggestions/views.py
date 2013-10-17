@@ -13,7 +13,7 @@ from rest_framework.decorators import action
 from apps.models import MobileApp
 from suggestions.models import AppUser, AppUserMembership, Algorithm, SuggestionList, Suggestion
 from suggestions.serializers import AppUserSerializer, AppUserMembershipSerializer, AlgorithmSerializer, SuggestionListSerializer, SuggestionSerializer
-#from facebook_messaging.facebook_messenger import send_invitations_via_facebook_message
+from helpers.facebook_messenger import send_invitations_via_facebook_message
 
 class MultipleFieldLookupMixin(object):
     """
@@ -43,7 +43,6 @@ class AppUserLoginView(APIView):
         'oauth_token': OAuth Token for the particular user
         'facebook_id': Facebook ID of the user
         '''
-        print "start: " + str(datetime.datetime.now())
         data = request.DATA
         try:
             app_facebook_id = data['app_facebook_id']
@@ -62,23 +61,20 @@ class AppUserLoginView(APIView):
             error = {'error': "Mobile app does not exist"}
             return Response(error, status=status.HTTP_400_BAD_REQUEST)
 
-        
-
-
         try:
             app_user_membership, app_user_membership_created = AppUserMembership.objects.get_or_create(app_user=app_user, 
                                                                     mobile_app=mobile_app, 
                                                                     oauth_token=oauth_token)
         except:
             error = {'error': "AppUserMembership could not be saved"}
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(error, status=status.HTTP_400_BAD_REQUEST)
 
+        self.app_user_login(app_user, mobile_app, app_user_membership)
         return Response(status=status.HTTP_201_CREATED)
 
     def app_user_login(self, app_user, mobile_app, app_user_membership):
 
         # If it's a new user, create new AppUser objects for his friends
-        print "update friends called: " + str(datetime.datetime.now())
         app_user.update_friends() 
 
         if mobile_app.default_algorithm:
@@ -86,18 +82,13 @@ class AppUserLoginView(APIView):
             # This will go off and start running the default algorithm
             sl, sl_created = SuggestionList.objects.get_or_create(app_user_membership=app_user_membership,
                                                 algorithm=mobile_app.default_algorithm)
-<<<<<<< HEAD
-            #sl.generate_suggestions()
-            
-=======
-            print "calling generate suggestions: " + str(datetime.datetime.now())
+
             sl.generate_suggestions()
-            print "generated suggestions: " + str(datetime.datetime.now())
             return Response(status=status.HTTP_201_CREATED)
->>>>>>> 673b28ccb510531290d2a5d8df11ab267cf1219f
+        
         else:
             error = {'error': "No default algorithm set"}
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(error, status=status.HTTP_400_BAD_REQUEST)
 
 
 class SuggestionsView(APIView):
@@ -109,18 +100,19 @@ class SuggestionsView(APIView):
             app_facebook_id = data['app_facebook_id']
             facebook_id = data['facebook_id']
         except KeyError:
-            return Response("Invalid request", status=status.HTTP_400_BAD_REQUEST)
+            error = {'error': "Invalid request"}
+            return Response(error, status=status.HTTP_400_BAD_REQUEST)
 
         # Get objects
         try:
             app_user = AppUser.objects.get(facebook_id=facebook_id)
             mobile_app = MobileApp.objects.get(pk=app_facebook_id)
         except ObjectDoesNotExist:
-            return Response("AppUser or Mobile App does not exist", status=status.HTTP_400_BAD_REQUEST)
+            error = {'error': "AppUser or Mobile App does not exist"}
+            return Response(error, status=status.HTTP_400_BAD_REQUEST)
 
         app_user_membership = AppUserMembership.objects.get(app_user=app_user,
                                                             mobile_app=mobile_app)
-
         # Gets first suggestion list
         # TODO -- more intelligent suggestion list choosing mechanism
         suggestion_list = app_user_membership.suggestionlist_set.all()[0]
@@ -147,22 +139,24 @@ class SuggestionsView(APIView):
             friends_seen = data['friends_seen']
             friends_invited = data['friends_invited']
         except KeyError:
-            return Response("Invalid request",
+            error = {'error': "Invalid request"}
+            return Response(error,
                             status=status.HTTP_400_BAD_REQUEST)
 
         try:
             suggestion_list = SuggestionList.objects.get(id=suggestion_list_id)
         except SuggestionList.DoesNotExist:
-            return Response("Suggestion List could not be found", 
+            error = {'error': "Suggestion List could not be found"}
+            return Response(error, 
                             status=status.HTTP_400_BAD_REQUEST)
 
 
         '''Sends invitations through facebook messaging using XMPP client'''
-        #invitations_sent = send_invitations_via_facebook_message(sender=suggestion_list.app_user_membership.app_user.facebook_id, 
-        #                                                        friends_invited=friends_invited, 
-        #                                                        invitation_message=suggestion_list.app_user_membership.mobile_app.invitation_message, 
-        #                                                        oauth_token=suggestion_list.app_user_membership.oauth_token,
-        #                                                        app_facebook_id=suggestion_list.app_user_membership.mobile_app.facebook_id)
+        invitations_sent = send_invitations_via_facebook_message(sender=suggestion_list.app_user_membership.app_user.facebook_id, 
+                                                               friends_invited=friends_invited, 
+                                                               invitation_message=suggestion_list.app_user_membership.mobile_app.invitation_message, 
+                                                               oauth_token=suggestion_list.app_user_membership.oauth_token,
+                                                               app_facebook_id=suggestion_list.app_user_membership.mobile_app.facebook_id)
 
         Suggestion.objects.filter(
             suggestion_list=suggestion_list,

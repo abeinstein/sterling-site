@@ -37,7 +37,6 @@ class AppUser(models.Model):
         friendships = []
         new_friends = []
 
-        print "adding old friend relations: " + str(datetime.datetime.now())
         for f in friends['data']:
             try:
                 app_user = AppUser.objects.get(facebook_id=f['id'])
@@ -46,15 +45,12 @@ class AppUser(models.Model):
                 app_user = AppUser(facebook_id = f['id'])
                 new_friends.append(app_user)
 
-        print "calling bulk create: " + str(datetime.datetime.now())
         AppUser.objects.bulk_create(new_friends)
 
-        print "adding new friend relationships: " + str(datetime.datetime.now())
         for app_user in new_friends:
             friendships.append(AppUser.objects.get(facebook_id=app_user.facebook_id))
 
         self.friends.add(*friendships)
-        print "done with update friends: " + str(datetime.datetime.now())
 
 
 
