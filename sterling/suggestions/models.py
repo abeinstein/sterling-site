@@ -42,7 +42,7 @@ class AppUser(models.Model):
                 app_user = AppUser.objects.get(facebook_id=f['id'])
                 friendships.append(app_user)
             except ObjectDoesNotExist:
-                app_user = AppUser(facebook_id = f['id'])
+                app_user = AppUser(facebook_id = f['id'], name=f['name'])
                 new_friends.append(app_user)
 
         AppUser.objects.bulk_create(new_friends)
