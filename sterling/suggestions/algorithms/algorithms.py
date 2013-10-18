@@ -14,3 +14,8 @@ def alphabetical(facebook_id, oauth_token):
     sorted_friends = sorted(friends['data'], key=lambda d: d['name'])
     return [d['id'] for d in sorted_friends]
 
+def beinstein_1(facebook_id, oauth_token):
+    ''' My first attempt at a fancy algorithm '''
+    graph = facebook.GraphAPI(oauth_token)
+
+    

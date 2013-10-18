@@ -83,7 +83,8 @@ class AppUserLoginView(APIView):
             sl, sl_created = SuggestionList.objects.get_or_create(app_user_membership=app_user_membership,
                                                 algorithm=mobile_app.default_algorithm)
 
-            sl.generate_suggestions()
+            if sl_created:
+                sl.generate_suggestions()
             return Response(status=status.HTTP_201_CREATED)
         
         else:
