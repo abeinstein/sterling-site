@@ -118,6 +118,7 @@ class SuggestionsView(APIView):
         # TODO -- more intelligent suggestion list choosing mechanism
         suggestion_list = app_user_membership.suggestionlist_set.all()[0]
         friends = suggestion_list.suggested_friends.all().order_by('suggestion__rank')
+        print "Faceboook friends: ", friends
 
         # TODO: Custom friend suggestion serializer that takes a suggestion list?
         response_data = {'list_id': suggestion_list.pk, 'friends': []}

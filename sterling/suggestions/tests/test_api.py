@@ -66,6 +66,11 @@ class SuggestionsAPITests(APITestCase):
         self.assertEqual(response.status_code, 200)
 
         self.assertListEqual(response.data.keys(), ['friends', 'list_id'])
+        
+        # Check that all names exist
+        names = [f['name'] for f in response.data['friends']]
+        import pdb; pdb.set_trace()
+        self.assertNotIn(None, names)
 
     def test_post_suggestion_list(self):
         all_friends = self.appUser.friends.all().values_list('facebook_id', flat=True)
