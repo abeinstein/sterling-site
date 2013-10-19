@@ -4,6 +4,7 @@ from django.db.models import F
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.timezone import now
+from django.http import HttpResponseRedirect
 
 from rest_framework import viewsets, status
 from rest_framework.views import APIView
@@ -154,11 +155,15 @@ class SuggestionsView(APIView):
 
 
         '''Sends invitations through facebook messaging using XMPP client'''
-        invitations_sent = send_invitations_via_facebook_message(sender=suggestion_list.app_user_membership.app_user.facebook_id, 
+        mobile_app = suggestion_list.app_user_membership.mobile_app
+        app_user = suggestion_list.app_user_membership.app_user
+        invitation_message = mobile_app.invitation_message
+        invitation_message += " %s" % mobile_app.link
+        invitations_sent = send_invitations_via_facebook_message(sender=app_user.facebook_id, 
                                                                friends_invited=friends_invited, 
-                                                               invitation_message=suggestion_list.app_user_membership.mobile_app.invitation_message, 
+                                                               invitation_message=invitation_message, 
                                                                oauth_token=suggestion_list.app_user_membership.oauth_token,
-                                                               app_facebook_id=suggestion_list.app_user_membership.mobile_app.facebook_id)
+                                                               app_facebook_id=mobile_app.facebook_id)
 
         Suggestion.objects.filter(
             suggestion_list=suggestion_list,
@@ -177,6 +182,41 @@ class SuggestionsView(APIView):
         )
 
         return Response(status=status.HTTP_200_OK)
+
+class InvitationsView(APIView):
+    def get(self, request, format=None):
+        data = request.QUERY_PARAMS
+
+        try: 
+            suggestion_id = data['suggestion']
+        except KeyError:
+            error = {'error': 'Malformed request. Need suggestion parameter'}
+            return Response(error, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            suggestion = Suggestion.objects.get(pk=suggestion_id)
+        except Suggestion.DoesNotExist:
+            error = {'error': "Could not find Suggestion object"}
+            return Response(error, status=status.HTTP_400_BAD_REQUEST)
+
+        suggestion.clicked = True
+        suggestion.clicked_date = now()
+
+        # TODO: Is this unacceptably slow? If so, figure out something else
+        link = suggestion.suggestion_list.app_user_membership.mobile_app.link
+        suggestion.save()
+
+        if link:
+            return HttpResponseRedirect(link)
+        else:
+            error = {'error': "Mobile app does not have a link"}
+            return Response(error)
+
+
+
+
+
+
 
 ###
 # Model Viewsets

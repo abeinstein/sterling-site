@@ -19,7 +19,8 @@ class SuggestionsAPITests(APITestCase):
             facebook_id=STERLING_FACEBOOK_APP_ID,
             name="Rush: Go Greek",
             invitation_message="Be the top frat on campus!",
-            default_algorithm=self.algorithm
+            default_algorithm=self.algorithm,
+            link="http://itunes.com/apps/AdamGluck/Rush:GoGreek"
         )
 
         self.appUser = AppUser.objects.create(
@@ -69,7 +70,6 @@ class SuggestionsAPITests(APITestCase):
         
         # Check that all names exist
         names = [f['name'] for f in response.data['friends']]
-        import pdb; pdb.set_trace()
         self.assertNotIn(None, names)
 
     def test_post_suggestion_list(self):
@@ -109,7 +109,15 @@ class SuggestionsAPITests(APITestCase):
         self.assertListEqual(map(lambda x: x+1, before_times_presented), list(after_times_presented))
         self.assertListEqual(map(lambda x: x+1, before_times_invited), list(after_times_invited))
 
-        # Check that suggestion objects were updated
+    def test_invitation_redirect(self):
+        sug = Suggestion.objects.all()[0] # Get first one
+        response = self.client.get('/invitations/?suggestion=%s' % sug.pk)
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+
+        self.assertEqual(response['Location'], sug.suggestion_list.app_user_membership.mobile_app.link)
+        new_sug = Suggestion.objects.get(pk=sug.pk)
+        self.assertTrue(new_sug.clicked)
+
 
 
 

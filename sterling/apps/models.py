@@ -13,6 +13,7 @@ class MobileApp(models.Model):
     users = models.ManyToManyField(settings.AUTH_USER_MODEL, through='DevMembership') # App admins
     invitation_message = models.TextField(blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
+    link = models.URLField(max_length=1000, blank=True, null=True) # Link to app in App Store
 
     # TODO: Point to actual default algorithm
     default_algorithm = models.ForeignKey(Algorithm, blank=True, null=True)

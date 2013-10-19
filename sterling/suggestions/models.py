@@ -164,6 +164,9 @@ class Suggestion(models.Model):
     times_invited = models.PositiveIntegerField(default=0) # How many times was this user invited?
     last_invited_date = models.DateTimeField(blank=True, null=True)   
 
+    clicked = models.BooleanField(default=False) # Did the user click the link?
+    clicked_date = models.DateTimeField(blank=True, null=True)
+
     accepted = models.BooleanField(default=False) # Did the invited actually accept?
     accepted_date = models.DateTimeField(blank=True, null=True)
     

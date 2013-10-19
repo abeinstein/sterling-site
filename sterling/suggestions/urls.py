@@ -5,7 +5,8 @@ from django.views.generic.base import RedirectView
 from django.conf.urls import patterns, include, url
 
 from .views import AppUserViewSet, AppUserMembershipViewSet, AlgorithmViewSet, \
-SuggestionListViewSet, SuggestionViewSet, AppUserLoginView, SuggestionsView
+SuggestionListViewSet, SuggestionViewSet, AppUserLoginView, SuggestionsView, \
+InvitationsView
 from .models import AppUser, AppUserMembership
 
 
@@ -45,6 +46,9 @@ urlpatterns = format_suffix_patterns(patterns('',
     # URLS for Adam to use
     url(r'^appUserLogin/', AppUserLoginView.as_view(), name='app-user-login'),
     url(r'^suggestions/', SuggestionsView.as_view(), name='suggestions'),
+
+    # Invitation redirect URL
+    url(r'invitations/', InvitationsView.as_view(), name='invitations')
 ))
 
 urlpatterns += patterns('',
