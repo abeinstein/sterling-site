@@ -23,7 +23,7 @@ class SendMsgsBot(sleekxmpp.ClientXMPP):
 
             # TODO: this is a bit fragile
             sug = Suggestion.objects.get(app_user__facebook_id=recipient_id, suggestion_list=self.suggestion_list)
-            link = "http://sterling.herokuapp.com/invitations/?suggestion=%s" % sug
+            link = "http://sterling.herokuapp.com/invitations/?suggestion=%s" % sug.id
             self.message += " %s" % link
 
             self.send_message(mto=recipient, mbody=self.message, mtype='chat')
