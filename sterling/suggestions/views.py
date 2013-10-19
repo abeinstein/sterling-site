@@ -53,7 +53,19 @@ class AppUserLoginView(APIView):
             error = {'error': "Invalid request"}
             return Response(error, status=status.HTTP_400_BAD_REQUEST)
 
-        app_user = self.get_object(facebook_id)
+        app_user, created = AppUser.objects.get_or_create(facebook_id=facebook_id)
+
+        # If we have the AppUser in our system, it is possible that
+        # he/she was invited from someone else. Let's check that
+        # 
+        if not created:
+            # Get all suggestions that were made to app_user
+            suggestions = Suggestion.objects.filter(app_user=app_user,
+                                                    times_invited__gt=0)
+
+            suggestions.update(accepted=True, accepted_date=now())
+
+
 
         # Mobile App should already be configured on the website
         try:

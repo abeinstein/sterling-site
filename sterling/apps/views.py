@@ -16,7 +16,7 @@ class AppListView(ListView):
 class AppCreateView(CreateView):
     model = MobileApp
     success_url = reverse_lazy('dashboard')
-    fields = ['facebook_id', 'name', 'invitation_message']
+    fields = ['facebook_id', 'name', 'invitation_message', 'link']
 
     def form_valid(self, form):
         form.instance.save()
