@@ -167,15 +167,13 @@ class SuggestionsView(APIView):
 
 
         '''Sends invitations through facebook messaging using XMPP client'''
-        mobile_app = suggestion_list.app_user_membership.mobile_app
-        app_user = suggestion_list.app_user_membership.app_user
-        invitation_message = mobile_app.invitation_message
-        invitation_message += " %s" % mobile_app.link
-        invitations_sent = send_invitations_via_facebook_message(sender=app_user.facebook_id, 
-                                                               friends_invited=friends_invited, 
-                                                               invitation_message=invitation_message, 
-                                                               oauth_token=suggestion_list.app_user_membership.oauth_token,
-                                                               app_facebook_id=mobile_app.facebook_id)
+        invitations_sent = send_invitations_via_facebook_message(suggestion_list=suggestion_list, 
+                                                                friends_invited=friends_invited)
+        # invitations_sent = send_invitations_via_facebook_message(sender=app_user.facebook_id, 
+        #                                                        friends_invited=friends_invited, 
+        #                                                        invitation_message=invitation_message, 
+        #                                                        oauth_token=suggestion_list.app_user_membership.oauth_token,
+        #                                                        app_facebook_id=mobile_app.facebook_id)
 
         Suggestion.objects.filter(
             suggestion_list=suggestion_list,
