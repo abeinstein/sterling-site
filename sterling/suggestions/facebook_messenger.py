@@ -30,7 +30,7 @@ class SendMsgsBot(sleekxmpp.ClientXMPP):
         
         self.disconnect(wait=True)
 
-#def send_invitations_via_facebook_message(sender, friends_invited, invitation_message, oauth_token, app_facebook_id):
+
 def send_invitations_via_facebook_message(suggestion_list, friends_invited):
     mobile_app = suggestion_list.app_user_membership.mobile_app
     app_user = suggestion_list.app_user_membership.app_user

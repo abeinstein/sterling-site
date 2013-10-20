@@ -76,11 +76,13 @@ class AppUserLoginView(APIView):
 
         try:
             app_user_membership, app_user_membership_created = AppUserMembership.objects.get_or_create(app_user=app_user, 
-                                                                    mobile_app=mobile_app, 
-                                                                    oauth_token=oauth_token)
+                                                                    mobile_app=mobile_app)
         except:
-            error = {'error': "AppUserMembership could not be saved"}
+            error = {'error': "AppUserMembership could not be created"}
             return Response(error, status=status.HTTP_400_BAD_REQUEST)
+
+        app_user_membership.oauth_token = oauth_token
+        app_user_membership.save()
 
         self.app_user_login(app_user, mobile_app, app_user_membership)
         return Response(status=status.HTTP_201_CREATED)
