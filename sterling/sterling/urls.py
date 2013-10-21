@@ -24,4 +24,5 @@ urlpatterns = patterns('',
     url(r'^accounts/register/', SterlingRegistrationView.as_view(), name="registration_register"),
     url(r'^accounts/', include('registration.backends.simple.urls')),
     url(r'^', include('suggestions.urls')),
+    url(r'^django-rq/', include('django_rq.urls')),
 )

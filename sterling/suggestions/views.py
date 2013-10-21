@@ -10,11 +10,18 @@ from rest_framework import viewsets, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import action
+# from rq import Queue
+# from worker import conn
+import django_rq
+
 
 from apps.models import MobileApp
 from suggestions.models import AppUser, AppUserMembership, Algorithm, SuggestionList, Suggestion
 from suggestions.serializers import AppUserSerializer, AppUserMembershipSerializer, AlgorithmSerializer, SuggestionListSerializer, SuggestionSerializer
 from suggestions.facebook_messenger import send_invitations_via_facebook_message
+
+# # Setup Redis Queue
+# q = Queue(connection=conn)
 
 class MultipleFieldLookupMixin(object):
     """
@@ -53,58 +60,64 @@ class AppUserLoginView(APIView):
             error = {'error': "Invalid request"}
             return Response(error, status=status.HTTP_400_BAD_REQUEST)
 
-        app_user, created = AppUser.objects.get_or_create(facebook_id=facebook_id)
-
-        # If we have the AppUser in our system, it is possible that
-        # he/she was invited from someone else. Let's check that
-        # 
-        if not created:
-            # Get all suggestions that were made to app_user
-            suggestions = Suggestion.objects.filter(app_user=app_user,
-                                                    times_invited__gt=0)
-
-            suggestions.update(accepted=True, accepted_date=now())
-
-
-
-        # Mobile App should already be configured on the website
-        try:
-            mobile_app = MobileApp.objects.get(pk=app_facebook_id)
-        except ObjectDoesNotExist:
-            error = {'error': "Mobile app does not exist"}
-            return Response(error, status=status.HTTP_400_BAD_REQUEST)
-
-        try:
-            app_user_membership, app_user_membership_created = AppUserMembership.objects.get_or_create(app_user=app_user, 
-                                                                    mobile_app=mobile_app)
-        except:
-            error = {'error': "AppUserMembership could not be created"}
-            return Response(error, status=status.HTTP_400_BAD_REQUEST)
-
-        app_user_membership.oauth_token = oauth_token
-        app_user_membership.save()
-
-        self.app_user_login(app_user, mobile_app, app_user_membership)
+        django_rq.enqueue(process_request, app_facebook_id, oauth_token, facebook_id)
         return Response(status=status.HTTP_201_CREATED)
 
-    def app_user_login(self, app_user, mobile_app, app_user_membership):
+def process_request(app_facebook_id, oauth_token, facebook_id):
+    app_user, created = AppUser.objects.get_or_create(facebook_id=facebook_id)
 
-        # If it's a new user, create new AppUser objects for his friends
-        app_user.update_friends() 
+    # If we have the AppUser in our system, it is possible that
+    # he/she was invited from someone else. Let's check that
+    # 
+    if not created:
+        # Get all suggestions that were made to app_user
+        # TODO: Think more carefully about what we are accepting as accepted
+        suggestions = Suggestion.objects.filter(app_user=app_user,
+                                                times_invited__gt=0)
 
-        if mobile_app.default_algorithm:
-            # Creates a suggestion list if one doesn't yet exist
-            # This will go off and start running the default algorithm
-            sl, sl_created = SuggestionList.objects.get_or_create(app_user_membership=app_user_membership,
-                                                algorithm=mobile_app.default_algorithm)
+        suggestions.update(accepted=True, accepted_date=now())
 
-            if sl_created:
-                sl.generate_suggestions()
-            return Response(status=status.HTTP_201_CREATED)
-        
-        else:
-            error = {'error': "No default algorithm set"}
-            return Response(error, status=status.HTTP_400_BAD_REQUEST)
+
+
+    # Mobile App should already be configured on the website
+    try:
+        mobile_app = MobileApp.objects.get(pk=app_facebook_id)
+    except ObjectDoesNotExist:
+        error = {'error': "Mobile app does not exist"}
+        # return Response(error, status=status.HTTP_400_BAD_REQUEST)
+        print error
+        return False
+
+    try:
+        app_user_membership, app_user_membership_created = AppUserMembership.objects.get_or_create(app_user=app_user, 
+                                                                mobile_app=mobile_app)
+    except:
+        error = {'error': "AppUserMembership could not be created"}
+        print error
+        return False
+        # return Response(error, status=status.HTTP_400_BAD_REQUEST)
+
+    app_user_membership.oauth_token = oauth_token
+    app_user_membership.save()
+
+    # If it's a new user, create new AppUser objects for his friends
+    app_user.update_friends() 
+
+    if mobile_app.default_algorithm:
+        # Creates a suggestion list if one doesn't yet exist
+        # This will go off and start running the default algorithm
+        sl, sl_created = SuggestionList.objects.get_or_create(app_user_membership=app_user_membership,
+                                            algorithm=mobile_app.default_algorithm)
+
+        if sl_created:
+            sl.generate_suggestions()
+        # return Response(status=status.HTTP_201_CREATED)
+            return True
+    else:
+        # TODO: use less ghetto way of error handling
+        error = "No default algorithm set"
+        print error
+        return False
 
 
 class SuggestionsView(APIView):
@@ -133,7 +146,6 @@ class SuggestionsView(APIView):
         # TODO -- more intelligent suggestion list choosing mechanism
         suggestion_list = app_user_membership.suggestionlist_set.all()[0]
         friends = suggestion_list.suggested_friends.all().order_by('suggestion__rank')
-        print "Faceboook friends: ", friends
 
         # TODO: Custom friend suggestion serializer that takes a suggestion list?
         response_data = {'list_id': suggestion_list.pk, 'friends': []}

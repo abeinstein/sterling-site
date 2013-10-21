@@ -1,11 +1,16 @@
 import facebook
 import datetime
+
+from celery import task
+
 from django.db import models
 from django.db.models import get_model
-from suggestions.algorithms.algorithms import alphabetical
-from celery import task
-from algorithms.algorithms import *
 from django.core.exceptions import ObjectDoesNotExist
+from django.conf import settings
+
+from suggestions.algorithms.algorithms import alphabetical
+from algorithms.algorithms import *
+
 
 # ALGORITHM IDS
 ALGORITHM_TOY = 1
@@ -31,7 +36,14 @@ class AppUser(models.Model):
         ''' Make AppUser's for self's friends if they don't already exist'''
         # First, grab friends from Facebook
         graph = facebook.GraphAPI(self.get_oauth_token())
-        friends = graph.get_connections("me", "friends")
+        try:
+            friends = graph.get_connections("me", "friends")
+        except facebook.GraphAPIError:
+            token = graph.extend_access_token(settings.STERLING_FACEBOOK_APP_ID,
+                                    settings.STERLING_FACEBOOK_APP_SECRET)['access_token']
+            graph.access_token = token
+            friends = graph.get_connections("me", "friends")
+
         # TODO: Worry about paging
         # TODO: Bulk update?
         friendships = []
@@ -175,3 +187,7 @@ class Suggestion(models.Model):
     class Meta:
         ordering = ['rank']
         unique_together = ('suggestion_list', 'app_user')
+
+    @property
+    def link(self):
+        return "http://sterling.herokuapp.com/invitations/?suggestion=%s" % self.id

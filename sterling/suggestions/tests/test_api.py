@@ -1,11 +1,16 @@
+import time
+
+from django.conf import settings
+
 from rest_framework.test import APITestCase
 from rest_framework import status
+from django_rq import get_worker
 
 from apps.models import MobileApp 
 from suggestions.models import AppUser, Algorithm, AppUserMembership, SuggestionList, \
     Suggestion, ALGORITHM_ALPHABETICAL
 
-STERLING_FACEBOOK_APP_ID = '466489223450195'
+
 user_facebook_id = '100006825758175'
 
 class SuggestionsAPITests(APITestCase):
@@ -16,7 +21,7 @@ class SuggestionsAPITests(APITestCase):
         )
 
         self.mobile_app = MobileApp.objects.create(
-            facebook_id=STERLING_FACEBOOK_APP_ID,
+            facebook_id=settings.STERLING_FACEBOOK_APP_ID,
             name="Rush: Go Greek",
             invitation_message="Be the top frat on campus!",
             default_algorithm=self.algorithm,
@@ -51,6 +56,8 @@ class SuggestionsAPITests(APITestCase):
         }
         response = self.client.post('/appUserLogin/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        get_worker().work(burst=True) # Process all jobs, then stop
 
         # Test that an AppUser was actually created
         user = AppUser.objects.get(facebook_id=user_facebook_id)
