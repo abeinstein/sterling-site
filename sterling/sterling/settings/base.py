@@ -194,19 +194,9 @@ STERLING_FACEBOOK_APP_SECRET = 'd16cb057755cb46197f10d774d7b47d5'
 
 RQ_QUEUES = {
     'default': {
-        'HOST': 'localhost',
-        'PORT': 6379,
-        'DB': 0,
-    },
-    'high': {
         'URL': os.getenv('REDISTOGO_URL', 'redis://localhost:6379'), # If you're on Heroku
         'DB': 0,
     },
-    'low': {
-        'HOST': 'localhost',
-        'PORT': 6379,
-        'DB': 0,
-    }
 }
 
 
