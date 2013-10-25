@@ -1,7 +1,8 @@
 /* Move down content because we have a fixed navbar that is 50px tall */
 body {
-  background-image: url("../img/cream_pixels_@2X.png");
-}
+  background-color: black;
+/*  background-image: url("../img/music-crowd-01.jpg");
+*/}
 
 
 h1, h2, h3, h4 {
@@ -12,11 +13,24 @@ h1, h2, h3, h4 {
 .logo {
     font-size: 5em;
     text-align: center;
+    color: white;
+}
+
+/* TODO: Fix to make responsive */
+.logo-container {
+  margin-top: 150px;
 }
 
 .tagline {
     text-align: center;
     font-size: 24px;
+    color: white;
+}
+
+.description {
+/*    text-align: center;
+*/    font-size: 18px;
+    color: white;
 }
 
 .center-container {

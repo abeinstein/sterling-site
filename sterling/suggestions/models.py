@@ -9,12 +9,13 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 
 from suggestions.algorithms.algorithms import alphabetical
-from algorithms.algorithms import *
+from algorithms.algorithms import toy_algorithm, alphabetical, splash_site
 
 
 # ALGORITHM IDS
 ALGORITHM_TOY = 1
 ALGORITHM_ALPHABETICAL = 2
+ALGORITHM_SPLASH = 3
 
 class AppUser(models.Model):
     ''' Represents anyone who is signed up for an app, or is Facebook friends with 
@@ -108,7 +109,8 @@ class Algorithm(models.Model):
     def algorithm(self):
         algorithm_dict = {
             ALGORITHM_TOY: toy_algorithm,
-            ALGORITHM_ALPHABETICAL: alphabetical
+            ALGORITHM_ALPHABETICAL: alphabetical,
+            ALGORITHM_SPLASH: splash_site
         }
         return algorithm_dict[self.algorithm_method_id]
 
