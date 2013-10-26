@@ -11,6 +11,7 @@ from suggestions.models import AppUser, Algorithm, AppUserMembership, Suggestion
     Suggestion, ALGORITHM_ALPHABETICAL
 
 
+user_name = 'Mike Amfhbegehage Smithsen'
 user_facebook_id = '100006825758175'
 
 class SuggestionsAPITests(APITestCase):
@@ -51,7 +52,7 @@ class SuggestionsAPITests(APITestCase):
     def test_create_new_app_user(self):
         data = {
             'app_facebook_id': self.mobile_app.facebook_id,
-            'oauth_token': 'CAAGoRPx0jlMBABtCsuMswpNlBjFu5k2rTkADkytze7GK0GIoKudhDZCzmA0KNqZAhs25TpoeCZAU7tDJO4KZBqkkXZC5SM7JRZBhDABqYVTghJsBZAtouGZB9UextyWRDzr5MygUs2inTXGlAPdULbvojU7qs3e2uJKswOdncPOwf0d0S7XmKaZAA',
+            'oauth_token': 'CAAGoRPx0jlMBADLEqXp4aYwQZAR64jTvdtNZCxTqZAlVZAGDJD99pZAjKghVvmTzNrUyFZCk15sNeYkF4sCl0ddVsGxOQFIjCBCd5oStqpjB4nzSWHzCrrZB5j1v4KkfZBIF7jIxkLIpBypXa2JOMyXkJZChf0k0UUPoFFqzxCoFT24IOZAhewCV5ZAU9eGUek77SYZD',
             'facebook_id': user_facebook_id
         }
         response = self.client.post('/appUserLogin/', data, format='json')
