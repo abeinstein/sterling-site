@@ -20,9 +20,9 @@ def alphabetical(facebook_id, oauth_token):
 
 def splash_site(facebook_id, oauth_token):
     people = [
-        'zuck',
         'adamt.gluck',
         'andrew.beinstein',
+        'zuck',
         'gc2maxpro',
         'gurevitch',
         'barackobama',
