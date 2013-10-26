@@ -35,8 +35,9 @@ def splash_site(facebook_id, oauth_token):
     return people
 
 def mutual_friends(facebook_id, oauth_token):
-    '''Sorts friends by the mutual friend count'''
-    '''Runs at EWess speed'''
+    '''Sorts friends by the mutual friend count
+    Runs at EWess "I see a cake" speed
+    '''
     graph = facebook.GraphAPI(oauth_token)
     friends = graph.fql('''SELECT uid, mutual_friend_count 
                             FROM user WHERE uid IN 
