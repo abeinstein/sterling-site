@@ -64,6 +64,7 @@ class AppUserLoginView(APIView):
         return Response(status=status.HTTP_201_CREATED)
 
 def process_request(app_facebook_id, oauth_token, facebook_id):
+    print "in process request"
     app_user, created = AppUser.objects.get_or_create(facebook_id=facebook_id)
 
     # If we have the AppUser in our system, it is possible that
