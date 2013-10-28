@@ -32,7 +32,7 @@ class MultipleFieldLookupMixin(object):
         queryset = self.get_queryset()             # Get the base queryset
         queryset = self.filter_queryset(queryset)  # Apply any filter backends
         filter = {}
-        for field in self.tiple_lookup_fields:
+        for field in self.multiple_lookup_fields:
             if field in self.kwargs:
                 filter[field] = self.kwargs[field]
         return get_object_or_404(queryset, **filter)  # Lookup the object
