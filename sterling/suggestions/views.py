@@ -87,7 +87,7 @@ def process_request(app_facebook_id, oauth_token, facebook_id):
     except ObjectDoesNotExist:
         error = {'error': "Mobile app does not exist"}
         # return Response(error, status=status.HTTP_400_BAD_REQUEST)
-        print "Process request error: " + error
+        print "Process request error: " + str(error['error'])
         return False
 
     try:
@@ -95,7 +95,7 @@ def process_request(app_facebook_id, oauth_token, facebook_id):
                                                                 mobile_app=mobile_app)
     except:
         error = {'error': "AppUserMembership could not be created"}
-        print "Process request error: " + error
+        print "Process request error: " + str(error['error'])
         return False
         # return Response(error, status=status.HTTP_400_BAD_REQUEST)
 
