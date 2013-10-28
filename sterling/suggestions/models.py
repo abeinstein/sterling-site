@@ -154,7 +154,7 @@ class SuggestionList(models.Model):
             try:
                 app_user = AppUser.objects.get(facebook_id=friend_id)
             except AppUser.DoesNotExist:
-                return Exception("Appuser does not exist")
+                return Exception("Appuser does not exist" + str(friend_id))
 
             suggestion = Suggestion(
                     suggestion_list=self,
