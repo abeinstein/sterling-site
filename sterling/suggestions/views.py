@@ -79,13 +79,14 @@ def process_request(app_facebook_id, oauth_token, facebook_id):
 
 
 
+
     # Mobile App should already be configured on the website
     try:
         mobile_app = MobileApp.objects.get(pk=app_facebook_id)
     except ObjectDoesNotExist:
         error = {'error': "Mobile app does not exist"}
         # return Response(error, status=status.HTTP_400_BAD_REQUEST)
-        print error
+        print "Process request error: " + error
         return False
 
     try:
@@ -93,7 +94,7 @@ def process_request(app_facebook_id, oauth_token, facebook_id):
                                                                 mobile_app=mobile_app)
     except:
         error = {'error': "AppUserMembership could not be created"}
-        print error
+        print "Process request error: " + error
         return False
         # return Response(error, status=status.HTTP_400_BAD_REQUEST)
 
@@ -116,7 +117,7 @@ def process_request(app_facebook_id, oauth_token, facebook_id):
     else:
         # TODO: use less ghetto way of error handling
         error = "No default algorithm set"
-        print error
+        print "Process request error: " + error
         return False
 
 
