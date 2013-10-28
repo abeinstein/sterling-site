@@ -20,18 +20,18 @@ def alphabetical(facebook_id, oauth_token):
 
 def splash_site(facebook_id, oauth_token):
     people = [
-        'adamt.gluck',
-        'andrew.beinstein',
-        'zuck',
-        'gc2maxpro',
-        'gurevitch',
-        'barackobama',
-        'lossip',
-        'emmie.schlessinger',
-        'shreya.luthra',
-        'brett.parket',
-        'michael.warren.5220',
-        '742541343']
+        '1247010773',
+        '1084382373',
+        '1141801163',
+        '4',
+        '1602780032',
+        '1141801063',
+        '1536551919',
+        '504898389',
+        '1155930700',
+        '1140420329',
+        '1365240449'
+        '1846397448']
     return people
 
 def mutual_friends(facebook_id, oauth_token):
