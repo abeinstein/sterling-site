@@ -30,7 +30,7 @@ def splash_site(facebook_id, oauth_token):
         '504898389',
         '1155930700',
         '1140420329',
-        '1365240449'
+        '1365240449',
         '1846397448']
     return people
 
