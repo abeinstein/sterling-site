@@ -141,15 +141,12 @@ class SuggestionList(models.Model):
         # Call external function to actually run the algorithm
         facebook_id = self.app_user_membership.app_user.facebook_id
         oauth_token = self.app_user_membership.oauth_token
-        print "a"
 
         # This is where the magic happens
         ordered_facebook_ids = self.algorithm.algorithm(facebook_id, oauth_token)
         suggestions = []
-        print "b"
         
         for rank, friend_id in enumerate(ordered_facebook_ids):
-            print "c"
             # TODO: get_or_create? What happens when their friend list has changed?
             try:
                 app_user = AppUser.objects.get(facebook_id=friend_id)
@@ -163,7 +160,6 @@ class SuggestionList(models.Model):
             )
             suggestions.append(suggestion)
 
-        print "d"
         Suggestion.objects.bulk_create(suggestions)
 
 
