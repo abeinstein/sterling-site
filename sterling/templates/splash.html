@@ -15,10 +15,12 @@
                 Invalid email. Please try again.
             </div>
             {% endif %}
-            <div class="col-md-8">
-              <img src="static/img/SterlingScreenshot.png"/>
+            <div class="col-md-6">
+              <div class="container">
+                <img class="img-responsive iphone-screenshot" src="static/img/screenshot-iphone.png"/>
+              </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6">
               <div class="logo-container">
                 <h1 class="logo">Sterling</h1>
                 <h3 class="tagline"> User Acquisition Made Easy </h3>
@@ -27,7 +29,8 @@
               
               <form class="email-form" role="form" method="post" action="{% url 'index' %}">
                 {% csrf_token %}
-                <div class="form-group">
+                <div class="input-group email-input">
+                  <span class="input-group-addon">@</span>
                   <input type="email" class="form-control" name="email" placeholder="Coming soon! Enter your email for updates.">
                 </div>
                 <button type="submit" class="btn btn-primary btn-large btn-block">Submit</button>

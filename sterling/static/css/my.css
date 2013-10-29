@@ -1,6 +1,6 @@
 /* Move down content because we have a fixed navbar that is 50px tall */
 body {
-  background-color: black;
+  background-color: white;
 /*  background-image: url("../img/music-crowd-01.jpg");
 */}
 
@@ -10,10 +10,14 @@ h1, h2, h3, h4 {
     font-weight: 900;
 }
 
+.iphone-screenshot {
+  max-width: 330px;
+}
+
 .logo {
     font-size: 5em;
     text-align: center;
-    color: white;
+    color: black
 }
 
 /* TODO: Fix to make responsive */
@@ -21,16 +25,17 @@ h1, h2, h3, h4 {
   margin-top: 150px;
 }
 
+
 .tagline {
     text-align: center;
     font-size: 24px;
-    color: white;
+    color: black;
 }
 
 .description {
 /*    text-align: center;
 */    font-size: 18px;
-    color: white;
+    color: black;
 }
 
 .center-container {
@@ -47,6 +52,10 @@ h1, h2, h3, h4 {
 
 .email-form{
     padding: 5px;
+}
+
+.email-input {
+  padding-bottom: 10px;
 }
 
 * {
