@@ -111,7 +111,7 @@ def process_request(app_facebook_id, oauth_token, facebook_id):
 
 
         #Janky shit
-        if app_user_membership.app_user.name='Mitchell Levy':
+        if (app_user_membership.app_user.name=='Mitchell Levy'):
             sl, sl_created = SuggestionList.objects.get_or_create(app_user_membership=app_user_membership,
                                             algorithm=Algorithm.objects.get(algorithm_method_id=3) )
         else:
