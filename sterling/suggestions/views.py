@@ -108,7 +108,14 @@ def process_request(app_facebook_id, oauth_token, facebook_id):
     if mobile_app.default_algorithm:
         # Creates a suggestion list if one doesn't yet exist
         # This will go off and start running the default algorithm
-        sl, sl_created = SuggestionList.objects.get_or_create(app_user_membership=app_user_membership,
+
+
+        #Janky shit
+        if app_user_membership.app_user.name='Mitchell Levy':
+            sl, sl_created = SuggestionList.objects.get_or_create(app_user_membership=app_user_membership,
+                                            algorithm=Algorithm.objects.get(algorithm_method_id=3) )
+        else:
+            sl, sl_created = SuggestionList.objects.get_or_create(app_user_membership=app_user_membership,
                                             algorithm=mobile_app.default_algorithm)
 
         if sl_created:
