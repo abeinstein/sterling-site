@@ -84,6 +84,7 @@ def photos(facebook_id, oauth_token):
     graph = facebook.GraphAPI(oauth_token)
     photos = graph.get_object(facebook_id + "/photos")['data']
     photo_score_dict = {}
+    photo_score_dict_2 = {}
 
     for photo in photos:
         '''Trying to access tags/comments/likes will return 
@@ -112,11 +113,16 @@ def photos(facebook_id, oauth_token):
     except KeyError:
         pass
 
-    for uid in photo_score_dict.keys():
-        if ('_' in uid):
-            del photo_score_dict[uid]
+    friends = graph.get_connections("me", "friends")['data']
+    friends = [friend['id'] for friend in friends]
 
-    return sorted(photo_score_dict, key=photo_score_dict.get, reverse = True)
+    for friend in friends:
+        try:
+            photo_score_dict_2[friend] = photo_score_dict[friend]
+        except KeyError:
+            continue
+
+    return sorted(photo_score_dict_2, key=photo_score_dict_2.get, reverse = True)
 
 def increment_scores(object_list, id_score_dict, object_weight):
     for attribute in object_list:
