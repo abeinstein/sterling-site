@@ -1,17 +1,37 @@
 /* Move down content because we have a fixed navbar that is 50px tall */
+html {
+  height: 100%;
+}
+
 body {
   background-color: white;
-/*  background-image: url("../img/music-crowd-01.jpg");
-*/}
+  background-image: url("../img/ticks_@2X.png");
+  height: 100%;
+}
 
 
 h1, h2, h3, h4 {
     font-family: 'Lato', sans-serif;
     font-weight: 900;
+    color: black;
+}
+
+.first {
+  height: 100%;
+}
+
+.second {
+  padding-top: 100px;
+  padding-bottom: 100px;
+  background-color: white;
+  background-image: url("../img/cream_pixels_@2X.png");
 }
 
 .iphone-screenshot {
-  max-width: 320px;
+  max-width: 300px;
+  margin-top: 2em;
+  margin-left: auto;
+  margin-right: auto;  
 }
 
 .logo {
@@ -23,6 +43,9 @@ h1, h2, h3, h4 {
 /* TODO: Fix to make responsive */
 .logo-container {
   margin-top: 150px;
+  padding: 40px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 
@@ -32,11 +55,7 @@ h1, h2, h3, h4 {
     color: black;
 }
 
-.description {
-/*    text-align: center;
-*/    font-size: 18px;
-    color: black;
-}
+
 
 .center-container {
   position: relative;
@@ -57,6 +76,27 @@ h1, h2, h3, h4 {
 .email-input {
   padding-bottom: 10px;
 }
+
+.bar-graph-icon {
+  font-size: 300px;
+  color: #54b4eb;
+  text-align: right;
+}
+
+.description {
+    font-size: 24px;
+    color: black;
+}
+
+
+.description-left {
+  text-align: left;
+}
+
+.description-right {
+  text-align: right;
+}
+
 
 * {
     font-family: 'Lato', sans-serif;

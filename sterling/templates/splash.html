@@ -1,47 +1,92 @@
 {% extends "base.html" %}
 
 {% block content %}
-      <div class="container container-center">
+<div class="first">
+  <div class="container">
 <!--         <div class="absolute-center">
- -->          <div class="row">
-            {% if signup_success %}
-            <div class="alert alert-dismissable alert-success">
-              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                Thank you for your interest!
+-->          <div class="row">
+        {% if signup_success %}
+        <div class="alert alert-dismissable alert-success">
+          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            Thank you for your interest!
+        </div>
+        {% elif error %}
+        <div class="alert alert-dismissable alert-danger">
+          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            Invalid email. Please try again.
+        </div>
+        {% endif %}
+
+        <div class="col-md-6 col-md-push-6">
+          <div class="logo-container">
+            <h1 class="logo">Sterling</h1>
+            <h3 class="tagline"> User acquisition made easy </h3>
+            <hr>
+          
+          <form class="email-form" role="form" method="post" action="{% url 'index' %}">
+            {% csrf_token %}
+            <div class="input-group email-input">
+              <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
+              <input type="email" class="form-control" name="email" placeholder="Coming soon! Enter your email for updates.">
             </div>
-            {% elif error %}
-            <div class="alert alert-dismissable alert-danger">
-              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                Invalid email. Please try again.
+            <button type="submit" class="btn btn-primary btn-large btn-block">Submit</button>
+          </form>
+        </div>
+        </div>
+        <div class="col-md-6 col-md-pull-6">
+          <div class="container">
+            <div class="cycle-slideshow" data-cycle-fx='none' data-cycle-timeout="10">
+               <img class="img-responsive iphone-screenshot center-block screenshot-1" src="static/img/screenshots/screenshot-1.png"/>
+               <img class="img-responsive iphone-screenshot center-block screenshot-2" src="static/img/screenshots/screenshot-2.png"/>
+               <img class="img-responsive iphone-screenshot center-block screenshot-2" src="static/img/screenshots/screenshot-3.png"/>
+               <img class="img-responsive iphone-screenshot center-block screenshot-2" src="static/img/screenshots/screenshot-4.png"/>
+               <img class="img-responsive iphone-screenshot center-block screenshot-2" src="static/img/screenshots/screenshot-5.png"/>
+               <img class="img-responsive iphone-screenshot center-block screenshot-1" src="static/img/screenshots/screenshot-6.png"/>
+               <img class="img-responsive iphone-screenshot center-block screenshot-2" src="static/img/screenshots/screenshot-7.png"/>
+               <img class="img-responsive iphone-screenshot center-block screenshot-2" src="static/img/screenshots/screenshot-8.png"/>
+               <img class="img-responsive iphone-screenshot center-block screenshot-2" src="static/img/screenshots/screenshot-9.png"/>
+               <img class="img-responsive iphone-screenshot center-block screenshot-2" src="static/img/screenshots/screenshot-10.png"/>
             </div>
-            {% endif %}
-            <div class="col-md-4 col-md-offset-2">
-              <div class="container">
-                <img class="img-responsive iphone-screenshot" src="static/img/screenshot-iphone.png"/>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="logo-container">
-                <h1 class="logo">Sterling</h1>
-                <h3 class="tagline"> User acquisition made easy </h3>
-                <hr>
-  <!--               <p class="description">Sterling is an iOS plugin for intelligent friend invitations. Instead of presenting your users with an alphabetical list of their Facebook friends, we can predict which friends they are most likely to invite, and push them to the top of the list.</p> -->
-              
-              <form class="email-form" role="form" method="post" action="{% url 'index' %}">
-                {% csrf_token %}
-                <div class="input-group email-input">
-                  <span class="input-group-addon">@</span>
-                  <input type="email" class="form-control" name="email" placeholder="Coming soon! Enter your email for updates.">
-                </div>
-                <button type="submit" class="btn btn-primary btn-large btn-block">Submit</button>
-              </form>
-            </div>
-            </div>
-          </div>
-          <div class="row">
-            
-          </div>
-<!--         </div>
- -->
-      </div> <!-- /container -->
+         </div>
+        </div>
+      </div>
+  </div> <!-- /container -->
+</div>
+<div class="second">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="description description-left">
+        <h2> Best friends and influencers </h2>
+        <p> Your users will find their best friends on top, and also those that we have predicted will spread the word about your app. This way, your users will actually invite their friends. </p>
+        </div>
+      </div>
+      <div class="col-md-3 col-md-offset-2">
+        <i class="fa fa-bar-chart-o bar-graph-icon"></i> 
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3">
+        <i class="fa fa-facebook-square bar-graph-icon"></i> 
+      </div>
+      <div class="col-md-6 col-md-offset-3">
+        <div class="description description-right">
+          <h2> No more spammy wall posts </h2>
+          <p> Invites will be private messages sent straight to the user. </p>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="description description-left">
+          <h2> Two lines of code </h2>
+          <p> Drop this into your app with two lines of code, and see your app go viral. </p>
+        </div>
+      </div>
+      <div class="col-md-3 col-md-offset-2">
+        <i class="fa fa-code bar-graph-icon"></i> 
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock content %}
