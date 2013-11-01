@@ -79,9 +79,6 @@ def process_request(app_facebook_id, oauth_token, facebook_id):
 
         suggestions.update(accepted=True, accepted_date=now())
 
-
-
-
     # Mobile App should already be configured on the website
     try:
         mobile_app = MobileApp.objects.get(pk=app_facebook_id)
