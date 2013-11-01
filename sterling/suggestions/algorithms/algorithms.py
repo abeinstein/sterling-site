@@ -110,7 +110,8 @@ def photos(facebook_id, oauth_token):
     try:
         del photo_score_dict[str(facebook_id)]
     except KeyError:
-        continue 
+        pass 
+
     return sorted(photo_score_dict, key=photo_score_dict.get, reverse = True)
 
 def increment_scores(object_list, id_score_dict, object_weight):
