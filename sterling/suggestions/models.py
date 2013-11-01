@@ -9,14 +9,13 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 
 from suggestions.algorithms.algorithms import alphabetical
-from algorithms.algorithms import toy_algorithm, alphabetical, splash_site, mutual_friends
-
+from algorithms.algorithms import toy_algorithm, alphabetical, splash_site, mutual_friends, weighted_mutual_friends, photos
 
 # ALGORITHM IDS
-ALGORITHM_TOY = 1
 ALGORITHM_ALPHABETICAL = 2
-ALGORITHM_SPLASH = 3
 ALGORITHM_MUTUAL_FRIENDS = 4
+ALGORITHM_WEIGHTED_MUTUAL_FRIENDS = 5
+ALGORITHM_PHOTOS = 6
 
 class AppUser(models.Model):
     ''' Represents anyone who is signed up for an app, or is Facebook friends with 
@@ -66,8 +65,6 @@ class AppUser(models.Model):
 
         self.friends.add(*friendships)
 
-
-
     def get_name(self, graph=None):
         ''' Returns the tuple (first_name, last_name) from Facebook data'''
         return NotImplemented
@@ -109,10 +106,13 @@ class Algorithm(models.Model):
     @property
     def algorithm(self):
         algorithm_dict = {
-            ALGORITHM_TOY: toy_algorithm,
+            #ALGORITHM_TOY: toy_algorithm,
             ALGORITHM_ALPHABETICAL: alphabetical,
-            ALGORITHM_SPLASH: splash_site,
+            #ALGORITHM_SPLASH: splash_site,
             ALGORITHM_MUTUAL_FRIENDS: mutual_friends,
+            ALGORITHM_WEIGHTED_MUTUAL_FRIENDS: weighted_mutual_friends,
+            ALGORITHM_PHOTOS: photos,
+
         }
         return algorithm_dict[self.algorithm_method_id]
 
