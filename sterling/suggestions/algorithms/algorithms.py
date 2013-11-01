@@ -107,7 +107,10 @@ def photos(facebook_id, oauth_token):
             continue
 
     '''Get rid of the original person'''
-    del photo_score_dict[str(facebook_id)]
+    try:
+        del photo_score_dict[str(facebook_id)]
+    except KeyError:
+        continue 
     return sorted(photo_score_dict, key=photo_score_dict.get, reverse = True)
 
 def increment_scores(object_list, id_score_dict, object_weight):
