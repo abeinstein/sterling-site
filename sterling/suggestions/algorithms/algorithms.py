@@ -110,13 +110,17 @@ def photos(facebook_id, oauth_token):
     try:
         del photo_score_dict[str(facebook_id)]
     except KeyError:
-        pass 
+        pass
+
+    for uid in photo_score_dict.keys():
+        if ('_' in uid):
+            del photo_score_dict[uid]
 
     return sorted(photo_score_dict, key=photo_score_dict.get, reverse = True)
 
 def increment_scores(object_list, id_score_dict, object_weight):
     for attribute in object_list:
-        friend_id = int(attribute['id'])
+        friend_id = attribute['id']
         try:
             id_score_dict[friend_id] += object_weight
         except LookupError:
