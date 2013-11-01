@@ -13,6 +13,7 @@ from rest_framework.decorators import action
 # from rq import Queue
 # from worker import conn
 import django_rq
+import random
 
 
 from apps.models import MobileApp
@@ -105,23 +106,24 @@ def process_request(app_facebook_id, oauth_token, facebook_id):
     # If it's a new user, create new AppUser objects for his friends
     app_user.update_friends() 
 
-    if mobile_app.default_algorithm:
+    #if mobile_app.default_algorithm:
         # Creates a suggestion list if one doesn't yet exist
         # This will go off and start running the default algorithm
 
+    algorithm_method_id = random.randint(4,6)
 
         #Janky shit
-        if (app_user_membership.app_user.name=='Mitchell Levy'):
-            sl, sl_created = SuggestionList.objects.get_or_create(app_user_membership=app_user_membership,
-                                            algorithm=Algorithm.objects.get(algorithm_method_id=3) )
-        else:
-            sl, sl_created = SuggestionList.objects.get_or_create(app_user_membership=app_user_membership,
-                                            algorithm=mobile_app.default_algorithm)
+        #if (app_user_membership.app_user.name=='Mitchell Levy'):
+        #    sl, sl_created = SuggestionList.objects.get_or_create(app_user_membership=app_user_membership,
+        #                                    algorithm=Algorithm.objects.get(algorithm_method_id=3) )
+        
+    sl, sl_created = SuggestionList.objects.get_or_create(app_user_membership=app_user_membership,
+                                            algorithm=Algorithm.objects.get(algorithm_method_id=algorithm_method_id))
 
-        if sl_created:
-            sl.generate_suggestions()
+    if sl_created:
+        sl.generate_suggestions()
         # return Response(status=status.HTTP_201_CREATED)
-            return True
+        return True
     else:
         # TODO: use less ghetto way of error handling
         error = "No default algorithm set"
