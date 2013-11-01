@@ -116,7 +116,7 @@ def photos(facebook_id, oauth_token):
 
 def increment_scores(object_list, id_score_dict, object_weight):
     for attribute in object_list:
-        friend_id = attribute['id']
+        friend_id = int(attribute['id'])
         try:
             id_score_dict[friend_id] += object_weight
         except LookupError:
