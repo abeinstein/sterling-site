@@ -75,6 +75,18 @@ def weighted_mutual_friends(facebook_id, oauth_token):
 
     return sorted(wmf_score_dict, key=wmf_score_dict.get, reverse = True)
 
+def feed(facebook_id, oauth_token):
+    graph = facebook.GraphAPI(oauth_token)
+    feed = graph.get_object(facebook_id + "/feed")['data']
+    entries = []
+
+    for entry in feed:
+        entries.append(entry['from']['id'])
+
+    entries = [entry for entry in entries if entry!=facebook_id]
+    entries_set = list(set(entries))
+    return sorted(entries_set, key= entries.index, reverse=True)
+
 def photos(facebook_id, oauth_token):
     '''Looks at photos that the user has recently been tagged in
     and assigns scores to each friend based on their likes, comments
