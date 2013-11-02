@@ -67,7 +67,7 @@ def weighted_mutual_friends(facebook_id, oauth_token):
     for friend in friends:
         friend_count = friend['friend_count']
         if (friend_count >= 500):
-            weighted_friend_count = (friend['mutual_friend_count']**3)/(friend['friend_count']+0.0)
+            weighted_friend_count = (friend['mutual_friend_count']**2)/(friend['friend_count']+0.0)
             score = weighted_friend_count
         else:
             score = 0
