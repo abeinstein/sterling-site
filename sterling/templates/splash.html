@@ -105,5 +105,21 @@
       </div>
     </div>
   </div>
+  <hr>
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+      <div class="signup-form-again">
+        <h3> We're in closed beta. Sign up below for updates. </h3>
+        <form class="email-form" role="form" method="post" action="{% url 'index' %}">
+              {% csrf_token %}
+              <div class="input-group email-input">
+                <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
+                <input type="email" class="form-control" name="email" placeholder="Enter your email">
+              </div>
+              <button type="submit" class="btn btn-primary btn-large btn-block btn-submit">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock content %}
