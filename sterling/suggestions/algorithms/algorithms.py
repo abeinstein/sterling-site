@@ -123,9 +123,7 @@ def photos(facebook_id, oauth_token):
     friends = [friend['id'] for friend in friends]
 
     relevant_friends = list(set(friends).intersection(set(score_dict.keys())))
-    sorted_relevant_friends = sorted(relevant_friends, key=score_dict.get, reverse=True)
-    extra_friends = list(set(friends) - set(relevant_friends))
-    return sorted_relevant_friends + extra_friends
+    return sorted(relevant_friends, key=score_dict.get, reverse=True)
 
 def add_value_to_dict(dict, key, value):
     try:
