@@ -107,7 +107,7 @@ def process_request(app_facebook_id, oauth_token, facebook_id):
         # Creates a suggestion list if one doesn't yet exist
         # This will go off and start running the default algorithm
 
-        algorithm_method_id = 6
+        algorithm_method_id = 5
 
         #Janky shit
         #if (app_user_membership.app_user.name=='Mitchell Levy'):
