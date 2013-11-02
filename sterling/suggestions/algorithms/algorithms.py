@@ -83,60 +83,53 @@ def photos(facebook_id, oauth_token):
     '''
     graph = facebook.GraphAPI(oauth_token)
     photos = graph.get_object(facebook_id + "/photos")['data']
-    photo_score_dict = {}
-    photo_score_dict_2 = {}
+    score_dict = {}
 
     for photo in photos:
         '''Trying to access tags/comments/likes will return 
         a KeyError if there are none for a photo'''
         try:
             tags = photo['tags']['data']
-            increment_scores(tags, photo_score_dict, 5)
+            for tag in tags:
+                uid = tag['id']
+                add_value_to_dict(score_dict, uid, 3)
         except KeyError:
-            continue
+            pass
 
         try:
             comments = photo['comments']['data']
-            increment_scores(comments, photo_score_dict, 3)
+            for comment in comments:
+                uid = comment['from']['id']
+                add_value_to_dict(score_dict, uid, 2)
         except KeyError:
-            continue
+            pass
 
         try:
             likes = photo['likes']['data']
-            increment_scores(likes, photo_score_dict, 2)
+            for like in likes:
+                uid = like['id']
+                add_value_to_dict(score_dict, uid, 1)
         except KeyError:
-            continue
+            pass
 
     '''Get rid of the original person'''
     try:
-        del photo_score_dict[str(facebook_id)]
+        del score_dict[str(facebook_id)]
     except KeyError:
         pass
 
+    '''Get rid of anyone that isn't friends with the user'''
     friends = graph.get_connections("me", "friends")['data']
     friends = [friend['id'] for friend in friends]
 
-    for friend in friends:
-        try:
-            photo_score_dict_2[friend] = photo_score_dict[friend]
-        except KeyError:
-            continue
+    relevant_friends = list(set(friends).intersection(set(score_dict.keys())))
+    return sorted(relevant_friends, key=score_dict.get, reverse=True)
 
-    return sorted(photo_score_dict_2, key=photo_score_dict_2.get, reverse = True)
-
-def increment_scores(object_list, id_score_dict, object_weight):
-    for attribute in object_list:
-        friend_id = attribute['id']
-        try:
-            id_score_dict[friend_id] += object_weight
-        except LookupError:
-            id_score_dict[friend_id] = object_weight
-
-
-
-
-
-
+def add_value_to_dict(dict, key, value):
+    try:
+        dict[key] += value
+    except LookupError:
+        dict[key] = value
 
 
 
