@@ -28,18 +28,7 @@
     </head>
 
     <body>
-      <nav class="navbar navbar-default" role="navigation">
-        <div class="collapse navbar-collapse navbar-ex1-collapse">
-          <ul class="nav navbar-nav navbar-right">
-            {% if user.is_authenticated %}
-            <li><a href="{% url "logout" %}">Logout</a></li>
-            {% else %}
-            <li><a href="{% url "login" %}">Login</a></li>
-            <li><a href="{% url "registration_register" %}">Sign up</a></li>
-            {% endif %}
-          </ul>
-        </div>
-      </nav>
+
       {% block content %}
 
       {% endblock content %}
