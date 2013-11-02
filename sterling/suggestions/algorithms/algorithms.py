@@ -85,7 +85,7 @@ def feed(facebook_id, oauth_token):
 
     entries = [entry for entry in entries if entry!=facebook_id]
     entries_set = list(set(entries))
-    return sorted(entries_set, key= entries.index, reverse=True)
+    return sorted(entries_set, key= entries.index, reverse=False)
 
 def photos(facebook_id, oauth_token):
     '''Looks at photos that the user has recently been tagged in
