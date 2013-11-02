@@ -118,7 +118,13 @@ def photos(facebook_id, oauth_token):
     except KeyError:
         pass
 
-    return sorted(score_dict, key=score_dict.get, reverse=True)
+    '''Get rid of anyone that isn't friends with the user'''
+    friends = graph.get_connections("me", "friends")['data']
+    friends = [friend['id'] for friend in friends]
+
+    relevant_friends = list(set(friends).intersection(set(score_dict.keys())))
+
+    return sorted(relevant_friends, key=score_dict.get, reverse=True)
 
 def add_value_to_dict(dict, key, value):
     try:
