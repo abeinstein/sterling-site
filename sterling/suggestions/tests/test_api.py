@@ -37,7 +37,7 @@ class SuggestionsAPITests(APITestCase):
         self.appUserMembership = AppUserMembership.objects.create(
             app_user=self.appUser,
             mobile_app=self.mobile_app,
-            oauth_token='CAAGoRPx0jlMBAKjCg3VSysoqSvosYw8k6ZA6mw6A5Ee4D74kveQbvMpDjeJbU5gHaJBBcuNlG7dnG9ysQcT7wZC7MZAMVpQhaNr4q2ZCZB5zE7eKbgrFzBdR0M9z4NtDd29ZABguV7HkcZCsjAhZAtvZB25yv0kIyeQLvaE2zROPXg78LB4ohzeriEdAMP3rTXwIZD'
+            oauth_token='CAAGoRPx0jlMBADRjwZA3iWGtPbwVtGDfnzm1FgDUAave26tuzGNPxj9EfBz6QGce8qT3Y85LFeoepJfpA0xheossfFtXoEx6vE9fczxSgXBYJqdZAisFNWDJOaZCMc7qvIYdYMIECntfSpLFr7mUa5tzjom1OYsryCksMY5JM2HZBuZBVVH2Js7OVWSfOAooZBRrZBKd8Tc7wZDZD'
         )
 
         self.appUser.update_friends()
@@ -52,7 +52,7 @@ class SuggestionsAPITests(APITestCase):
     def test_create_new_app_user(self):
         data = {
             'app_facebook_id': self.mobile_app.facebook_id,
-            'oauth_token': 'CAAGoRPx0jlMBAP40vaZA8fDgaobEndtO5JjBJOaNKHkyH8K3LLcgA5oeMC0eiWiRSTz4xdQy6utnF1z50JJiSAZBKDaVsnl2tBKRMfHtceuGMVj108gKlvx4Q0f64nA8pdJQesc5GTzf7rkzddVZC0KG6yLJhdkZCdcxbiKIIaQZB3ZCFL8E4XoqEZCzCJuaeUZD',
+            'oauth_token': 'CAAGoRPx0jlMBABi0XvUAZAftICqw6dwQQz3N4OrTDqd5UByP03QrNYmHgopY9jVEcXIhq3OXpnu1MvTZAYfmgoQlVDqx96dEZA6UdhMWKKZAnrVBOUMZCQgVK9wVdljviHWD63IUoY2nMXZADUUavZBoPRFajyzN9nQJnow56fFRZCvd0NmT7VvtgCHZBwDhHClaSqrBmtYHyhQZDZD',
             'facebook_id': user_facebook_id
         }
         response = self.client.post('/appUserLogin/', data, format='json')
