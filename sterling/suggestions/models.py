@@ -118,8 +118,6 @@ class Algorithm(models.Model):
         }
         return algorithm_dict[self.algorithm_method_id]
 
-
-
 class SuggestionList(models.Model):
     ''' Represents a list of suggestions. This is also a 'through' model betweeen 
     AppUserMembership and Algorithm 
