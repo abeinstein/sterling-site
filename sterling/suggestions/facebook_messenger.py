@@ -24,8 +24,6 @@ class SendMsgsBot(sleekxmpp.ClientXMPP):
             sug = Suggestion.objects.get(app_user__facebook_id=recipient_id, suggestion_list=self.suggestion_list)
             self.message += " %s" % sug.link
             
-            self.message = "Trick or Treat at AEPi for dirty girl scouts and more!"
-
             self.send_message(mto=recipient, mbody=self.message, mtype='chat')
         
         self.disconnect(wait=True)
