@@ -24,8 +24,9 @@ h1, h2, h3, h4 {
   padding-top: 100px;
   padding-bottom: 100px;
   background-color: white;
-  background-image: url("../img/cream_pixels_@2X.png");
-}
+
+/*  background-image: url("../img/cream_pixels_@2X.png");
+*/}
 
 .iphone-screenshot {
   max-width: 300px;
@@ -44,7 +45,7 @@ h1, h2, h3, h4 {
 .logo {
     font-size: 5em;
     text-align: center;
-    color: black
+    color: rgb(51, 83, 109);
 }
 
 /* TODO: Fix to make responsive */
@@ -59,7 +60,7 @@ h1, h2, h3, h4 {
 .tagline {
     text-align: center;
     font-size: 24px;
-    color: black;
+    color: rgb(51, 83, 109);
 }
 
 
@@ -92,7 +93,11 @@ h1, h2, h3, h4 {
 
 .description {
     font-size: 24px;
-    color: black;
+    color: rgb(116, 135, 150);
+}
+
+.description h2 {
+  color: rgb(51, 83, 109);
 }
 
 
