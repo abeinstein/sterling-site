@@ -3,14 +3,18 @@
 {% block content %}
 <div class="first">
 <nav class="navbar navbar-default" role="navigation">
+  <div class='navbar-header'>
+    <a class="navbar-brand"><i class="fa fa-circle-o" style="padding-right: 3px"></i>   sterling </a>
+  </div>
   <div class="collapse navbar-collapse navbar-ex1-collapse">
+
     <ul class="nav navbar-nav navbar-right">
       {% if user.is_authenticated %}
       <li><a href="{% url "logout" %}">Logout</a></li>
       {% else %}
-      <li><a href="{% url "login" %}">Login</a></li>
-      <li><a href="{% url "registration_register" %}">Sign up</a></li>
-      {% endif %}
+<!--       <li><a href="{% url "login" %}">Login</a></li> -->
+<!--       <li><a href="{% url "registration_register" %}">Sign up</a></li>
+ -->      {% endif %}
     </ul>
   </div>
 </nav>
@@ -41,7 +45,7 @@
               <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
               <input type="email" class="form-control" name="email" placeholder="Enter your email to get on the waiting list.">
             </div>
-            <button type="submit" class="btn btn-primary btn-large btn-block">Submit</button>
+            <button type="submit" class="btn btn-primary btn-large btn-block btn-submit">Submit</button>
           </form>
         </div>
         </div>

@@ -16,6 +16,14 @@ h1, h2, h3, h4 {
     color: black;
 }
 
+.navbar {
+  border-radius: 0;
+}
+
+/*.navbar-brand {
+  font-family: 'Merriweather', serif;
+}*/
+
 .first {
   min-height: 100%;
 }
@@ -43,7 +51,7 @@ h1, h2, h3, h4 {
 }
 
 .logo {
-    font-size: 5em;
+    font-size: 6.5em;
     text-align: center;
     color: rgb(51, 83, 109);
 }
@@ -59,7 +67,7 @@ h1, h2, h3, h4 {
 
 .tagline {
     text-align: center;
-    font-size: 24px;
+    font-size: 2em;
     color: rgb(51, 83, 109);
 }
 
@@ -84,6 +92,7 @@ h1, h2, h3, h4 {
 .email-input {
   padding-bottom: 10px;
 }
+
 
 .bar-graph-icon {
   font-size: 300px;
