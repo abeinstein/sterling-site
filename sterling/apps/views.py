@@ -1,6 +1,7 @@
 # Create your views here.
 from registration.backends.simple.views import RegistrationView
 from vanilla import ListView, CreateView, DetailView
+from django.views.generic import TemplateView
 
 from django.core.urlresolvers import reverse, reverse_lazy
 
@@ -39,6 +40,32 @@ class AppDetailView(DetailView):
         context['total_users'] = mobileapp.num_users()
         return context
 
+class AppDemographicsView(DetailView):
+    model = MobileApp
+    template_name = "apps/mobileapp_demographics.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(AppDemographicsView, self).get_context_data(**kwargs)
+        mobileapp = context['mobileapp']
+        return context
+
+class AppSettingsView(DetailView):
+    model = MobileApp
+    template_name = "apps/mobileapp_settings.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(AppSettingsView, self).get_context_data(**kwargs)
+        mobileapp = context['mobileapp']
+        return context
+
+class AppAlgorithmsView(DetailView):
+    model = MobileApp
+    template_name = "apps/mobileapp_algorithms.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(AppAlgorithmsView, self).get_context_data(**kwargs)
+        mobileapp = context['mobileapp']
+        return context
 
 class SterlingRegistrationView(RegistrationView):
 
