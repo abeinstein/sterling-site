@@ -13,7 +13,6 @@
 <div class="growth">
     <ul>
         <li> Users: {{ total_users }}</li>
-        <li> Number of times button was clicked: {{ num_suggested_list }} </li>
         <li> Number of invitations sent: {{ num_invited }}</li>
         <li> Number of invitations accepted: {{ num_accepted }}</li>
         {% if conversion_rate %}
@@ -23,14 +22,5 @@
     </ul>
 </div>
 
-<div class="demographics">
-    <ul>
-        <li> Percent Male / Percent Female: </li>
-        <li> Age groups: </li>
-    </ul>
-</div>
 
-<div class="algorithms">
-    <ul>
-        <li> Algorithms used:
 {% endblock content %}
