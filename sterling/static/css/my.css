@@ -67,7 +67,7 @@ h1, h2, h3, h4 {
 
 .tagline {
     text-align: center;
-    font-size: 2em;
+    font-size: 3em;
     color: rgb(51, 83, 109);
 }
 
@@ -93,8 +93,8 @@ h1, h2, h3, h4 {
 
 .sign-in {
   text-align: center;
+  font-size: 3em;
 }
-
 
 .bar-graph-icon {
   font-size: 300px;
