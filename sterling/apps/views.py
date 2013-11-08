@@ -17,7 +17,10 @@ class AppHomeView(RedirectView):
         return MobileApp.objects.filter(users__exact=self.request.user)
 
     def dispatch(self, request, *args, **kwargs):
-        return redirect('detail/%d' % int(self.get_queryset()[0].pk) )
+        if self.get_queryset():
+            return redirect('detail/%d' % int(self.get_queryset()[0].pk) )
+        else:
+            return redirect('list/')
 
 #     def get_redirect_url(self, **kwargs):
 #         app_pk = self.get_queryset()[0].pk
