@@ -71,6 +71,11 @@ h1, h2, h3, h4 {
     color: rgb(51, 83, 109);
 }
 
+.dashboard {
+  margin-left: 25px;
+  margin-top: 25px;
+}
+
 .center-container {
   position: relative;
 }

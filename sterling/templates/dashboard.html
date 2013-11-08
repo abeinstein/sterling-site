@@ -2,7 +2,8 @@
 
 {% block content %}
 
-<h2> My Apps </h2>
+<div class="dashboard">
+    <h2> My Apps </h2>
     <ul>
         {% for app in object_list %}
             <li><a href="{% url 'detail_app' app.pk %}"> {{ app.name }} </a></li>
@@ -10,5 +11,6 @@
     </ul>
 
     <a href="{% url 'create_app' %}" class="btn btn-primary">Add an app</a>
+</div>
 
 {% endblock content %}
