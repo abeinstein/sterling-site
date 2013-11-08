@@ -2,7 +2,11 @@
 
 {% block content %}
 
+<div class="dashboard">
+<div class="dashboard-header">
 <h1> {{ mobileapp.name }} </h1>
+</div>
+
 <ul class="nav nav-tabs">
     <li> <a href="{% url 'detail_app' pk=mobileapp.pk %}"> Growth </a> </li>
     <li> <a href="{% url 'demographics_app' pk=mobileapp.pk %}"> Demographics </a></li>
@@ -15,6 +19,7 @@
     <ul>
         <li> Algorithms used: </li>
     </ul>
+</div>
 </div>
 
 {% endblock content %}

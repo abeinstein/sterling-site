@@ -1,11 +1,29 @@
 # Create your views here.
 from registration.backends.simple.views import RegistrationView
-from vanilla import ListView, CreateView, DetailView
+from vanilla import ListView, CreateView, DetailView, RedirectView
 from django.views.generic import TemplateView
+from django.http import HttpResponseRedirect
 
 from django.core.urlresolvers import reverse, reverse_lazy
+from django.shortcuts import redirect
 
 from .models import MobileApp, DevMembership
+
+class AppHomeView(RedirectView):
+    template_name = 'apps/mobileapp_detail.html'
+    model = MobileApp
+
+    def get_queryset(self):
+        return MobileApp.objects.filter(users__exact=self.request.user)
+
+    def dispatch(self, request, *args, **kwargs):
+        return redirect('detail/%d' % int(self.get_queryset()[0].pk) )
+
+#     def get_redirect_url(self, **kwargs):
+#         app_pk = self.get_queryset()[0].pk
+#         kwargs = {'pk': app_pk}
+#         url = reverse('detail_app', kwargs=kwargs)
+#         return HttpResponseRedirect(url)
 
 class AppListView(ListView):
     model = MobileApp
