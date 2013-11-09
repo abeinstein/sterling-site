@@ -7,12 +7,12 @@
 <h1> {{ mobileapp.name }} </h1>
 </div>
 
-<ul class="nav nav-tabs">
+
+<ul class="nav nav-list col-md-2">
     <li class="active"> <a href="{% url 'detail_app' pk=mobileapp.pk %}"> Growth </a> </li>
     <li> <a href="{% url 'demographics_app' pk=mobileapp.pk %}"> Demographics </a></li>
     <li> <a href="{% url 'algorithms_app' pk=mobileapp.pk %}">Algorithms </a></li>
     <li> <a href="{% url 'settings_app' pk=mobileapp.pk %}">Settings </a></li>
-
 </ul>
 
 <div class="growth">
