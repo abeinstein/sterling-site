@@ -20,13 +20,16 @@
       <ul class="nav navbar-nav navbar-right">
         {% if user.is_authenticated %}
 
-        <li><a href="{% url "app_list" %}">My apps</a></li>
+        {% for app in user.mobileapp_set.all %}
+            <li><a href="{% url 'detail_app' app.pk %}"> {{ app }} </a></li>
+        {% endfor %}
+
+        <li><a href="{% url "app_list" %}">My Apps</a></li>
+
         <li><a href="{% url "logout" %}">Logout</a></li>
+
         {% else %}
         <li><a href="{% url "index" %}">Home</a></li>
-        {% for app in object_list %}
-            <li><a href="{% url 'detail_app' app.pk %}"> {{ app.name }} </a></li>
-        {% endfor %}
   <!--       <li><a href="{% url "login" %}">Login</a></li> -->
   <!--       <li><a href="{% url "registration_register" %}">Sign up</a></li>
    -->      {% endif %}
