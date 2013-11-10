@@ -7,7 +7,7 @@
 <h1> {{ appsettings.mobile_app.name }} </h1>
 </div>
 
-<ul class="nav nav-list col-md-2">
+<ul class="nav nav-list col-md-2 well">
     <li> <a href="{% url 'detail_app' pk=appsettings.mobile_app.pk %}"> Growth </a> </li>
     <li> <a href="{% url 'demographics_app' pk=appsettings.mobile_app.pk %}"> Demographics </a></li>
     <li> <a href="{% url 'settings_app' pk=appsettings.pk %}">Settings </a></li>
@@ -15,7 +15,7 @@
 </div>
 
 <div class="algorithm-settings col-md-8">
-
+<p> Customize the friends that your users see. Do you want them to see their athletic friends? Their liberal friends? How about their college friends in Chicago who like food? </p>
 <form action="{% url 'settings_app' pk=appsettings.pk %}" method="post">
     {{ form.non_field_errors }}
     {% csrf_token %}

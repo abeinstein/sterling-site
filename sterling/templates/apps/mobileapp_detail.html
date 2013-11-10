@@ -54,48 +54,20 @@
         chart.draw(data, options);
       }
 </script>
-<div class = "sidebar">
-<ul class="nav nav-list col-md-2">
-    <li class="active"> <a href="{% url 'detail_app' pk=mobileapp.pk %}"> Growth </a> </li>
-    <li> <a href="{% url 'demographics_app' pk=mobileapp.pk %}"> Demographics </a></li>
-    <li> <a href="{% url 'settings_app' pk=mobileapp.appsettings.pk %}">Settings </a></li>
-</ul>
-</div>
-<div class = "table-div">
-    <table class="growth">
-        <thead>
-            <tr>
-            <th>Users</th>
-            <th>Invitations</th>
-            <th>Accepted</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td> {{ total_users }} </th>
-                <td> {{ num_invited }} </th>
-                <td> {{ num_accepted }} </th>
-            </tr>
-        </tbody>
-    </table>
-</div>
-<div id="chart-div" style="width: 1000px; height: 500px;"></div>
-
 <div class="growth">
     <div class="row">
-        <div class="col-md-6">
-            <ul class="list-group">
+        <div class="col-md-7">
+            <ul class="list-group" style="padding-top: 30px; padding-left: 50px;">
                 <li class="list-group-item"> Users: <span class="badge">{{ total_users }}</span></li>
                 <li class="list-group-item">Number of invitations sent: <span class="badge">{{ num_invited }}</span></li>
                 <li class="list-group-item"> Number of invitations accepted: <span class="badge">{{ num_accepted }}</span></li>
                 {% if conversion_rate %}
                 <li class="list-group-item">Conversion rate: <span class="badge">{{ conversion_rate }}</span>  </li>
                 {% endif %}
-                
             </ul>
         </div>
     </div>
 </div>
-<div id="chart-div" style="width: 800px; height: 400px;"></div>
+<div id="chart-div" style="width: 900px; height: 400px;"></div>
 
 {% endblock mobileapp-content %}
