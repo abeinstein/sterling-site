@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard">
+<div class="dashboard-header">
+<h1> {{ mobileapp.name }} </h1>
+</div>
+
+<ul class="nav nav-list col-md-2 well mobileapp-nav">
+    <li> <a href="{% url 'detail_app' pk=mobileapp.pk %}"> Growth </a> </li>
+    <li>  <a href="{% url 'demographics_app' pk=mobileapp.pk %}"> Demographics </a></li>
+    <li>  <a href="{% url 'settings_app' pk=mobileapp.appsettings.pk %}">Settings </a></li>
+</ul>
+
+{% block mobileapp-content %}
+
+{% endblock mobileapp-content %}
+
+</div>
+
+{% endblock content %}

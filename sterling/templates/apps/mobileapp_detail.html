@@ -1,11 +1,6 @@
-{% extends "base.html" %}
-{% block content %}
+{% extends "apps/mobileapp_base.html" %}
+{% block mobileapp-content %}
 {% load staticfiles %}
-
-<div class="dashboard">
-<div class="dashboard-header">
-<h1> {{ mobileapp.name }} Growth </h1>
-</div>
 
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript" src="{% static "js/date.js" %}"></script>
@@ -61,25 +56,21 @@
       }
 </script>
 
-<ul class="nav nav-list col-md-2">
-    <li class="active"> <a href="{% url 'detail_app' pk=mobileapp.pk %}"> Growth </a> </li>
-    <li> <a href="{% url 'demographics_app' pk=mobileapp.pk %}"> Demographics </a></li>
-    <li> <a href="{% url 'algorithms_app' pk=mobileapp.pk %}">Algorithms </a></li>
-    <li> <a href="{% url 'settings_app' pk=mobileapp.appsettings.pk %}">Settings </a></li>
-</ul>
-
 <div class="growth">
-    <ul>
-        <li> Users: {{ total_users }}</li>
-        <li> Number of invitations sent: {{ num_invited }}</li>
-        <li> Number of invitations accepted: {{ num_accepted }}</li>
-        {% if conversion_rate %}
-        <li> Conversion rate: {{ conversion_rate }}  </li>
-        {% endif %}
-        
-    </ul>
+    <div class="row">
+        <div class="col-md-6">
+            <ul class="list-group">
+                <li class="list-group-item"> Users: <span class="badge">{{ total_users }}</span></li>
+                <li class="list-group-item">Number of invitations sent: <span class="badge">{{ num_invited }}</span></li>
+                <li class="list-group-item"> Number of invitations accepted: <span class="badge">{{ num_accepted }}</span></li>
+                {% if conversion_rate %}
+                <li class="list-group-item">Conversion rate: <span class="badge">{{ conversion_rate }}</span>  </li>
+                {% endif %}
+                
+            </ul>
+        </div>
+    </div>
 </div>
-<div id="chart-div" style="width: 1000px; height: 500px;"></div>
-</div>
+<div id="chart-div" style="width: 800px; height: 400px;"></div>
 
-{% endblock content %}
+{% endblock mobileapp-content %}

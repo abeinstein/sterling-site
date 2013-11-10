@@ -183,3 +183,7 @@ h1, h2, h3, h4 {
     width: 600px;
     margin: 0 auto;
 }
+
+.mobileapp-nav {
+  margin-right: 50px;
+}
