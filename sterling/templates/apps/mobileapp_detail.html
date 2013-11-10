@@ -1,12 +1,65 @@
 {% extends "base.html" %}
-
 {% block content %}
+{% load staticfiles %}
 
 <div class="dashboard">
 <div class="dashboard-header">
-<h1> {{ mobileapp.name }} </h1>
+<h1> {{ mobileapp.name }} Growth </h1>
 </div>
 
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript" src="{% static "js/date.js" %}"></script>
+<script type="text/javascript">
+    
+    function lastMonth(){
+        var days = [];
+        var daysAgo = Date.today().add({days: -28});
+        while (daysAgo <= Date.today()){
+            days.push(new Date(daysAgo))
+            daysAgo.add({days:1})
+        }
+        return days
+    }
+
+
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+
+        days = lastMonth();
+        formatted_data = [];
+        formatted_data[0] = ['Day','Shares', 'Conversions'];
+        data = JSON.parse("{{dates_invited|escapejs}}");
+        for (var i = 1; i <= days.length; i++){
+            found = false
+            day = days[i-1];
+            for (key in data){
+                current = Date.parse(key);
+                if (day.valueOf() == current.valueOf()){
+                    formatted_data[i] = [current.toString("dd MMM")].concat(data[key]);
+                    found = true
+                }
+            }
+
+            if (!found){
+                console.log("!found" + i.toString())
+                formatted_data[i] = [day.toString("dd MMM"), 0, 0];
+            }
+        }
+
+        console.log(formatted_data.toString())
+
+        var data = google.visualization.arrayToDataTable(formatted_data);
+        var options = {
+          title: 'Company Performance',
+          hAxis: {title: 'Day', titleTextStyle: {color: 'black'}}
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart-div'));
+        chart.draw(data, options);
+      }
+</script>
 
 <ul class="nav nav-list col-md-2">
     <li class="active"> <a href="{% url 'detail_app' pk=mobileapp.pk %}"> Growth </a> </li>
@@ -26,7 +79,7 @@
         
     </ul>
 </div>
-
+<div id="chart-div" style="width: 1000px; height: 500px;"></div>
 </div>
 
 {% endblock content %}

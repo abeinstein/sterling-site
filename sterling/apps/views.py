@@ -6,6 +6,7 @@ from django.http import HttpResponseRedirect
 
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.shortcuts import redirect
+from django.utils import simplejson as json
 
 from .models import MobileApp, DevMembership
 
@@ -59,6 +60,16 @@ class AppDetailView(DetailView):
         if context['num_invited']:
             context['conversion_rate'] = float(context['num_accepted']) / context['num_invited']
         context['total_users'] = mobileapp.num_users()
+        context['dates_invited'] = json.dumps({'2013-11-01T00:00:00': [40, 4], 
+                                    '2013-11-02T00:00:00': [50, 6],
+                                    '2013-11-03T00:00:00': [60, 9],
+                                    '2013-11-04T00:00:00': [90, 11],
+                                    '2013-11-05T00:00:00': [50, 7],
+                                    '2013-11-06T00:00:00': [30, 2],
+                                    '2013-11-07T00:00:00': [50, 7],
+                                    '2013-11-08T00:00:00': [90, 11],
+                                    '2013-11-09T00:00:00': [30, 12],
+                                    '2013-11-10T00:00:00': [50, 6]})
         return context
 
 class AppDemographicsView(DetailView):
