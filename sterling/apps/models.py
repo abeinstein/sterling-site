@@ -44,8 +44,6 @@ class MobileApp(models.Model):
                                          times_invited__gt=0,
                                          created__lt=datetime).count()
 
-
-
     def num_invitations_joined(self, datetime=datetime.datetime.now()):
         ''' Returns number of invitations that resulted in app signups '''
         return Suggestion.objects.filter(suggestion_list__app_user_membership__mobile_app=self,
@@ -56,12 +54,23 @@ class AppSettings(models.Model):
     ''' Contains settings chosen for a given app's algorithms
     and maybe eventually for other stuff'''
     mobile_app = models.OneToOneField(MobileApp)
-    sports_fans = models.BooleanField(default=False)
-    political_bias = models.CharField(max_length=100, null=True, blank=True)
-    tech_enthusiast = models.BooleanField(default=False)
-    outdoors_lovers = models.BooleanField(default=False)
-    city = models.TextField(max_length=250, null=True, blank=True)
 
+    likes_sports = models.BooleanField(default=False)
+    likes_technology = models.BooleanField(default=False)
+    likes_books = models.BooleanField(default=False)
+    likes_nature = models.BooleanField(default=False)
+    likes_games = models.BooleanField(default=False)
+    likes_restaurants = models.BooleanField(default=False)
+    likes_music = models.BooleanField(default=False)
+
+    political_bias = models.IntegerField(blank=True, null=True)
+    same_city = models.BooleanField(default=False)
+    city = models.CharField(max_length=250, null=True, blank=True)
+    social_circle = models.CharField( choices=( ("family", "family"), 
+                                                ("colleagues", "colleagues"), 
+                                                ("college_friends", "college_friends"),
+                                                ("high_school_friends", "high_school_friends") ),
+                                                max_length = 100, blank=True, null=True )
 
 class DevMembership(models.Model):
     ''' 'Through' model for app signups. '''
