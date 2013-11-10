@@ -2,7 +2,8 @@ from django.contrib.auth.views import login, logout
 from django.conf.urls import patterns, include, url
 from splash.views import SplashFormView
 from vanilla import RedirectView
-from apps.views import AppListView, AppCreateView, AppDetailView, SterlingRegistrationView, AppDemographicsView, AppAlgorithmsView, AppSettingsView, AppHomeView
+from apps.views import AppListView, AppCreateView, AppDetailView, SterlingRegistrationView, \
+AppDemographicsView, AppAlgorithmsView, AppSettingsView, AppHomeView, AppHelpView
 
 
 # Uncomment the next two lines to enable the admin:
@@ -23,8 +24,9 @@ urlpatterns = patterns('',
     url(r'^apps/list/$', AppListView.as_view(), name='app_list'),
     url(r'^apps/detail/(?P<pk>\d+)/$', AppDetailView.as_view(), name="detail_app"),
     url(r'^apps/detail/(?P<pk>\d+)/demographics/$', AppDemographicsView.as_view(), name="demographics_app"),
-    url(r'^apps/detail/(?P<pk>\d+)/algorithms/$', AppAlgorithmsView.as_view(), name="algorithms_app"),
+    # url(r'^apps/detail/(?P<pk>\d+)/algorithms/$', AppAlgorithmsView.as_view(), name="algorithms_app"),
     url(r'^apps/detail/(?P<pk>\d+)/settings/$', AppSettingsView.as_view(), name="settings_app"),
+    url(r'^help/$', AppHelpView.as_view(), name="help"),
     url(r'^apps/create/$', AppCreateView.as_view(), name="create_app"),
     url(r'^accounts/register/', SterlingRegistrationView.as_view(), name="registration_register"),
     url(r'^accounts/', include('registration.backends.simple.urls')),

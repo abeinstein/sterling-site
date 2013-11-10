@@ -1,11 +1,6 @@
-{% extends "base.html" %}
-{% block content %}
+{% extends "apps/mobileapp_base.html" %}
+{% block mobileapp-content %}
 {% load staticfiles %}
-
-<div class="dashboard">
-<div class="dashboard-header">
-<h1> {{ mobileapp.name }} Growth </h1>
-</div>
 
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript" src="{% static "js/date.js" %}"></script>
@@ -59,6 +54,7 @@
         chart.draw(data, options);
       }
 </script>
+<<<<<<< HEAD
 <div class = "sidebar">
 <ul class="nav nav-list col-md-2">
     <li class="active"> <a href="{% url 'detail_app' pk=mobileapp.pk %}"> Growth </a> </li>
@@ -86,6 +82,24 @@
     </table>
 </div>
 <div id="chart-div" style="width: 1000px; height: 500px;"></div>
-</div>
+=======
 
-{% endblock content %}
+<div class="growth">
+    <div class="row">
+        <div class="col-md-6">
+            <ul class="list-group">
+                <li class="list-group-item"> Users: <span class="badge">{{ total_users }}</span></li>
+                <li class="list-group-item">Number of invitations sent: <span class="badge">{{ num_invited }}</span></li>
+                <li class="list-group-item"> Number of invitations accepted: <span class="badge">{{ num_accepted }}</span></li>
+                {% if conversion_rate %}
+                <li class="list-group-item">Conversion rate: <span class="badge">{{ conversion_rate }}</span>  </li>
+                {% endif %}
+                
+            </ul>
+        </div>
+    </div>
+>>>>>>> 57cd68ead12383da5d60c648c76a1585fe95ba62
+</div>
+<div id="chart-div" style="width: 800px; height: 400px;"></div>
+
+{% endblock mobileapp-content %}

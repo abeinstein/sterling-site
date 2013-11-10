@@ -3,16 +3,14 @@ from django.forms import ModelForm, Select
 from apps.models import AppSettings
 
 CITIES = (  (None, "----"),
-            ("ATLANTA", "ATL"),
-            ("BOSTON", "BOS"),
-            ("CHICAGO", "CHI"),
-            ("HOUSTON", "HOU"),
-            ("LOS ANGELES", "LA"),
-            ("NEW YORK", "NY"),
-            ("SAN FRANCISCO", "SF"),
-            ("SEATTLE", "SEA"))
-
-
+            ("Atlanta, Georgia", "Atlanta, Georgia"),
+            ("Boston, Massachusetts", "Boston, Massachusetts"),
+            ("Chicago, Illinois", "Chicago, Illinois"),
+            ("Houston, Texas", "Houston, Texas"),
+            ("Los Angeles, California", "Los Angeles, California"),
+            ("New York, New York", "New York, New York"),
+            ("San Francisco, California", "San Francisco, California"),
+            ("Seattle, Washington", "Seattle, Washington"))
 
 class AppSettingsForm(ModelForm):
     class Meta:

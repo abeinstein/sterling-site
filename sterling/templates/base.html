@@ -13,11 +13,13 @@
 
   <nav class="navbar navbar-default" role="navigation">
     <div class='navbar-header'>
-      <a class="navbar-brand"><i class="fa fa-circle-o" style="padding-right: 3px"></i>   sterling </a>
+      <a class="navbar-brand" href="/"><i class="fa fa-circle-o" style="padding-right: 3px"></i>   sterling </a>
     </div>
     <div class="collapse navbar-collapse navbar-ex1-collapse">
 
+
       <ul class="nav navbar-nav navbar-right">
+        <li><a href="{% url 'help' %}">Help</a></li>
         {% if user.is_authenticated %}
 
         {% for app in user.mobileapp_set.all %}
@@ -67,6 +69,8 @@
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>    
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
     <script src="http://malsup.github.com/jquery.cycle2.js"></script>
+
+    
     
   </body>
   </html>
