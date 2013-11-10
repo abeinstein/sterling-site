@@ -1,14 +1,99 @@
 {% extends "apps/mobileapp_base.html" %}
-
 {% block mobileapp-content %}
+{% load staticfiles %}
+
+<meta charset="utf-8">
+
+<style>
+path {
+  stroke: white;
+  stroke-width: 0.25px;
+  fill: "grey";
+}
+</style>
+<body>
+<script type="text/javascript" src="http://sigmajs.org/js/sigma.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="{% static "js/sigma.parseGexf.js" %}" charset="utf-8"></script>
+<script type="text/javascript" src="{% static "js/sigma.forceatlas2.js" %}" charset="utf-8"></script>
+<script type="text/javascript">
+    function init() {
+// Instanciate sigma.js and customize rendering :
+var sigInst = sigma.init(document.getElementById('sigma-example')).drawingProperties({
+        defaultLabelColor: '#fff',
+        defaultLabelSize: 0,
+        defaultLabelBGColor: 'blue',
+        defaultLabelHoverColor: '#000',
+        labelThreshold: 6,
+        defaultEdgeType: 'curve'
+    }).graphProperties({
+        minNodeSize: 0.5,
+        maxNodeSize: 5,
+        minEdgeSize: 1,
+        maxEdgeSize: 1,
+        }).mouseProperties({
+        maxRatio: 4
+    });
 
 
-<div class="demographics">
-    <ul>
-        <li> Percent Male / Percent Female: </li>
-        <li> Age groups: </li>
-    </ul>
-</div>
+// Parse a GEXF encoded file to fill the graph
+// (requires "sigma.parseGexf.js" to be included)
+    sigInst.parseGexf("{% static "img/like_network_mine_weighted.gexf" %}");
+    
+     var greyColor = '#666';
+     sigInst.bind('overnodes',function(event){
+        var nodes = event.content;
+        var neighbors = {};
+        sigInst.iterEdges(function(e){
+            if(nodes.indexOf(e.source)<0 && nodes.indexOf(e.target)<0){
+                if(!e.attr['grey']){
+                    e.attr['true_color'] = e.color;
+                    e.color = greyColor;
+                    e.attr['grey'] = 1;
+                }
+            }else{
+                e.color = e.attr['grey'] ? e.attr['true_color'] : e.color;
+                e.attr['grey'] = 0;
+ 
+                neighbors[e.source] = 1;
+                neighbors[e.target] = 1;
+            }
+        }).iterNodes(function(n){
+            if(!neighbors[n.id]){
+                if(!n.attr['grey']){
+                    n.attr['true_color'] = n.color;
+                    n.color = greyColor;
+                    n.attr['grey'] = 1;
+            }
+            }else{
+                n.color = n.attr['grey'] ? n.attr['true_color'] : n.color;
+                n.attr['grey'] = 0;
+            }
+        }).draw(2,2,2);
+    }).bind('outnodes',function(){
+        sigInst.iterEdges(function(e){
+            e.color = e.attr['grey'] ? e.attr['true_color'] : e.color;
+            e.attr['grey'] = 0;
+        }).iterNodes(function(n){
+            n.color = n.attr['grey'] ? n.attr['true_color'] : n.color;
+            n.attr['grey'] = 0;
+        }).draw(2,2,2);
+    });
 
+    sigInst.startForceAtlas2();
+// Draw the graph :
+    sigInst.draw();
+}
+ 
+if (document.addEventListener) {
+    document.addEventListener("DOMContentLoaded", init, false);
+    } else {
+    window.onload = init;
+}
+
+</script>
+</body>
+</html>
+
+<div id="sigma-example" style="width: 1000px; height: 750px;"></div>
 
 {% endblock mobileapp-content %}

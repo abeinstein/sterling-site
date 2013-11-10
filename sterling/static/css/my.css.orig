@@ -222,7 +222,15 @@ h1, h2, h3, h4 {
 
 #chart-div {
     width: 600px;
+<<<<<<< HEAD
+    margin: 0 auto;
+    margin-top: 0px;
+    padding-top: 0px;
+    margin-top: 0px;
+    margin-bottom: 100px;
+=======
     margin: auto;
+>>>>>>> 6bbec749fdf396ec5aa1e65b10e1b5207403994a
 }
 
 .documentation {

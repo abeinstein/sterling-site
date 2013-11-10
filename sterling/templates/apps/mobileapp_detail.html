@@ -47,7 +47,6 @@
 
         var data = google.visualization.arrayToDataTable(formatted_data);
         var options = {
-          title: 'Company Performance',
           hAxis: {title: 'Day', titleTextStyle: {color: 'black'}}
         };
 
@@ -55,22 +54,20 @@
         chart.draw(data, options);
       }
 </script>
-
 <div class="growth">
     <div class="row">
-        <div class="col-md-6">
-            <ul class="list-group">
+        <div class="col-md-7">
+            <ul class="list-group" style="padding-top: 30px; padding-left: 50px;">
                 <li class="list-group-item"> Users: <span class="badge">{{ total_users }}</span></li>
                 <li class="list-group-item">Number of invitations sent: <span class="badge">{{ num_invited }}</span></li>
                 <li class="list-group-item"> Number of invitations accepted: <span class="badge">{{ num_accepted }}</span></li>
                 {% if conversion_rate %}
                 <li class="list-group-item">Conversion rate: <span class="badge">{{ conversion_rate }}</span>  </li>
                 {% endif %}
-                
             </ul>
         </div>
     </div>
 </div>
-<div id="chart-div" style="width: 800px; height: 400px;"></div>
+<div id="chart-div" style="width: 900px; height: 400px;"></div>
 
 {% endblock mobileapp-content %}
