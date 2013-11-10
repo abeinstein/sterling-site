@@ -2,7 +2,7 @@
 # Each algorithm should accept two arguments:
 # <facebook_id> and <oauth_token>
 import facebook
-import algorithms.utilities as utilities
+import utilities as utilities
 import networkx as nx
 
 def toy_algorithm(facebook_id, oauth_token):
