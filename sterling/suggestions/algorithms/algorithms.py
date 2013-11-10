@@ -48,6 +48,9 @@ class AlgorithmManager():
             # shitty hackathon code:
             filter_list = list(set(social_circle_friends).intersection(set(filter_list)))
 
+        if params['city'] is not None:
+            friends_in_city = get_friends_in_city(self.graph, params['city'])
+            filter_list = list(set(friends_in_city).intersection(set(filter_list)))
 
         if params['likes_books']:
             books_friends = to_dict(sorted(best_friends.keys(), key=lambda fbid: books_score(fbid, self.graph), reverse=True))
@@ -72,11 +75,24 @@ class AlgorithmManager():
             bf_score = best_friends[fbid]
             return (pref_score + bf_score)
 
-        return sorted(filter_list.keys(), key=rank)
+        return sorted(filter_list, key=rank)
 
 def to_dict(ordered_list):
     return dict([(val, i) for i, val in enumerate(ordered_list)])
 
+def get_friends_in_city(graph, city):
+    args = {'fields': 'id,name,location'}
+    friends = graph.get_connections("me", "friends", **args)
+
+    friends_in_city = [f['id'] for f in friends['data'] if in_right_city(f, city)]
+    return friends_in_city
+
+def in_right_city(f, city):
+    try:
+        print f['location']['name']
+        return (f['location']['name']==city)
+    except KeyError:
+        return False
 
 def get_hs_friends(graph):
     ''' Gets a users HS friends '''
@@ -115,7 +131,6 @@ def get_col_friends(graph):
     college = max(colleges.keys(), key=lambda colid: len(colleges[colid]))
 
     return [f['id'] for f in friends['data'] if 'education' in f if college in [s['school']['id'] for s in f['education']]]
-
 
 def get_colleagues(graph):
     ''' Gets a users colleagues '''
