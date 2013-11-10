@@ -128,7 +128,13 @@ def process_request(app_facebook_id, oauth_token, facebook_id):
 
 class SuggestionsView(APIView):
     def get(self, request, format=None):
-        ''' Returns an ordered list of suggestions '''
+        ''' Returns an ordered list of suggestions 
+        Takes a request of the following form:
+        app_facebook_id: Facebook ID of your app,
+        facebook_id: Facebook ID of the user,
+        social_circle: Returns only friends from the given social circle (Optional),
+        keywords: Returns friends who like the given keyword (Optional),
+        '''
         data = request.QUERY_PARAMS
 
         try:
@@ -150,7 +156,12 @@ class SuggestionsView(APIView):
                                                             mobile_app=mobile_app)
         # Gets first suggestion list
         # TODO -- more intelligent suggestion list choosing mechanism
-        suggestion_list = app_user_membership.suggestionlist_set.all()[0]
+        try:
+            suggestion_list = app_user_membership.suggestionlist_set.all()[0]
+        except IndexError:
+            msg = "Suggestion list is still processing. Try again in a minute or two."
+            return Response({'error': msg}, status=status.HTTP_400_BAD_REQUEST)
+
         friends = suggestion_list.suggested_friends.all().order_by('suggestion__rank')
 
         # TODO: Custom friend suggestion serializer that takes a suggestion list?
