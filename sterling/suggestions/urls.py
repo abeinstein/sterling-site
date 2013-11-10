@@ -10,12 +10,12 @@ InvitationsView
 from .models import AppUser, AppUserMembership
 
 
-# router = DefaultRouter()
-# router.register(r'appUsers', AppUserViewSet)
-# router.register(r'appUserMemberships', AppUserMembershipViewSet)
-# router.register(r'algorithms', AlgorithmViewSet)
-# router.register(r'suggestionLists', SuggestionListViewSet)
-# router.register(r'suggestions', SuggestionViewSet)
+router = DefaultRouter()
+router.register(r'appUsers', AppUserViewSet)
+router.register(r'appUserMemberships', AppUserMembershipViewSet)
+router.register(r'algorithms', AlgorithmViewSet)
+router.register(r'suggestionLists', SuggestionListViewSet)
+router.register(r'suggestions', SuggestionViewSet)
 
 app_user_detail = AppUserViewSet.as_view({
     'get': 'retrieve',
@@ -51,6 +51,6 @@ urlpatterns = format_suffix_patterns(patterns('',
     url(r'invitations/', InvitationsView.as_view(), name='invitations')
 ))
 
-# urlpatterns += patterns('',
-# 	url(r'', include(router.urls)),
-# )
+urlpatterns += patterns('',
+	url(r'', include(router.urls)),
+)
