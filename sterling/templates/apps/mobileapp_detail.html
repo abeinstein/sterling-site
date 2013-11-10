@@ -61,24 +61,6 @@
     <li> <a href="{% url 'settings_app' pk=mobileapp.appsettings.pk %}">Settings </a></li>
 </ul>
 </div>
-<div class = "table-div">
-    <table class="growth">
-        <thead>
-            <tr>
-            <th>Users</th>
-            <th>Invitations</th>
-            <th>Accepted</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td> {{ total_users }} </th>
-                <td> {{ num_invited }} </th>
-                <td> {{ num_accepted }} </th>
-            </tr>
-        </tbody>
-    </table>
-</div>
 <div id="chart-div" style="width: 1000px; height: 500px;"></div>
 
 <div class="growth">
