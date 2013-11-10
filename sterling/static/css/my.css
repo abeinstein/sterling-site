@@ -35,6 +35,11 @@ h1, h2, h3, h4 {
   color: #2fa4e7;
 }
 
+.algorithm-settings-save {
+  margin-top: 20px;
+  padding: 5px;
+}
+
 .form-option {
   padding: 5px;
 }
@@ -172,4 +177,9 @@ h1, h2, h3, h4 {
 * {
     font-family: 'Lato', sans-serif;
     font-weight: 400;
+}
+
+#chart-div {
+    width: 600px;
+    margin: 0 auto;
 }
