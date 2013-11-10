@@ -52,6 +52,15 @@ class MobileApp(models.Model):
                                             accepted=True,
                                             created__lt=datetime).count()
 
+class AppSettings(models.Model):
+    ''' Contains settings chosen for a given app's algorithms
+    and maybe eventually for other stuff'''
+    mobile_app = models.OneToOneField(MobileApp)
+    sports_fans = models.BooleanField(default=False)
+    political_bias = models.CharField(max_length=100, null=True, blank=True)
+    tech_enthusiast = models.BooleanField(default=False)
+    outdoors_lovers = models.BooleanField(default=False)
+    city = models.TextField(max_length=250, null=True, blank=True)
 
 
 class DevMembership(models.Model):
