@@ -35,6 +35,11 @@ h1, h2, h3, h4 {
   color: #2fa4e7;
 }
 
+.algorithm-settings-save {
+  margin-top: 20px;
+  padding: 5px;
+}
+
 .form-option {
   padding: 5px;
 }

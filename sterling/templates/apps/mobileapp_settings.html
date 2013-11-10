@@ -66,7 +66,24 @@
 
     <h5> Demographics </h5>
 
-    <p><input type="submit" value="Save" /></p>
+    <div class="form-field-wrapper">
+        {{ form.message.errors }}
+        <label for="city">City:</label>
+        <div class = "form-option" style="display: inline">
+            {{ form.city }}
+        </div>
+    </div>
+    <div class="form-field-wrapper">
+        {{ form.message.errors }}
+        <label for="social_circle">Social Circle:</label>
+        <div class = "form-option" style="display: inline">
+            {{ form.social_circle }}
+        </div>
+    </div>
+
+    <div class="algorithm-settings-save">
+        <p><input type="submit" value="Save" /></p>
+    </div>
 </form>
 
 </div>
