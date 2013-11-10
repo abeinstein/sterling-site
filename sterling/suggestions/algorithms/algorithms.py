@@ -6,7 +6,7 @@ import utilities
 import networkx as nx
 from collections import defaultdict
 
-from filters import sports_score, political_score, paging
+from filters import sports_score, political_score, paging, books_score, music_score, restaurants_score, games_score
 
 class AlgorithmManager():
     def __init__(self, facebook_id, oauth_token):
@@ -49,13 +49,28 @@ class AlgorithmManager():
             filter_list = list(set(social_circle_friends).intersection(set(filter_list)))
 
 
+        if params['likes_books']:
+            books_friends = to_dict(sorted(best_friends.keys(), key=lambda fbid: books_score(fbid, self.graph), reverse=True))
+            params_lists.append(books_friends)
 
+        if params['likes_games']:
+            games_friends = to_dict(sorted(best_friends.keys(), key=lambda fbid: games_score(fbid, self.graph), reverse=True))
+            params_lists.append(games_friends)
 
+        if params['likes_restauraunts']:
+            restaurant_friends = to_dict(sorted(best_friends.keys(), key=lambda fbid: restaurants_score(fbid, self.graph), reverse=True))
+            params_lists.append(restaurant_friends)
+
+        if params['likes_music']:
+            music_friends = to_dict(sorted(best_friends.keys(), key=lambda fbid: music_score(fbid, self.graph), reverse=True))
+            params_lists.append(music_friends)
         
         # Now, create list combining the lists
 
-        def rank(fbid): 
-            return sum([li[fbid] for li in params_lists])
+        def rank(fbid):
+            pref_score = sum([li[fbid] for li in params_lists]) / (len(params_lists) + 0.0)
+            bf_score = best_friends[fbid]
+            return (pref_score + bf_score)
 
         return sorted(filter_list.keys(), key=rank)
 
@@ -271,10 +286,10 @@ def photos(graph):
             pass
 
     '''Get rid of the original person'''
-    try:
-        del score_dict[str(facebook_id)]
-    except KeyError:
-        pass
+    # try:
+    #     del score_dict[str(facebook_id)]
+    # except KeyError:
+    #     pass
 
     '''Get rid of anyone that isn't friends with the user'''
     friends = [friend['id'] for friend in graph.get_connections("me", "friends")['data']]

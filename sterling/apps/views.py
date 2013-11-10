@@ -67,11 +67,13 @@ class AppDemographicsView(DetailView):
 
 class AppSettingsView(UpdateView):
     model = AppSettings
+    fields = ['likes_sports', 'likes_books', 'likes_music', 'likes_restaurants', 'likes_games', 'political_bias']
     template_name = "apps/mobileapp_settings.html"
     form_class = AppSettingsForm
 
     def get_success_url(self, **kwargs):
         return reverse("dashboard")
+
 
 class AppAlgorithmsView(DetailView):
     model = MobileApp

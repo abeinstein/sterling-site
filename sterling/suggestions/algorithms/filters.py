@@ -60,7 +60,10 @@ def get_sports_likes(response):
     sports_likes = []
     categories = [
         'Professional sports team',
-        'Sport'
+        'Sport',
+        'Athlete',
+        'Sports League',
+        'Coach',
     ]
     for like in response['data']:
         if like['category'] in categories:
@@ -68,6 +71,67 @@ def get_sports_likes(response):
 
     return sports_likes
 
+@paging
+def get_books_likes(response):
+    categories = [
+        'Book',
+        'Author',
+        'Book Store',
+        'Library',
+        'Magazine',
+    ]
+
+    books_likes = [like for like in response['data'] if like['category'] in categories]
+    return books_likes
+
+def get_games_likes(response):
+    categories = [
+        'Games/Toys',
+        'Games',
+        'Book Store',
+        'Library',
+        'Magazine',
+        'App',
+    ]
+
+    games_likes = [like for like in response['data'] if like['category'] in categories]
+    return games_likes
+
+def get_restaurants_likes(response):
+    categories = [
+        'Restaurant',
+        'Restaurant/cafe',
+        'Food/Beverages',
+        'Food',
+        'Asian Restaurant',
+        'Fine Dining Restaurant',
+        'Dessert Restaurant',
+        'Pub',
+        'Italian Restaurant',
+        'Mexican Restaurant',
+        'Mediterranean Restaurant',
+        'Steakhouse',
+    ]
+
+    restaurants_likes = [like for like in response['data'] if like['category'] in categories]
+    return restaurants_likes
+
+def get_music_likes(response):
+    categories = [
+        'Music',
+        'Band',
+        'Musician',
+        'Musician/Band',
+        'Musical Instrument',
+        'Song',
+        'Album',
+        'Concert Tour',
+        'Playlist',
+
+    ]
+
+    music_likes = [like for like in response['data'] if like['category'] in categories]
+    return music_likes
 
 
 def political_score(facebook_id, graph):
@@ -121,4 +185,22 @@ def sports_score(facebook_id, graph):
 
     return score
 
+def books_score(facebook_id, graph):
+    '''Returns a score describing the intensity of how much
+    a person likes books'''
+    return len(get_books_likes(graph.get_connections(facebook_id, "likes") ) )
 
+def games_score(facebook_id, graph):
+    '''Returns a score describing the intensity of how much
+    a person likes books'''
+    return len(get_games_likes(graph.get_connections(facebook_id, "likes") ) )
+
+def restaurants_score(facebook_id, graph):
+    '''Returns a score describing the intensity of how much
+    a person likes books'''
+    return len(get_restaurants_likes(graph.get_connections(facebook_id, "likes") ) )
+
+def music_score(facebook_id, graph):
+    '''Returns a score describing the intensity of how much
+    a person likes books'''
+    return len(get_music_likes(graph.get_connections(facebook_id, "likes") ) )

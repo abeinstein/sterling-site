@@ -28,6 +28,22 @@ h1, h2, h3, h4 {
   text-align: center;
 }
 
+.algorithm-settings {
+}
+
+.algorithm-settings h5 {
+  color: #2fa4e7;
+}
+
+.form-option {
+  padding: 5px;
+}
+
+.form-field-wrapper {
+  padding: 4px;
+  color: rgb(116, 135, 150);
+}
+
 .dashboard {
 }
 
