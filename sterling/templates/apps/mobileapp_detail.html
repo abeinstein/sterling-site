@@ -52,7 +52,6 @@
 
         var data = google.visualization.arrayToDataTable(formatted_data);
         var options = {
-          title: 'Company Performance',
           hAxis: {title: 'Day', titleTextStyle: {color: 'black'}}
         };
 
@@ -60,24 +59,31 @@
         chart.draw(data, options);
       }
 </script>
-
+<div class = "sidebar">
 <ul class="nav nav-list col-md-2">
     <li class="active"> <a href="{% url 'detail_app' pk=mobileapp.pk %}"> Growth </a> </li>
     <li> <a href="{% url 'demographics_app' pk=mobileapp.pk %}"> Demographics </a></li>
     <li> <a href="{% url 'algorithms_app' pk=mobileapp.pk %}">Algorithms </a></li>
     <li> <a href="{% url 'settings_app' pk=mobileapp.appsettings.pk %}">Settings </a></li>
 </ul>
-
-<div class="growth">
-    <ul>
-        <li> Users: {{ total_users }}</li>
-        <li> Number of invitations sent: {{ num_invited }}</li>
-        <li> Number of invitations accepted: {{ num_accepted }}</li>
-        {% if conversion_rate %}
-        <li> Conversion rate: {{ conversion_rate }}  </li>
-        {% endif %}
-        
-    </ul>
+</div>
+<div class = "table-div">
+    <table class="growth">
+        <thead>
+            <tr>
+            <th>Users</th>
+            <th>Invitations</th>
+            <th>Accepted</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td> {{ total_users }} </th>
+                <td> {{ num_invited }} </th>
+                <td> {{ num_accepted }} </th>
+            </tr>
+        </tbody>
+    </table>
 </div>
 <div id="chart-div" style="width: 1000px; height: 500px;"></div>
 </div>
