@@ -24,6 +24,13 @@ h1, h2, h3, h4 {
   font-family: 'Merriweather', serif;
 }*/
 
+.dashboard-header {
+  text-align: center;
+}
+
+.dashboard {
+}
+
 .first {
   min-height: 100%;
 }
@@ -51,9 +58,9 @@ h1, h2, h3, h4 {
 }
 
 .logo {
-    font-size: 6.5em;
-    text-align: center;
-    color: rgb(51, 83, 109);
+  font-size: 6.5em;
+  text-align: center;
+  color: rgb(51, 83, 109);
 }
 
 /* TODO: Fix to make responsive */
@@ -71,7 +78,10 @@ h1, h2, h3, h4 {
     color: rgb(51, 83, 109);
 }
 
-
+.dashboard {
+  margin-left: 25px;
+  margin-top: 25px;
+}
 
 .center-container {
   position: relative;
@@ -86,13 +96,20 @@ h1, h2, h3, h4 {
 }
 
 .email-form{
-    padding: 5px;
+  padding: 5px;
 }
 
 .email-input {
   padding-bottom: 10px;
 }
 
+.sign-in {
+  text-align: center;
+}
+
+.login {
+  margin-top: 25px;
+}
 
 .bar-graph-icon {
   font-size: 300px;

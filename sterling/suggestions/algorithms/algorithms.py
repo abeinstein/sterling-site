@@ -75,6 +75,34 @@ def weighted_mutual_friends(facebook_id, oauth_token):
 
     return sorted(wmf_score_dict, key=wmf_score_dict.get, reverse = True)
 
+def feed(facebook_id, oauth_token):
+    graph = facebook.GraphAPI(oauth_token)
+    feed = graph.get_object(facebook_id + "/feed")['data']
+    friends = [friend['id'] for friend in graph.get_connections("me","friends")['data']]
+    entries = []
+    feed_score_dict = {}
+
+    posted_by_list = []
+    liked_post_list = []
+
+    for entry in feed:
+        entries.append(entry)
+
+    posted_by_list =  [entry['from']['id'] for entry in entries if catch_key_error(entry, 'from')]
+
+    likes = [entry['likes'] for entry in entries if catch_key_error(entry,'likes')]
+    uid_lists = [like['data'] for like in likes]
+    for uid_list in uid_lists:
+        for uid in uid_list:
+            liked_post_list.append(uid['id'])
+
+    for friend in friends:
+        post_score = 5*len([uid for uid in posted_by_list if uid == friend])
+        like_score = len([uid for uid in liked_post_list if uid == friend])
+        feed_score_dict[friend] = post_score + like_score
+
+    return sorted(friends, key= feed_score_dict.get, reverse=True)
+
 def photos(facebook_id, oauth_token):
     '''Looks at photos that the user has recently been tagged in
     and assigns scores to each friend based on their likes, comments
@@ -119,9 +147,7 @@ def photos(facebook_id, oauth_token):
         pass
 
     '''Get rid of anyone that isn't friends with the user'''
-    friends = graph.get_connections("me", "friends")['data']
-    friends = [friend['id'] for friend in friends]
-
+    friends = [friend['id'] for friend in graph.get_connections("me", "friends")['data']]
     relevant_friends = list(set(friends).intersection(set(score_dict.keys())))
     return sorted(relevant_friends, key=score_dict.get, reverse=True)
 
@@ -131,7 +157,9 @@ def add_value_to_dict(dict, key, value):
     except LookupError:
         dict[key] = value
 
-
-
-
-
+def catch_key_error(entry, key):
+    try:
+        dummy = entry[key]
+        return True
+    except KeyError:
+        return False

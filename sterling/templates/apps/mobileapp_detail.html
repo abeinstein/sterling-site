@@ -1,20 +1,23 @@
 {% extends "base.html" %}
 
 {% block content %}
+
+<div class="dashboard">
+<div class="dashboard-header">
 <h1> {{ mobileapp.name }} </h1>
-<ul class="nav nav-tabs">
-    <li class="active"> <a href="#"> Growth </a> </li>
+</div>
 
-    <li> <a href="#"> Demographics </a></li>
-    <li> <a href="#">Algorithms </a></li>
-    <li> <a href="#">Settings </a></li>
 
+<ul class="nav nav-list col-md-2">
+    <li class="active"> <a href="{% url 'detail_app' pk=mobileapp.pk %}"> Growth </a> </li>
+    <li> <a href="{% url 'demographics_app' pk=mobileapp.pk %}"> Demographics </a></li>
+    <li> <a href="{% url 'algorithms_app' pk=mobileapp.pk %}">Algorithms </a></li>
+    <li> <a href="{% url 'settings_app' pk=mobileapp.pk %}">Settings </a></li>
 </ul>
 
 <div class="growth">
     <ul>
         <li> Users: {{ total_users }}</li>
-        <li> Number of times button was clicked: {{ num_suggested_list }} </li>
         <li> Number of invitations sent: {{ num_invited }}</li>
         <li> Number of invitations accepted: {{ num_accepted }}</li>
         {% if conversion_rate %}
@@ -24,14 +27,6 @@
     </ul>
 </div>
 
-<div class="demographics">
-    <ul>
-        <li> Percent Male / Percent Female: </li>
-        <li> Age groups: </li>
-    </ul>
 </div>
 
-<div class="algorithms">
-    <ul>
-        <li> Algorithms used:
 {% endblock content %}

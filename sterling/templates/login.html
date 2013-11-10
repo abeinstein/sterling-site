@@ -4,8 +4,9 @@
 {% if form.errors %}
 <p> You have the wrong username or password. Please try again. </p>
 {% endif %}
-<div class="col-md-2 col-md-offset-5">
+<div class="col-md-2">
 <div class="container">
+<div class="login">
 <form role="form" method="post" action="{% url "login" %}">
   {% csrf_token %}
   <div class="input-group">
@@ -17,6 +18,7 @@
     </div>
 </form>
 
+</div>
 </div>
 </div>
 
