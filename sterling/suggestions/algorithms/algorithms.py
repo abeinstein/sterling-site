@@ -5,7 +5,7 @@ import facebook
 import utilities
 import networkx as nx
 
-from filters import sports_score, political_score, paging, books_score
+from filters import sports_score, political_score, paging, books_score, music_score, restaurants_score, games_score
 
 class AlgorithmManager():
     def __init__(self, facebook_id, oauth_token):
@@ -34,9 +34,21 @@ class AlgorithmManager():
         if params['social_circle'] is not None:
             pass
 
-        if params['likes_books'] is not None:
+        if params['likes_books']:
             books_friends = to_dict(sorted(best_friends.keys(), key=lambda fbid: books_score(fbid, self.graph), reverse=True))
             params_lists.append(books_friends)
+
+        if params['likes_games']:
+            games_friends = to_dict(sorted(best_friends.keys(), key=lambda fbid: games_score(fbid, self.graph), reverse=True))
+            params_lists.append(games_friends)
+
+        if params['likes_restauraunts']:
+            restaurant_friends = to_dict(sorted(best_friends.keys(), key=lambda fbid: restaurants_score(fbid, self.graph), reverse=True))
+            params_lists.append(restaurant_friends)
+
+        if params['likes_music']:
+            music_friends = to_dict(sorted(best_friends.keys(), key=lambda fbid: music_score(fbid, self.graph), reverse=True))
+            params_lists.append(music_friends)
         
         # Now, create list combining the lists
 
