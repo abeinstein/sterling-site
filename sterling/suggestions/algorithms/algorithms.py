@@ -32,6 +32,7 @@ class AlgorithmManager():
 
         # Now, check social circles
         if params['social_circle'] is not None:
+            pass
 
 
 

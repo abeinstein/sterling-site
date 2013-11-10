@@ -11,7 +11,7 @@ from django.conf import settings
 from suggestions.algorithms.algorithms import alphabetical
 from algorithms.algorithms import toy_algorithm, alphabetical, splash_site, \
  mutual_friends, weighted_mutual_friends, photos, feed, dispersion_1, \
- run, AlgorithmManager
+ AlgorithmManager
 
 # ALGORITHM IDS
 ALGORITHM_ALPHABETICAL = 2

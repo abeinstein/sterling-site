@@ -122,7 +122,3 @@ def sports_score(facebook_id, graph):
     return score
 
 
-def 
-
-
-
