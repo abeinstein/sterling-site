@@ -95,6 +95,10 @@ class AppAlgorithmsView(DetailView):
         mobileapp = context['mobileapp']
         return context
 
+class AppHelpView(TemplateView):
+    template_name = "help.html"
+
+
 class SterlingRegistrationView(RegistrationView):
 
     def get_success_url(self, request, user):

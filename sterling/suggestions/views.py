@@ -132,8 +132,6 @@ class SuggestionsView(APIView):
         Takes a request of the following form:
         app_facebook_id: Facebook ID of your app,
         facebook_id: Facebook ID of the user,
-        social_circle: Returns only friends from the given social circle (Optional),
-        keywords: Returns friends who like the given keyword (Optional),
         '''
         data = request.QUERY_PARAMS
 
