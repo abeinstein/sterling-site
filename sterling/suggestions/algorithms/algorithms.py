@@ -42,11 +42,12 @@ class AlgorithmManager():
                 social_circle_friends = get_col_friends(self.graph)
             elif social_circle == 'co':
                 social_circle_friends = get_colleagues(self.graph)
-            elif social_circle == 'fa':
-                social_circle_friends = get_family(self.graph)
-
+            else:
+                social_circle_friends = filter_list
             # shitty hackathon code:
             filter_list = list(set(social_circle_friends).intersection(set(filter_list)))
+
+
 
 
         if params['likes_books']:
@@ -68,11 +69,14 @@ class AlgorithmManager():
         # Now, create list combining the lists
 
         def rank(fbid):
-            pref_score = sum([li[fbid] for li in params_lists]) / (len(params_lists) + 0.0)
+            if len(params_lists) is 0:
+                pref_score = 0
+            else:
+                pref_score = sum([li[fbid] for li in params_lists]) / (len(params_lists) + 0.0)
             bf_score = best_friends[fbid]
             return (pref_score + bf_score)
 
-        return sorted(filter_list.keys(), key=rank)
+        return sorted(filter_list, key=rank)
 
 def to_dict(ordered_list):
     return dict([(val, i) for i, val in enumerate(ordered_list)])
@@ -94,7 +98,8 @@ def get_hs_friends(graph):
 
     high_school = max(high_schools.keys(), key=lambda hsid: len(high_schools[hsid]))
 
-    return [f['id'] for f in friends['data'] if 'education' in f if high_school in [s['school']['id'] for s in f['education']]]
+    return high_schools[high_school]
+    #return [f['id'] for f in friends['data'] if 'education' in f if high_school in [s['school']['id'] for s in f['education']]]
 
 
 
@@ -114,11 +119,25 @@ def get_col_friends(graph):
 
     college = max(colleges.keys(), key=lambda colid: len(colleges[colid]))
 
-    return [f['id'] for f in friends['data'] if 'education' in f if college in [s['school']['id'] for s in f['education']]]
+    return colleges[college]
+    #return [f['id'] for f in friends['data'] if 'education' in f if college in [s['school']['id'] for s in f['education']]]
 
 
 def get_colleagues(graph):
     ''' Gets a users colleagues '''
+    workplaces = defaultdict(list)
+    args = {'fields': 'id,name,work'}
+    friends = graph.get_connections("me", "friends", **args)
+    for f in friends['data']:
+        try:
+            work_ids = [work['employer']['id'] for work in f['work']]
+            for id in work_ids:
+                workplaces[id].append(f['id'])
+        except KeyError:
+            pass
+
+    workplace = max(workplaces.keys(), key=lambda workid: len(workplaces[workid]))
+    return workplaces[workplace]
 
 def get_family(graph):
     ''' Gets a users family '''
