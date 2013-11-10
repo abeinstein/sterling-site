@@ -2,7 +2,7 @@
 # Each algorithm should accept two arguments:
 # <facebook_id> and <oauth_token>
 import facebook
-import utilities as utilities
+import utilities
 import networkx as nx
 
 def toy_algorithm(facebook_id, oauth_token):
@@ -40,7 +40,8 @@ def splash_site(facebook_id, oauth_token):
     return people
 
 def dispersion_1(facebook_id, oauth_token):
-    '''Sorts friends by dispersion
+    '''
+       Sorts friends by dispersion
        Where dg = graph theoretic distance
        Distance metric = { dg < 1 : 0
                            dg = undefined : 0
