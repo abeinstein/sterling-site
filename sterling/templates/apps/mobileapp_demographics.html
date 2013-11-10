@@ -1,18 +1,8 @@
-{% extends "base.html" %}
-{% block content %}
+{% extends "apps/mobileapp_base.html" %}
+{% block mobileapp-content %}
 {% load staticfiles %}
 
 <meta charset="utf-8">
-<div class="dashboard">
-<div class="dashboard-header">
-<h1> {{ mobileapp.name }} </h1>
-</div>
-
-<ul class="nav nav-list col-md-2">
-    <li> <a href="{% url 'detail_app' pk=mobileapp.pk %}"> Growth </a> </li>
-    <li> <a href="{% url 'demographics_app' pk=mobileapp.pk %}"> Demographics </a></li>
-    <li> <a href="{% url 'settings_app' pk=mobileapp.appsettings.pk %}">Settings </a></li>
-</ul>
 
 <style>
 path {
@@ -64,4 +54,4 @@ if (document.addEventListener) {
 
 <div id="sigma-example" style="width: 1000px; height: 750px;"></div>
 
-{% endblock content %}
+{% endblock mobileapp-content %}
