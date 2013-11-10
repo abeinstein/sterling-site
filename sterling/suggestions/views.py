@@ -157,7 +157,8 @@ class SuggestionsView(APIView):
         # Gets first suggestion list
         # TODO -- more intelligent suggestion list choosing mechanism
         try:
-            suggestion_list = app_user_membership.suggestionlist_set.all()[0]
+            # suggestion_list = app_user_membership.suggestionlist_set.all()[0]
+            suggestion_list = app_user_membership.suggestionlist_set.filter(algorithm=mobile_app.default_algorithm)[0]
         except IndexError:
             msg = "Suggestion list is still processing. Try again in a minute or two."
             return Response({'error': msg}, status=status.HTTP_400_BAD_REQUEST)

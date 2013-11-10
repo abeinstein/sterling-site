@@ -13,6 +13,7 @@ from suggestions.models import AppUser, Algorithm, AppUserMembership, Suggestion
 
 user_name = 'Mike Amfhbegehage Smithsen'
 user_facebook_id = '100006825758175'
+user_oauth_token = 'CAAGoRPx0jlMBAPGvcriFu7VrwCgSIZAiPmhICc3ZBw0ESA7NCXhZCzdqLKpoo7cyqa6mvuHBIOmz6CIcVNZB3ZCL2ojz7OWEyfMyYMC4T1y5bwTOVkcgDyOprTlXy7tZBQAFdNZAuNtAHxd9nzMENUXZCZAfCgLnUnpQb8mQWt9uowpl9q4FpbKspTvLZBMpFY12EZD'
 
 class SuggestionsAPITests(APITestCase):
     def setUp(self):
@@ -37,7 +38,7 @@ class SuggestionsAPITests(APITestCase):
         self.appUserMembership = AppUserMembership.objects.create(
             app_user=self.appUser,
             mobile_app=self.mobile_app,
-            oauth_token='CAAGoRPx0jlMBADRjwZA3iWGtPbwVtGDfnzm1FgDUAave26tuzGNPxj9EfBz6QGce8qT3Y85LFeoepJfpA0xheossfFtXoEx6vE9fczxSgXBYJqdZAisFNWDJOaZCMc7qvIYdYMIECntfSpLFr7mUa5tzjom1OYsryCksMY5JM2HZBuZBVVH2Js7OVWSfOAooZBRrZBKd8Tc7wZDZD'
+            oauth_token='CAAGoRPx0jlMBAJN673xfSbpAJJT4rQ4a5pX2gAOJ0y0MrV4O9XAql4axVtmG3KOUGHQRTcFGhA2KrznNj8XdoKcdfY9ejbwb8qwuZAya90lmqGR54XZAqWpTc70VJQJJrWQFZB8FOEB3ODmCts0PQMNqhbbTZCVvzoiZCPNbM8UjXHlOfuO8VEDYRW5d2lM8ZD'
         )
 
         self.appUser.update_friends()
@@ -52,7 +53,7 @@ class SuggestionsAPITests(APITestCase):
     def test_create_new_app_user(self):
         data = {
             'app_facebook_id': self.mobile_app.facebook_id,
-            'oauth_token': 'CAAGoRPx0jlMBABi0XvUAZAftICqw6dwQQz3N4OrTDqd5UByP03QrNYmHgopY9jVEcXIhq3OXpnu1MvTZAYfmgoQlVDqx96dEZA6UdhMWKKZAnrVBOUMZCQgVK9wVdljviHWD63IUoY2nMXZADUUavZBoPRFajyzN9nQJnow56fFRZCvd0NmT7VvtgCHZBwDhHClaSqrBmtYHyhQZDZD',
+            'oauth_token': user_oauth_token,
             'facebook_id': user_facebook_id
         }
         response = self.client.post('/appUserLogin/', data, format='json')
