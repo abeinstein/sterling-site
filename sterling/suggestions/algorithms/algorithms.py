@@ -4,6 +4,7 @@
 import facebook
 import utilities
 import networkx as nx
+from collections import defaultdict
 
 from filters import sports_score, political_score, paging
 
@@ -18,6 +19,7 @@ class AlgorithmManager():
         best_friends = to_dict(algorithm(self.graph))
 
         params_lists = []
+        filter_list = best_friends.keys() # Will only select friends in this list
 
         if params['likes_sports']:
             sports_friends = to_dict(sorted(best_friends.keys(), key=lambda fbid: sports_score(fbid, self.graph), reverse=True))
@@ -32,7 +34,20 @@ class AlgorithmManager():
 
         # Now, check social circles
         if params['social_circle'] is not None:
-            pass
+            social_circle = params['social_circle']
+            # High school friends
+            if social_circle == 'hsf':
+                social_circle_friends = get_hs_friends(self.graph)
+            elif social_circle == 'colf':
+                social_circle_friends = get_col_friends(self.graph)
+            elif social_circle == 'co':
+                social_circle_friends = get_colleagues(self.graph)
+            elif social_circle == 'fa':
+                social_circle_friends = get_family(self.graph)
+
+            # shitty hackathon code:
+            filter_list = list(set(social_circle_friends).intersection(set(filter_list)))
+
 
 
 
@@ -42,11 +57,57 @@ class AlgorithmManager():
         def rank(fbid): 
             return sum([li[fbid] for li in params_lists])
 
-        return sorted(best_friends, key=rank)
+        return sorted(filter_list.keys(), key=rank)
 
 def to_dict(ordered_list):
     return dict([(val, i) for i, val in enumerate(ordered_list)])
 
+
+def get_hs_friends(graph):
+    ''' Gets a users HS friends '''
+    high_schools = defaultdict(list)
+    args = {'fields': 'id,name,education'}
+    friends = graph.get_connections("me", "friends", **args)
+    for f in friends['data']:
+        try:
+            hs = [school['school']['id'] for school in f['education'] if school['type'] == 'High School'][0]
+            high_schools[hs].append(f['id'])
+        except KeyError:
+            pass
+        except IndexError:
+            pass
+
+    high_school = max(high_schools.keys(), key=lambda hsid: len(high_schools[hsid]))
+
+    return [f['id'] for f in friends['data'] if 'education' in f if high_school in [s['school']['id'] for s in f['education']]]
+
+
+
+def get_col_friends(graph):
+    ''' Gets a users college friends '''
+    colleges = defaultdict(list)
+    args = {'fields': 'id,name,education'}
+    friends = graph.get_connections("me", "friends", **args)
+    for f in friends['data']:
+        try:
+            col = [school['school']['id'] for school in f['education'] if school['type'] == 'College'][0]
+            colleges[col].append(f['id'])
+        except KeyError:
+            pass
+        except IndexError:
+            pass
+
+    college = max(colleges.keys(), key=lambda colid: len(colleges[colid]))
+
+    return [f['id'] for f in friends['data'] if 'education' in f if college in [s['school']['id'] for s in f['education']]]
+
+
+def get_colleagues(graph):
+    ''' Gets a users colleagues '''
+
+def get_family(graph):
+    ''' Gets a users family '''
+    raise NotImplementedError
 
 
 def toy_algorithm(graph):
