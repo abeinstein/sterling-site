@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+<div class="documentation">
+        <h2 id="apidocumentation">API Documentation</h2>
+
+        <p>To start using the API, you need to have a Facebook app. The API only works on users that have signed up for your Facebook app.
+        Refer to the Facebook documentation to get started with the Facebook API.</p>
+
+        <p>Once you have a Facebook App with some users, register for an account on our website. You will need your app's Facebook ID 
+        to register.</p>
+
+        <p>After you have registered, make the following calls to access the API:</p>
+
+        <p>1) <strong>POST</strong>: <code>www.sterlingshare.com/api/register/</code>
+        This registers your request, and starts running the algorithms for the particular user. It takes the following parameters:</p>
+        <ul>
+        <li><code>app_facebook_id</code>: Your app's Facebook ID</li>
+        <li><code>facebook_id</code>: The user's Facebook ID</li>
+        <li><code>oauth_token</code>: The OAuth Token for the particular user</li>
+        </ul>
+
+        <p>It returns an 201 upon success.</p>
+
+        <p>2) <strong>GET</strong>: <code>www.sterlingshare.com/api/friends/</code>
+        This fetches the suggestion list for the given user. It takes the following parameters:
+        </p>
+        <ul>
+        <li><code>app_facebook_id</code>: Your app's Facebook ID</li>
+        <li><code>facebook_id</code>: The user's Facebook ID</li>
+        </ul>
+
+        <p>On success, it returns:</p>
+        <ul>
+        <li><code>friends</code>: An ordered list of the user's best friends.</li>
+        <li><code>list_id</code>: A unique ID for the list. Save this if you wish to send invites to the users.</li>
+        </ul>
+
+        <p>3) <strong>POST</strong>: <code>www.sterlingshare.com/api/friends/</code>
+        This sends a Facebook message to the selected friends. It also collects statistics that you can see on the website.
+        It takes the following parameters:</p>
+        <ul>
+        <li><code>list_id</code>: The ID of the suggestion list returned by the GET request.</li>
+        <li><code>friends_seen</code>: A list of the friends that the user saw (i.e. were on the front page). If you don't know, feel free to include 
+        all of the users friends. </li>
+        <li><code>friends_invited</code>: A list of the friends that the user selected to invite. WARNING: A private facebook message will be sent to each of these users.</li>
+</ul>
+
+        <p>It returns a 200 on success.</p>
+</div>
+
+{% endblock content %}
