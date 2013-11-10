@@ -12,8 +12,6 @@ CITIES = (  (None, "----"),
             ("San Francisco, California", "San Francisco, California"),
             ("Seattle, Washington", "Seattle, Washington"))
 
-
-
 class AppSettingsForm(ModelForm):
     class Meta:
         model = AppSettings
