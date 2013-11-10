@@ -17,6 +17,7 @@ facebook-sdk==0.4.0
 gunicorn==18.0
 ipython==1.1.0
 kombu==2.5.15
+networkx==1.8.1
 psycopg2==2.5.1
 python-dateutil==2.1
 pytz==2013.7
