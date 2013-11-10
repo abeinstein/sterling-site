@@ -18,9 +18,6 @@ def alphabetical(facebook_id, oauth_token):
     sorted_friends = sorted(friends['data'], key=lambda d: d['name'])
     return [d['id'] for d in sorted_friends]
 
-# def beinstein_1(facebook_id, oauth_token):
-#     ''' My first attempt at a fancy algorithm '''
-#     graph = facebook.GraphAPI(oauth_token)
 
 def splash_site(facebook_id, oauth_token):
     '''FB Graph Calls: 0'''
@@ -52,7 +49,7 @@ def dispersion_1(facebook_id, oauth_token):
        facebook_id is not used
     '''
 
-    graph = utilities.mutual_friends_nx_graph(oauth_token)
+    graph = utilities.mutual_friends_nx_graph(oauth_token, verbose=True)
     return utilities.ordered_friends(graph)
 
 def mutual_friends(facebook_id, oauth_token):
@@ -181,4 +178,8 @@ def catch_key_error(entry, key):
         return True
     except KeyError:
         return False
+
+
+
+
 
