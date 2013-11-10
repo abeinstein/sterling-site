@@ -2,7 +2,7 @@ from django.forms import ModelForm, Select
 
 from apps.models import AppSettings
 
-CITIES = (  ("NOT SET", "N/A"),
+CITIES = (  (None, "----"),
             ("ATLANTA", "ATL"),
             ("BOSTON", "BOS"),
             ("CHICAGO", "CHI"),
