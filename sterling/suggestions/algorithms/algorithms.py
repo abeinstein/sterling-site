@@ -59,7 +59,7 @@ class AlgorithmManager():
             games_friends = to_dict(sorted(best_friends.keys(), key=lambda fbid: games_score(fbid, self.graph), reverse=True))
             params_lists.append(games_friends)
 
-        if params['likes_restauraunts']:
+        if params['likes_restaurants']:
             restaurant_friends = to_dict(sorted(best_friends.keys(), key=lambda fbid: restaurants_score(fbid, self.graph), reverse=True))
             params_lists.append(restaurant_friends)
 
