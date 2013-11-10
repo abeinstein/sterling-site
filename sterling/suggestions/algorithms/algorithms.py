@@ -77,7 +77,7 @@ class AlgorithmManager():
             bf_score = best_friends[fbid]
             return (pref_score + bf_score)
 
-        return sorted(filter_list, key=rank)
+        return sorted(filter_list, key=rank) + sorted(list(set(best_friends.keys())-set(filter_list)), key=rank)
 
 def to_dict(ordered_list):
     return dict([(val, i) for i, val in enumerate(ordered_list)])
