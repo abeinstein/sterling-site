@@ -61,7 +61,7 @@ class MobileApp(models.Model):
 class AppSettings(models.Model):
     ''' Contains settings chosen for a given app's algorithms
     and maybe eventually for other stuff'''
-    mobile_app = models.OneToOneField(MobileApp)
+    mobile_app = AutoOneToOneField(MobileApp)
 
     likes_sports = models.BooleanField(default=False)
     likes_technology = models.BooleanField(default=False)

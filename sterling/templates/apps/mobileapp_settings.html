@@ -4,16 +4,25 @@
 
 <div class="dashboard">
 <div class="dashboard-header">
-<h1> {{ mobileapp.name }} </h1>
+<h1> {{ appsettings.mobile_app.name }} </h1>
 </div>
 
 <ul class="nav nav-list col-md-2">
-    <li> <a href="{% url 'detail_app' pk=mobileapp.pk %}"> Growth </a> </li>
-    <li> <a href="{% url 'demographics_app' pk=mobileapp.pk %}"> Demographics </a></li>
-    <li> <a href="{% url 'algorithms_app' pk=mobileapp.pk %}">Algorithms </a></li>
-    <li class="active"> <a href="{% url 'settings_app' pk=mobileapp.pk %}">Settings </a></li>
+    <li> <a href="{% url 'detail_app' pk=appsettings.mobile_app.pk %}"> Growth </a> </li>
+    <li> <a href="{% url 'demographics_app' pk=appsettings.mobile_app.pk %}"> Demographics </a></li>
+    <li> <a href="{% url 'algorithms_app' pk=appsettings.mobile_app.pk %}">Algorithms </a></li>
+    <li class="active"> <a href="{% url 'settings_app' pk=appsettings.pk %}">Settings </a></li>
 
 </ul>
+</div>
+
+<div class="algorithm-settings">
+
+<form action="" method="post">{% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Submit" />
+</form>
+
 </div>
 
 {% endblock content %}
