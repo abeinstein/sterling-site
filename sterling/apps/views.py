@@ -1,13 +1,14 @@
 # Create your views here.
 from registration.backends.simple.views import RegistrationView
-from vanilla import ListView, CreateView, DetailView, RedirectView
+from vanilla import ListView, CreateView, DetailView, RedirectView, UpdateView
 from django.views.generic import TemplateView
 from django.http import HttpResponseRedirect
 
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.shortcuts import redirect
 
-from .models import MobileApp, DevMembership
+from .models import MobileApp, DevMembership, AppSettings
+from .forms import AppSettingsForm
 
 class AppHomeView(RedirectView):
     template_name = 'apps/mobileapp_detail.html'
@@ -21,12 +22,6 @@ class AppHomeView(RedirectView):
             return redirect('detail/%d' % int(self.get_queryset()[0].pk) )
         else:
             return redirect('list/')
-
-#     def get_redirect_url(self, **kwargs):
-#         app_pk = self.get_queryset()[0].pk
-#         kwargs = {'pk': app_pk}
-#         url = reverse('detail_app', kwargs=kwargs)
-#         return HttpResponseRedirect(url)
 
 class AppListView(ListView):
     model = MobileApp
@@ -70,14 +65,13 @@ class AppDemographicsView(DetailView):
         mobileapp = context['mobileapp']
         return context
 
-class AppSettingsView(DetailView):
-    model = MobileApp
+class AppSettingsView(UpdateView):
+    model = AppSettings
     template_name = "apps/mobileapp_settings.html"
+    form_class = AppSettingsForm
 
-    def get_context_data(self, **kwargs):
-        context = super(AppSettingsView, self).get_context_data(**kwargs)
-        mobileapp = context['mobileapp']
-        return context
+    def get_success_url(self, **kwargs):
+        return reverse("dashboard")
 
 class AppAlgorithmsView(DetailView):
     model = MobileApp
