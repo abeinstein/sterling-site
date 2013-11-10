@@ -48,7 +48,11 @@ urlpatterns = format_suffix_patterns(patterns('',
     url(r'^suggestions/', SuggestionsView.as_view(), name='suggestions'),
 
     # Invitation redirect URL
-    url(r'invitations/', InvitationsView.as_view(), name='invitations')
+    url(r'invitations/', InvitationsView.as_view(), name='invitations'),
+
+    # REST api URL's
+    url(r'^/api/register/', AppUserLoginView.as_view(), name='register'),
+    url(r'^/api/friends/', SuggestionsView.as_view(), name='friends')
 ))
 
 urlpatterns += patterns('',
