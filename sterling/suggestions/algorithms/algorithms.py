@@ -52,7 +52,7 @@ def dispersion_1(facebook_id, oauth_token):
        facebook_id is not used
     '''
 
-    graph = utilities.mutual_friends_nx_graph(oauth_token)
+    graph = utilities.mutual_friends_nx_graph(oauth_token, verbose=True)
     return utilities.ordered_friends(graph)
 
 def mutual_friends(facebook_id, oauth_token):
