@@ -9,7 +9,9 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 
 from suggestions.algorithms.algorithms import alphabetical
-from algorithms.algorithms import toy_algorithm, alphabetical, splash_site, mutual_friends, weighted_mutual_friends, photos, feed, dispersion_1
+from algorithms.algorithms import toy_algorithm, alphabetical, splash_site, \
+ mutual_friends, weighted_mutual_friends, photos, feed, dispersion_1, \
+ run, AlgorithmManager
 
 # ALGORITHM IDS
 ALGORITHM_ALPHABETICAL = 2
@@ -140,12 +142,14 @@ class SuggestionList(models.Model):
     def generate_suggestions(self):
         ''' Takes an AppUserMembership and calls an external function to 
         generate Suggestion objects '''
-        # Call external function to actually run the algorithm
         facebook_id = self.app_user_membership.app_user.facebook_id
         oauth_token = self.app_user_membership.oauth_token
+        settings = self.app_user_membership.mobile_app.appsettings.__dict__ # TODO: is this ok?    
 
         # This is where the magic happens
-        ordered_facebook_ids = self.algorithm.algorithm(facebook_id, oauth_token)
+        #ordered_facebook_ids = self.algorithm.algorithm(facebook_id, oauth_token)
+        manager = AlgorithmManager(facebook_id, oauth_token)
+        ordered_facebook_ids = manager.run(self.algorithm.algorithm, settings)
         suggestions = []
         
         for rank, friend_id in enumerate(ordered_facebook_ids):

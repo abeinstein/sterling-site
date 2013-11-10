@@ -5,21 +5,63 @@ import facebook
 import utilities
 import networkx as nx
 
-def toy_algorithm(facebook_id, oauth_token):
+from filters import sports_score, political_score, paging
+
+class AlgorithmManager():
+    def __init__(self, facebook_id, oauth_token):
+        self.facebook_id = facebook_id
+        self.oauth_token = oauth_token
+        self.graph = facebook.GraphAPI(self.oauth_token)
+
+
+    def run(self, algorithm, params):
+        best_friends = to_dict(algorithm(self.graph))
+
+        params_lists = []
+
+        if params['likes_sports']:
+            sports_friends = to_dict(sorted(best_friends.keys(), key=lambda fbid: sports_score(fbid, self.graph), reverse=True))
+            params_lists.append(sports_friends)
+
+        if params['political_bias'] is not 0:
+            is_liberal = params['political_bias'] == 1
+            poli_bias_friends = to_dict(sorted(best_friends.keys(), 
+                key=lambda fbid: political_score(fbid, self.graph),
+                reverse=is_liberal))
+            params_lists.append(poli_bias_friends)
+
+        # Now, check social circles
+        if params['social_circle'] is not None:
+
+
+
+        
+        # Now, create list combining the lists
+
+        def rank(fbid): 
+            return sum([li[fbid] for li in params_lists])
+
+        return sorted(best_friends, key=rank)
+
+def to_dict(ordered_list):
+    return dict([(val, i) for i, val in enumerate(ordered_list)])
+
+
+
+def toy_algorithm(graph):
     '''TODO: deprecate'''
     return ['100006812678326']
 
-def alphabetical(facebook_id, oauth_token):
+def alphabetical(graph):
     ''' Returns users in an alphabetical list 
     FB Graph Calls: 1'''
-    graph = facebook.GraphAPI(oauth_token)
     friends = graph.get_connections("me", "friends")
 
     sorted_friends = sorted(friends['data'], key=lambda d: d['name'])
     return [d['id'] for d in sorted_friends]
 
 
-def splash_site(facebook_id, oauth_token):
+def splash_site(graph):
     '''FB Graph Calls: 0'''
     people = [
         '1247010773',
@@ -36,7 +78,7 @@ def splash_site(facebook_id, oauth_token):
         '1846397448']
     return people
 
-def dispersion_1(facebook_id, oauth_token):
+def dispersion_1(graph):
     '''
        Sorts friends by dispersion
        Where dg = graph theoretic distance
@@ -49,15 +91,14 @@ def dispersion_1(facebook_id, oauth_token):
        facebook_id is not used
     '''
 
-    graph = utilities.mutual_friends_nx_graph(oauth_token, verbose=True)
+    graph = utilities.mutual_friends_nx_graph(graph.access_token, verbose=True)
     return utilities.ordered_friends(graph)
 
-def mutual_friends(facebook_id, oauth_token):
+def mutual_friends(graph):
     '''Sorts friends by the mutual friend count
     Runs at EWess "I see a cake" speed
     FB Graph Calls: 1
     '''
-    graph = facebook.GraphAPI(oauth_token)
     friends = graph.fql('''SELECT uid, mutual_friend_count 
                             FROM user WHERE uid IN 
                             (SELECT uid1 FROM friend WHERE uid2 = me()) 
@@ -65,13 +106,12 @@ def mutual_friends(facebook_id, oauth_token):
 
     return [d['uid'] for d in friends]
 
-def weighted_mutual_friends(facebook_id, oauth_token):
+def weighted_mutual_friends(graph):
     '''Sorts friends by the mutual friend count
     divided by the number of friends that the second user has
     - if the friend has less than 100 total friends they get
     bumped to the bottom'''
 
-    graph = facebook.GraphAPI(oauth_token)
     wmf_score_dict = {}
 
     friends = graph.fql('''SELECT uid, mutual_friend_count, friend_count 
@@ -90,9 +130,15 @@ def weighted_mutual_friends(facebook_id, oauth_token):
 
     return sorted(wmf_score_dict, key=wmf_score_dict.get, reverse = True)
 
-def feed(facebook_id, oauth_token):
-    graph = facebook.GraphAPI(oauth_token)
-    feed = graph.get_object(facebook_id + "/feed")['data']
+@paging
+def get_feed(response):
+    feed = []
+    for f in response['data']:
+        feed.append(f)
+    return feed
+
+def feed(graph):
+    feed = get_feed(graph.get_object("me/feed"))
     friends = [friend['id'] for friend in graph.get_connections("me","friends")['data']]
     entries = []
     feed_score_dict = {}
@@ -118,14 +164,21 @@ def feed(facebook_id, oauth_token):
 
     return sorted(friends, key= feed_score_dict.get, reverse=True)
 
-def photos(facebook_id, oauth_token):
+@paging
+def get_photos(response):
+    photos = []
+    for p in response['data']:
+        photos.append(p)
+    return photos
+
+
+def photos(graph):
     '''Looks at photos that the user has recently been tagged in
     and assigns scores to each friend based on their likes, comments
     and tags for those photos, weighting each relation differently
     FB Graph calls: 1
     '''
-    graph = facebook.GraphAPI(oauth_token)
-    photos = graph.get_object(facebook_id + "/photos")['data']
+    photos = get_photos(graph.get_object("me/photos"))
     score_dict = {}
 
     for photo in photos:
@@ -165,6 +218,8 @@ def photos(facebook_id, oauth_token):
     friends = [friend['id'] for friend in graph.get_connections("me", "friends")['data']]
     relevant_friends = list(set(friends).intersection(set(score_dict.keys())))
     return sorted(relevant_friends, key=score_dict.get, reverse=True)
+
+
 
 def add_value_to_dict(dict, key, value):
     try:
