@@ -5,7 +5,7 @@ import facebook
 import utilities
 import networkx as nx
 
-from filters import sports_score, political_score, paging
+from filters import sports_score, political_score, paging, books_score
 
 class AlgorithmManager():
     def __init__(self, facebook_id, oauth_token):
@@ -34,13 +34,16 @@ class AlgorithmManager():
         if params['social_circle'] is not None:
             pass
 
-
-
+        if params['likes_books'] is not None:
+            books_friends = to_dict(sorted(best_friends.keys(), key=lambda fbid: books_score(fbid, self.graph), reverse=True))
+            params_lists.append(books_friends)
         
         # Now, create list combining the lists
 
-        def rank(fbid): 
-            return sum([li[fbid] for li in params_lists])
+        def rank(fbid):
+            pref_score = sum([li[fbid] for li in params_lists]) / (len(params_lists) + 0.0)
+            bf_score = best_friends[fbid]
+            return (pref_score + bf_score)
 
         return sorted(best_friends, key=rank)
 
@@ -210,10 +213,10 @@ def photos(graph):
             pass
 
     '''Get rid of the original person'''
-    try:
-        del score_dict[str(facebook_id)]
-    except KeyError:
-        pass
+    # try:
+    #     del score_dict[str(facebook_id)]
+    # except KeyError:
+    #     pass
 
     '''Get rid of anyone that isn't friends with the user'''
     friends = [friend['id'] for friend in graph.get_connections("me", "friends")['data']]

@@ -60,7 +60,10 @@ def get_sports_likes(response):
     sports_likes = []
     categories = [
         'Professional sports team',
-        'Sport'
+        'Sport',
+        'Athlete',
+        'Sports League',
+        'Coach',
     ]
     for like in response['data']:
         if like['category'] in categories:
@@ -68,7 +71,18 @@ def get_sports_likes(response):
 
     return sports_likes
 
+@paging
+def get_books_likes(response):
+    categories = [
+        'Book',
+        'Author',
+        'Book Store',
+        'Library',
+        'Magazine',
+    ]
 
+    books_likes = [like for like in response['data'] if like['category'] in categories]
+    return books_likes
 
 def political_score(facebook_id, graph):
     ''' Returns a score describing poltitical beliefs
@@ -121,4 +135,7 @@ def sports_score(facebook_id, graph):
 
     return score
 
-
+def books_score(facebook_id, graph):
+    '''Returns a score describing the intensity of how much
+    a person likes books'''
+    return len(get_books_likes(graph.get_connections(facebook_id, "likes") ) )

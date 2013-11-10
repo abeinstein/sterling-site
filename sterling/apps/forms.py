@@ -6,4 +6,4 @@ class AppSettingsForm(ModelForm):
 
     class Meta:
         model = AppSettings
-        fields = ['likes_sports', 'political_bias']
+        fields = ['likes_sports', 'political_bias', 'likes_books']
