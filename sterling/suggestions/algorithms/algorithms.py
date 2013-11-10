@@ -51,8 +51,6 @@ class AlgorithmManager():
             friends_in_city = get_friends_in_city(self.graph, params['city'])
             filter_list = list(set(friends_in_city).intersection(set(filter_list)))
 
-
-
         if params['likes_books']:
             books_friends = to_dict(sorted(best_friends.keys(), key=lambda fbid: books_score(fbid, self.graph), reverse=True))
             params_lists.append(books_friends)
