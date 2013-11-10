@@ -149,6 +149,7 @@ INSTALLED_APPS = (
     'annoying',
     'suggestions',
     'django_rq',
+    'networkx'
 )
 
 # A sample logging configuration. The only tangible logging

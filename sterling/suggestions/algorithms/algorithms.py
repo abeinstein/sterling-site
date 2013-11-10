@@ -2,6 +2,8 @@
 # Each algorithm should accept two arguments:
 # <facebook_id> and <oauth_token>
 import facebook
+import algorithms.utilities as utilities
+import networkx as nx
 
 def toy_algorithm(facebook_id, oauth_token):
     '''TODO: deprecate'''
@@ -36,6 +38,21 @@ def splash_site(facebook_id, oauth_token):
         '1365240449',
         '1846397448']
     return people
+
+def dispersion_1(facebook_id, oauth_token):
+    '''Sorts friends by dispersion
+       Where dg = graph theoretic distance
+       Distance metric = { dg < 1 : 0
+                           dg = undefined : 0
+                           dg > 1 : 1
+                          }
+       Runs at EWess "I have to get off the couch, really?" speed
+       Should work on that
+       facebook_id is not used
+    '''
+
+    graph = utilities.mutual_friends_nx_graph(oauth_token)
+    return utilities.ordered_friends(graph)
 
 def mutual_friends(facebook_id, oauth_token):
     '''Sorts friends by the mutual friend count
@@ -163,3 +180,4 @@ def catch_key_error(entry, key):
         return True
     except KeyError:
         return False
+
