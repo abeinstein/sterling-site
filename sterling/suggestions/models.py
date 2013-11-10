@@ -9,7 +9,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 
 from suggestions.algorithms.algorithms import alphabetical
-from algorithms.algorithms import toy_algorithm, alphabetical, splash_site, mutual_friends, weighted_mutual_friends, photos, feed
+from algorithms.algorithms import toy_algorithm, alphabetical, splash_site, mutual_friends, weighted_mutual_friends, photos, feed, dispersion_1
 
 # ALGORITHM IDS
 ALGORITHM_ALPHABETICAL = 2
@@ -17,6 +17,7 @@ ALGORITHM_MUTUAL_FRIENDS = 4
 ALGORITHM_WEIGHTED_MUTUAL_FRIENDS = 5
 ALGORITHM_PHOTOS = 6
 ALGORITHM_FEED = 7
+ALGORITHM_DISPERSION_1 = 8
 
 class AppUser(models.Model):
     ''' Represents anyone who is signed up for an app, or is Facebook friends with 
@@ -114,6 +115,7 @@ class Algorithm(models.Model):
             ALGORITHM_WEIGHTED_MUTUAL_FRIENDS: weighted_mutual_friends,
             ALGORITHM_PHOTOS: photos,
             ALGORITHM_FEED: feed,
+            ALGORITHM_DISPERSION_1: dispersion_1, 
 
         }
         return algorithm_dict[self.algorithm_method_id]
