@@ -47,7 +47,6 @@
 
         var data = google.visualization.arrayToDataTable(formatted_data);
         var options = {
-          title: 'Company Performance',
           hAxis: {title: 'Day', titleTextStyle: {color: 'black'}}
         };
 
@@ -66,7 +65,6 @@
                 {% if conversion_rate %}
                 <li class="list-group-item">Conversion rate: <span class="badge">{{ conversion_rate }}</span>  </li>
                 {% endif %}
-                
             </ul>
         </div>
     </div>
