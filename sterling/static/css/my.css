@@ -20,6 +20,17 @@ h1, h2, h3, h4 {
   border-radius: 0;
 }
 
+#lean_overlay {
+    position: fixed;
+    z-index:100;
+    top: 0px;
+    left: 0px;
+    height:100%;
+    width:100%;
+    background: #000;
+    display: none;
+}
+
 /*.navbar-brand {
   font-family: 'Merriweather', serif;
 }*/
