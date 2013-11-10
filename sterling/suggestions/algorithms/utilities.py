@@ -44,4 +44,4 @@ def ordered_friends(G):
         strength = norm(G, node)
         ordered[node] = strength
 
-    return sorted(ordered, key=ordered.get)
+    return sorted(ordered, key=ordered.get, reverse = True)
