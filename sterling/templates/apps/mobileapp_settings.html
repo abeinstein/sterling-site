@@ -4,16 +4,88 @@
 
 <div class="dashboard">
 <div class="dashboard-header">
-<h1> {{ mobileapp.name }} </h1>
+<h1> {{ appsettings.mobile_app.name }} </h1>
 </div>
 
 <ul class="nav nav-list col-md-2">
-    <li> <a href="{% url 'detail_app' pk=mobileapp.pk %}"> Growth </a> </li>
-    <li> <a href="{% url 'demographics_app' pk=mobileapp.pk %}"> Demographics </a></li>
-    <li> <a href="{% url 'algorithms_app' pk=mobileapp.pk %}">Algorithms </a></li>
-    <li class="active"> <a href="{% url 'settings_app' pk=mobileapp.pk %}">Settings </a></li>
-
+    <li> <a href="{% url 'detail_app' pk=appsettings.mobile_app.pk %}"> Growth </a> </li>
+    <li> <a href="{% url 'demographics_app' pk=appsettings.mobile_app.pk %}"> Demographics </a></li>
+    <li> <a href="{% url 'algorithms_app' pk=appsettings.mobile_app.pk %}">Algorithms </a></li>
+    <li class="active"> <a href="{% url 'settings_app' pk=appsettings.pk %}">Settings </a></li>
 </ul>
+</div>
+
+<div class="algorithm-settings col-md-8">
+
+<form action="{% url 'settings_app' pk=appsettings.pk %}" method="post">
+    {{ form.non_field_errors }}
+    {% csrf_token %}
+    <h5> Interests </h5>
+    <div class="form-field-wrapper">
+        {{ form.subject.errors }}
+        <label for="likes_sports">Sports fan?</label>
+        <div class = "form-option" style="display: inline">
+            {{ form.likes_sports }}
+        </div>
+    </div>
+    <div class="form-field-wrapper">
+        {{ form.message.errors }}
+        <label for="likes_music">Music fan?</label>
+        <div class = "form-option" style="display: inline">
+            {{ form.likes_music }}
+        </div>
+    </div>
+    <div class="form-field-wrapper">
+        {{ form.message.errors }}
+        <label for="likes_games">Gamer?</label>
+        <div class = "form-option" style="display: inline">
+            {{ form.likes_games }}
+        </div>
+    </div>
+    <div class="form-field-wrapper">
+        {{ form.message.errors }}
+        <label for="likes_restaurants">Foodies?</label>
+        <div class = "form-option" style="display: inline">
+            {{ form.likes_restaurants }}
+        </div>
+    </div>
+    <div class="form-field-wrapper">
+        {{ form.message.errors }}
+        <label for="likes_books">Bookworm?</label>
+        <div class = "form-option" style="display: inline">
+            {{ form.likes_books }}
+        </div>
+    </div>
+    <div class="form-field-wrapper">
+        {{ form.message.errors }}
+        <label for="political_bias">Aspiring presidents?</label>
+        <div class = "form-option" style="display: inline">
+            {{ form.political_bias }}
+        </div>
+    </div>
+
+    <h5> Demographics </h5>
+
+    <div class="form-field-wrapper">
+        {{ form.message.errors }}
+        <label for="city">City:</label>
+        <div class = "form-option" style="display: inline">
+            {{ form.city }}
+        </div>
+    </div>
+    <div class="form-field-wrapper">
+        {{ form.message.errors }}
+        <label for="social_circle">Social Circle:</label>
+        <div class = "form-option" style="display: inline">
+            {{ form.social_circle }}
+        </div>
+    </div>
+
+    <div class="algorithm-settings-save">
+        <p><input type="submit" value="Save" /></p>
+    </div>
+</form>
+
 </div>
 
 {% endblock content %}

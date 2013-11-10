@@ -50,10 +50,18 @@ class MobileApp(models.Model):
                                             accepted=True,
                                             created__lt=datetime).count()
 
+    def save(self, *args, **kwargs):
+        super(MobileApp, self).save(*args, **kwargs)
+        try:
+            settings = self.appsettings
+        except AppSettings.DoesNotExist:
+            AppSettings.objects.create(mobile_app=self)
+        
+
 class AppSettings(models.Model):
     ''' Contains settings chosen for a given app's algorithms
     and maybe eventually for other stuff'''
-    mobile_app = models.OneToOneField(MobileApp)
+    mobile_app = AutoOneToOneField(MobileApp)
 
     likes_sports = models.BooleanField(default=False)
     likes_technology = models.BooleanField(default=False)
@@ -63,14 +71,28 @@ class AppSettings(models.Model):
     likes_restaurants = models.BooleanField(default=False)
     likes_music = models.BooleanField(default=False)
 
-    political_bias = models.IntegerField(blank=True, null=True)
+    POLITICAL_CHOICES = (
+        (0, 'No bias'),
+        (-1, 'Conservative'),
+        (1, 'Liberal')
+    )
+
+    political_bias = models.IntegerField(POLITICAL_CHOICES, blank=True, null=True)
     same_city = models.BooleanField(default=False)
     city = models.CharField(max_length=250, null=True, blank=True)
-    social_circle = models.CharField( choices=( ("family", "family"), 
-                                                ("colleagues", "colleagues"), 
-                                                ("college_friends", "college_friends"),
-                                                ("high_school_friends", "high_school_friends") ),
-                                                max_length = 100, blank=True, null=True )
+
+    SOCIAL_CIRCLE_CHOICES = (
+        ("fa", "Family"), 
+        ("co", "Colleagues"), 
+        ("colf", "College Friends"),
+        ("hsf", "High School Friends") 
+    )
+
+    social_circle = models.CharField(choices=SOCIAL_CIRCLE_CHOICES, max_length=100, blank=True, null=True)
+
+    def dict_rep(self):
+        data = {}
+
 
 class DevMembership(models.Model):
     ''' 'Through' model for app signups. '''
