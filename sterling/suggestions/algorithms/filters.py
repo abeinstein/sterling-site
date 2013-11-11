@@ -2,36 +2,6 @@ import json
 import facebook
 import urllib2
 
-LIBERALS = [
-'Barack Obama',
-'Bill Clinton',
-'Joe Biden',
-'Al Franken',
-'Cory Booker',
-'Al Gore'
-]
-
-CONSERVATIVES = [
-'Mitt Romney',
-'Arnold Schwarzenegger',
-'Paul Ryan VP',
-'Sarah Palin',
-'George W. Bush',
-'Mike Huckabee',
-'Ron Paul',
-'John McCain',
-'Herman Cain',
-'Michelle Bachmann',
-'Paul Ryan',
-'Scott Brown',
-'Newt Gingrich',
-'Ronald Reagan',
-'Rick Perry',
-'Rick Santorum'
-]
-
-
-
 def paging(f):
         ''' Decorator for paging through facebook responses '''
         def inner(response):
@@ -73,63 +43,25 @@ def get_sports_likes(response):
 
 @paging
 def get_books_likes(response):
-    categories = [
-        'Book',
-        'Author',
-        'Book Store',
-        'Library',
-        'Magazine',
-    ]
+    categories = BOOK_CATEGORIES
 
     books_likes = [like for like in response['data'] if like['category'] in categories]
     return books_likes
 
 def get_games_likes(response):
-    categories = [
-        'Games/Toys',
-        'Games',
-        'Book Store',
-        'Library',
-        'Magazine',
-        'App',
-    ]
+    categories = GAME_CATEGORIES
 
     games_likes = [like for like in response['data'] if like['category'] in categories]
     return games_likes
 
 def get_restaurants_likes(response):
-    categories = [
-        'Restaurant',
-        'Restaurant/cafe',
-        'Food/Beverages',
-        'Food',
-        'Asian Restaurant',
-        'Fine Dining Restaurant',
-        'Dessert Restaurant',
-        'Pub',
-        'Italian Restaurant',
-        'Mexican Restaurant',
-        'Mediterranean Restaurant',
-        'Steakhouse',
-    ]
+    categories = RESTAURANT_CATEGORIES
 
     restaurants_likes = [like for like in response['data'] if like['category'] in categories]
     return restaurants_likes
 
 def get_music_likes(response):
-    categories = [
-        'Music',
-        'Band',
-        'Musician',
-        'Musician/Band',
-        'Musical Instrument',
-        'Song',
-        'Album',
-        'Concert Tour',
-        'Playlist',
-
-    ]
-
+    categories = MUSIC_CATEGORIES
     music_likes = [like for like in response['data'] if like['category'] in categories]
     return music_likes
 
@@ -204,3 +136,82 @@ def music_score(facebook_id, graph):
     '''Returns a score describing the intensity of how much
     a person likes books'''
     return len(get_music_likes(graph.get_connections(facebook_id, "likes") ) )
+
+LIBERALS = [
+    'Barack Obama',
+    'Bill Clinton',
+    'Joe Biden',
+    'Al Franken',
+    'Cory Booker',
+    'Al Gore',
+    'Hillary Clinton',
+    'Elizabeth Warren',
+    'Nancy Pelosi',
+    'Harry Reid',
+    'President Bill Clinton',
+]
+
+CONSERVATIVES = [
+    'Mitt Romney',
+    'Arnold Schwarzenegger',
+    'Paul Ryan VP',
+    'Sarah Palin',
+    'George W. Bush',
+    'Mike Huckabee',
+    'Ron Paul',
+    'John McCain',
+    'Herman Cain',
+    'Michelle Bachmann',
+    'Paul Ryan',
+    'Scott Brown',
+    'Newt Gingrich',
+    'Ronald Reagan',
+    'Rick Perry',
+    'Rick Santorum',
+    'Chris Christie',
+    'Marco Rubio,'
+]
+
+BOOK_CATEGORIES = [
+    'Book',
+    'Author',
+    'Book Store',
+    'Library',
+    'Magazine',
+]
+
+GAME_CATEGORIES = [
+    'Games/Toys',
+    'Games',
+    'Book Store',
+    'Library',
+    'Magazine',
+    'App',
+]
+
+MUSIC_CATEGORIES = [
+    'Music',
+    'Band',
+    'Musician',
+    'Musician/Band',
+    'Musical Instrument',
+    'Song',
+    'Album',
+    'Concert Tour',
+    'Playlist',
+]
+
+RESTAURANT_CATEGORIES = [
+    'Restaurant',
+    'Restaurant/cafe',
+    'Food/Beverages',
+    'Food',
+    'Asian Restaurant',
+    'Fine Dining Restaurant',
+    'Dessert Restaurant',
+    'Pub',
+    'Italian Restaurant',
+    'Mexican Restaurant',
+    'Mediterranean Restaurant',
+    'Steakhouse',
+]
