@@ -170,6 +170,9 @@ class SuggestionsView(APIView):
             response_data['friends'].append({'id': f.facebook_id,
                                 'name': f.name })
 
+        if (response_data == []):
+            return Response("error", status=status.HTTP_400_BAD_REQUEST)
+
         return Response(response_data, status=status.HTTP_200_OK)
 
     def post(self, request, format=None):
