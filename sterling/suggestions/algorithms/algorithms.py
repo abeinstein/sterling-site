@@ -5,8 +5,10 @@ import facebook
 import utilities
 import networkx as nx
 from collections import defaultdict
+import re
 
 from filters import sports_score, political_score, paging, books_score, music_score, restaurants_score, games_score
+from filters import sport_ranks, political_ranks, book_ranks, game_ranks, restaurant_ranks, music_ranks
 
 class AlgorithmManager():
     def __init__(self, facebook_id, oauth_token):
@@ -14,22 +16,23 @@ class AlgorithmManager():
         self.oauth_token = oauth_token
         self.graph = facebook.GraphAPI(self.oauth_token)
 
-
     def run(self, algorithm, params):
         best_friends = to_dict(algorithm(self.graph))
 
         params_lists = []
         filter_list = best_friends.keys() # Will only select friends in this list
 
+        if ( (params['likes_sports']) or (params['political_bias'] is not 0) or (params['likes_books']) 
+            or (params['likes_games']) or (params['likes_restaurants']) or (params['likes_music']) ):
+            friends_likes = get_friends_likes(self.graph)
+
         if params['likes_sports']:
-            sports_friends = to_dict(sorted(best_friends.keys(), key=lambda fbid: sports_score(fbid, self.graph), reverse=True))
-            params_lists.append(sports_friends)
+            sport_rankings = to_dict(sport_ranks(self.graph, friends_likes))
+            params_lists.append(sport_rankings)
 
         if params['political_bias'] is not 0:
-            is_liberal = params['political_bias'] == 1
-            poli_bias_friends = to_dict(sorted(best_friends.keys(), 
-                key=lambda fbid: political_score(fbid, self.graph),
-                reverse=is_liberal))
+            #is_liberal = params['political_bias'] == 1
+            political_ranks = to_dict(political_ranks(self.graph, friends_likes))
             params_lists.append(poli_bias_friends)
 
         # Now, check social circles
@@ -52,20 +55,20 @@ class AlgorithmManager():
             filter_list = list(set(friends_in_city).intersection(set(filter_list)))
 
         if params['likes_books']:
-            books_friends = to_dict(sorted(best_friends.keys(), key=lambda fbid: books_score(fbid, self.graph), reverse=True))
-            params_lists.append(books_friends)
+            book_rankings = to_dict(book_ranks(self.graph, friends_likes))
+            params_lists.append(book_rankings)
 
         if params['likes_games']:
-            games_friends = to_dict(sorted(best_friends.keys(), key=lambda fbid: games_score(fbid, self.graph), reverse=True))
-            params_lists.append(games_friends)
+            game_rankings = to_dict(game_ranks(self.graph, friends_likes))
+            params_lists.append(game_rankings)
 
         if params['likes_restaurants']:
-            restaurant_friends = to_dict(sorted(best_friends.keys(), key=lambda fbid: restaurants_score(fbid, self.graph), reverse=True))
-            params_lists.append(restaurant_friends)
+            restaurant_rankings = to_dict(restaurant_ranks(self.graph, friends_likes))
+            params_lists.append(restaurant_rankings)
 
         if params['likes_music']:
-            music_friends = to_dict(sorted(best_friends.keys(), key=lambda fbid: music_score(fbid, self.graph), reverse=True))
-            params_lists.append(music_friends)
+            music_rankings = to_dict(music_ranks(self.graph, friends_likes))
+            params_lists.append(music_rankings)
         
         # Now, create list combining the lists
 
@@ -73,11 +76,17 @@ class AlgorithmManager():
             if len(params_lists) is 0:
                 pref_score = 0
             else:
-                pref_score = sum([li[fbid] for li in params_lists]) / (len(params_lists) + 0.0)
+                pref_score = sum([ get_pref_score(li, fbid) for li in params_lists]) / (2.0*len(params_lists))
             bf_score = best_friends[fbid]
             return (pref_score + bf_score)
 
         return sorted(filter_list, key=rank) + sorted(list(set(best_friends.keys())-set(filter_list)), key=rank)
+
+def get_pref_score(dict, fbid):
+    try:
+        return dict[fbid]
+    except KeyError:
+        return 0
 
 def to_dict(ordered_list):
     return dict([(val, i) for i, val in enumerate(ordered_list)])
@@ -91,7 +100,6 @@ def get_friends_in_city(graph, city):
 
 def in_right_city(f, city):
     try:
-        print f['location']['name']
         return (f['location']['name']==city)
     except KeyError:
         return False
@@ -328,8 +336,6 @@ def photos(graph):
     relevant_friends = list(set(friends).intersection(set(score_dict.keys())))
     return sorted(relevant_friends, key=score_dict.get, reverse=True)
 
-
-
 def add_value_to_dict(dict, key, value):
     try:
         dict[key] += value
@@ -342,6 +348,55 @@ def catch_key_error(entry, key):
         return True
     except KeyError:
         return False
+
+def get_friends_likes(graph):
+    friends = [friend['id'] for friend in graph.get_connections("me", "friends")['data']]
+    batch_request_list = [ (friend, likes_request(friend)) for friend in friends]
+    like_lists = []
+    while (len(batch_request_list) > 0):
+        like_list = graph.request("", post_args={"batch": [batch[1] for batch in batch_request_list[0:50]]})
+        friends_list = [batch[0] for batch in batch_request_list[0:50]]
+        like_lists += [(friends_list[i], get_data(like_list[i]) ) for i in range(min(50, len(like_list)))]
+
+        next_page_urls = [next_page(eval(person_likes['body'])) for person_likes in like_list if (next_page(eval(person_likes['body'])) is not None)]
+        batch_request_list = batch_request_list[len(like_list):]
+
+        for url in next_page_urls:
+            uid = re.findall("https://graph.facebook.com/([0-9]+)", url)[0]
+            limit = (re.findall("([&\?]limit=[0-9]+)\Z", url) + re.findall("([&\?]limit=[0-9]+)[&\?]", url))[0]
+            after = (re.findall("([&\?]after=.*)\Z", url) + re.findall("([&\?]after=.*)[&\?]", url))[0]
+            paging_info = "?" + limit[1:] + "&" + after[1:]
+
+            next_batch_request = {"method": "GET", "relative_url": (str(uid) + "/likes?" + paging_info)}
+            batch_request_list.append( (uid, next_batch_request))
+
+
+    like_dict = {}
+    for like_list in like_lists:
+        person = like_list[0]
+        try:
+            like_dict[person] += like_list[1]
+        except KeyError:
+            like_dict[person] = like_list[1]
+        except TypeError:
+            pass
+
+    return like_dict
+
+def get_data(person_likes):
+    try:
+        return eval(person_likes['body'])['data']
+    except KeyError:
+        pass
+
+def likes_request(friend):
+    return {"method": "GET", "relative_url": (str(friend) + "/likes")}
+
+def next_page(like_list):
+    try:
+        return like_list['paging']['next'].replace('\/', '/')
+    except KeyError:
+        pass
 
 
 

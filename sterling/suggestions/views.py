@@ -61,7 +61,7 @@ class AppUserLoginView(APIView):
             error = {'error': "Invalid request"}
             return Response(error, status=status.HTTP_400_BAD_REQUEST)
 
-        django_rq.enqueue(process_request, app_facebook_id, oauth_token, facebook_id)
+        django_rq.enqueue(process_request, app_facebook_id, oauth_token, facebook_id, timeout=1500)
         return Response(status=status.HTTP_201_CREATED)
 
 def process_request(app_facebook_id, oauth_token, facebook_id):
