@@ -32,8 +32,8 @@ class AlgorithmManager():
 
         if params['political_bias'] is not 0:
             #is_liberal = params['political_bias'] == 1
-            political_ranks = to_dict(political_ranks(self.graph, friends_likes))
-            params_lists.append(poli_bias_friends)
+            political_rankings = to_dict(political_ranks(self.graph, friends_likes))
+            params_lists.append(political_rankings)
 
         # Now, check social circles
         if params['social_circle'] is not None:
