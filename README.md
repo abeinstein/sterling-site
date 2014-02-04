@@ -1,6 +1,8 @@
 Sterling
 =============
-To get started with sterling, visit our webiste at www.sterlingshare.com. Right now, we have an iOS frontend and an API.
+### **IMPORTANT: API is currently down as we are dealing with Facebook ToS issues**
+
+~~To get started with sterling, visit our webiste at www.sterlingshare.com. Right now, we have an iOS frontend and an API.~~
 
 ## API Documentation
 To start using the API, you need to have a Facebook app. The API only works on users that have signed up for your Facebook app.
